@@ -22,6 +22,7 @@ class RemoteFeedLoader{
         client.get(from: url)
     }
 }
+
 protocol HttpClient{
     func get(from url:URL)
     
@@ -36,7 +37,7 @@ class RemoteFeedLoaderTests:XCTestCase{
         XCTAssertNil(client.requestedURL)
         
     }
-    //
+    
     func test_load_shouldRequestDataFromUrl(){
         let url = URL(string: "https://a-given-url.com")!
         let client = HttpClientSpy()
@@ -49,12 +50,7 @@ class RemoteFeedLoaderTests:XCTestCase{
         
     }
     
-    class HttpClientSpy:HttpClient{
-        var requestedURL:URL?
-        func get(from url:URL){
-            requestedURL = url
-        }
-    }
+    // MARK: - Helpers
     
     private func makeSut(url:URL = URL(string: "https//google.com")!) -> (RemoteFeedLoader,HttpClientSpy){
         let client = HttpClientSpy()
@@ -62,5 +58,12 @@ class RemoteFeedLoaderTests:XCTestCase{
         
         return (sut,client)
 
+    }
+    
+    class HttpClientSpy:HttpClient{
+        var requestedURL:URL?
+        func get(from url:URL){
+            requestedURL = url
+        }
     }
 }

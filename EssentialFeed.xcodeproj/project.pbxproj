@@ -56,6 +56,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		54C4825C2B30E9E300C9DB71 /* Feed Api */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Feed Api";
+			sourceTree = "<group>";
+		};
 		54F8D44D2B2EA9BD00C62D91 = {
 			isa = PBXGroup;
 			children = (
@@ -77,6 +84,7 @@
 		54F8D4592B2EA9BD00C62D91 /* EssentialFeed */ = {
 			isa = PBXGroup;
 			children = (
+				54C4825C2B30E9E300C9DB71 /* Feed Api */,
 				54F8D45A2B2EA9BD00C62D91 /* EssentialFeed.h */,
 				54F8D45B2B2EA9BD00C62D91 /* EssentialFeed.docc */,
 				54F8D4782B2EADC500C62D91 /* Feed Feature */,

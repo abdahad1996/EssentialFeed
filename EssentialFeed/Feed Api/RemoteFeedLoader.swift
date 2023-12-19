@@ -22,8 +22,8 @@ public class RemoteFeedLoader{
         self.url = url
         self.client = client
     }
+    public func load(completion:@escaping (Error) -> Void){
     
-    public func load(completion:@escaping (Error) -> Void = {_ in }){
         client.get(from: url, completion: {error in
             completion(.connectivity)
         })

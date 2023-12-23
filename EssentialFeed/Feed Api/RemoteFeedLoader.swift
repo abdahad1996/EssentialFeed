@@ -27,24 +27,20 @@ public class RemoteFeedLoader{
     }
    
     
+    
+    
     public func load(completion:@escaping (Result) -> Void){
     
         client.get(from: url, completion: {result in
             switch result {
             case .success(let data,let response):
-                do {
-                   let items = try FeedItemsMapper.map(data, response)
-                    completion(.success(items))
-                }catch{
-                    completion(.failure(.invalidData))
-
-                }
-                 
-                
+                completion(FeedItemsMapper.map(data, response))
+             
             case .failure(_):
                 completion(.failure(.connectivity))
             }
             
         })
     }
+   
 }

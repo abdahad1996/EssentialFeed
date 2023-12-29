@@ -1,0 +1,56 @@
+//
+//  URLSessionHTTPClient.swift
+//  EssentialFeedTests
+//
+//  Created by Abdul Ahad on 29.12.23.
+//
+
+import Foundation
+import XCTest
+
+class URLSessionHttpClient{
+    let session : URLSession
+    
+    init(session:URLSession) {
+        self.session = session
+    }
+    func get(from url:URL){
+        session.dataTask(with: url){_,_,_ in}
+    }
+    
+}
+class URLSessionHTTPClient:XCTestCase{
+    func test_init_DoesntCreateDataTask(){
+        let url = URL(string:"http://any-url.com")!
+        let session = URLSessionSpy()
+        let sut = URLSessionHttpClient(session: session)
+        
+//        sut.get(from: url)
+        
+        XCTAssertTrue(session.recievedURLS.isEmpty)
+        
+    }
+    
+    func test_getFromURL_CreatesDataTaskWithURL(){
+        let url = URL(string:"http://any-url.com")!
+        let session = URLSessionSpy()
+        let sut = URLSessionHttpClient(session: session)
+        
+        sut.get(from: url)
+        
+        XCTAssertEqual(session.recievedURLS,[url])
+        
+    }
+    
+    class URLSessionSpy:URLSession{
+        var recievedURLS = [URL]()
+        
+        override func dataTask(with url: URL, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
+            recievedURLS.append(url)
+            return FakeURLSessionDataTask()
+        }
+        
+        }
+    
+    class FakeURLSessionDataTask:URLSessionDataTask{}
+}

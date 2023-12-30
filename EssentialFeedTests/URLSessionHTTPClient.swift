@@ -80,7 +80,7 @@ class URLSessionHTTPClientTests: XCTestCase {
         return sut
     }
     
-    private anyURL() -> URL {
+    private func anyURL() -> URL {
         let url = URL(string: "http://any-url.com")!
         return url
     }

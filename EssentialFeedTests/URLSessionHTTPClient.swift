@@ -55,45 +55,54 @@ class URLSessionHTTPClientTests: XCTestCase {
     }
     func test_getFromURL_failsOnRequestError() {
         let url = anyURL()
-        let error = NSError(domain: "any error", code: 0)
-        URLProtocolStub.stub(data:nil,response:nil, error: error)
+        let requestError = NSError(domain: "any error", code: 0)
+        URLProtocolStub.stub(data:nil,response:nil, error: requestError)
         
        
         
+       let receivedError = resultErrorFor(data: nil, response: nil, error: requestError)
+        
+        XCTAssertNotNil(receivedError)
+    }
+    
+    func test_getFromURL_failsOnAllInvalidRepresentationCase(){
+        let anyData = Data("any data".utf8)
+        let anyError = NSError(domain: "any error", code: 0)
+        let nonHTTPURLResponse = URLResponse(url: anyURL(), mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
+        let anyHTTPURLResponse =  HTTPURLResponse(url: anyURL(), statusCode: 200, httpVersion: nil, headerFields: nil)
+        
+        XCTAssertNotNil(resultErrorFor(data: nil, response: nil, error: nil))
+        XCTAssertNotNil(resultErrorFor(data: nil, response: nonHTTPURLResponse, error: nil))
+        XCTAssertNotNil(resultErrorFor(data: nil, response: anyHTTPURLResponse, error: nil))
+        XCTAssertNotNil(resultErrorFor(data: anyData, response: nil, error: nil))
+        XCTAssertNotNil(resultErrorFor(data: anyData, response: nil, error: anyError))
+        XCTAssertNotNil(resultErrorFor(data: nil, response: nonHTTPURLResponse, error: anyError))
+        XCTAssertNotNil(resultErrorFor(data: anyData, response: anyHTTPURLResponse, error: anyError))
+        XCTAssertNotNil(resultErrorFor(data: anyData, response: nonHTTPURLResponse, error: anyError))
+
+    }
+    
+    // MARK: - Helpers
+    private func resultErrorFor(data:Data?,response:URLResponse?,error:Error?) -> Error?{
+        URLProtocolStub.stub(data:nil,response:nil, error: error)
+        
         let exp = expectation(description: "Wait for completion")
         
-        makeSUT().get(from: url) { result in
+        var receivedError:Error?
+        makeSUT().get(from: anyURL()) { result in
             switch result {
-            case let .failure(receivedError as NSError):
-                XCTAssertNotNil(receivedError)
+            case let .failure(error ):
+                receivedError = error
             default:
                 XCTFail("Expected failure with error \(error), got \(result) instead")
             }
             
             exp.fulfill()
         }
-        
-        wait(for: [exp], timeout: 1.0)
-    }
-    
-    func test_getFromURL_failsOnAllNilValues(){
-        URLProtocolStub.stub(data:nil,response:nil, error: nil)
 
-        let exp = expectation(description: "Wait for completion")
-        
-        makeSUT().get(from: anyURL()) { result in
-            switch result {
-            case .failure:
-                break
-            default:
-                XCTFail("Expected failure, got \(result) instead")
-                
-            }
-            exp.fulfill()
-        }
         wait(for: [exp],timeout: 1)
+        return receivedError
     }
-    // MARK: - Helpers
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> URLSessionHTTPClient{
         let sut = URLSessionHTTPClient()
         trackForMemoryLeaks(sut,file: file,line: line)

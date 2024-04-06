@@ -35,8 +35,13 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
     // MARK: - Helpers
     
     private func getFeedResult(file: StaticString = #file, line: UInt = #line) -> LoadFeedResult? {
+        
+        //no redirects hence when no internet uses cache and tests works successfully
+//        let testServerURL = URL(string: "https://static1.squarespace.com/static/5891c5b8d1758ec68ef5dbc2/t/5c52cdd0b8a045df091d2fff/1548930512083/feed-case-study-test-api-feed.json")!
+        
+        //URLSession handles the 3xx redirect response behind the scenes so you don’t get 3xx responses. After the redirect it gets a 200 from the final URL and URLSession only reports the final 200 code.
         let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
-        let client = URLSessionHTTPClient()
+        let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
         let loader = RemoteFeedLoader(url: testServerURL, client: client)
         trackForMemoryLeaks(client, file: file, line: line)
         trackForMemoryLeaks(loader, file: file, line: line)

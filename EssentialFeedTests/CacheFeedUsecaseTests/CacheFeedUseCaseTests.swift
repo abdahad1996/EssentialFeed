@@ -30,24 +30,23 @@ class LocalFeedStore{
     func save(items:[FeedItem],completion:@escaping (Error?) -> Void ){
         store.deleteCacheFeed {[weak self] error in
             guard let self = self else{return}
-            if error == nil{
+            
+            if let cacheDeletionError = error {
+                completion(cacheDeletionError)
+            }
+            else{
                 self.store.insert(items,timeStamp: self.currentTimeStamp(), completion: {[weak self] error in
                     guard let self = self else{return}
                     
-                    if error == nil {
-                        completion(nil)
-                    }else{
-                        completion(error)
-                    }
+                    completion(error)
+                    
                     
                 })
-            }else{
-                completion(error)
             }
         }
     }
     
-     
+    
     
 }
 class CacheFeedUseCaseTests:XCTestCase{
@@ -72,9 +71,9 @@ class CacheFeedUseCaseTests:XCTestCase{
         let deletionError = anyError()
         
         sut.save(items:items, completion: {_ in})
-
+        
         store.completeDeletion(with: deletionError)
-
+        
         XCTAssertEqual(store.receivedMessages, [.deleteCacheFeed])
         
     }
@@ -84,13 +83,13 @@ class CacheFeedUseCaseTests:XCTestCase{
         let date = Date()
         let (store,sut) = makeSut(currentTimeStamp: {date})
         let items = [uniqueItem()]
-       
+        
         sut.save(items:items, completion: {_ in})
         store.completeDeletionSuccessFully()
-       
-
+        
+        
         XCTAssertEqual(store.receivedMessages, [.deleteCacheFeed,.insert(items: items, timeStamp: date)])
-
+        
     }
     
     func test_save_failsOnDeletionError(){
@@ -98,15 +97,15 @@ class CacheFeedUseCaseTests:XCTestCase{
         let (store,sut) = makeSut(currentTimeStamp: {date})
         let items = [uniqueItem()]
         let deletionError = anyError()
-
-       
+        
+        
         expect(sut: sut, toCompleteWithError: deletionError, when: {
             store.completeDeletion(with: deletionError)
         })
-       
         
         
-                
+        
+        
     }
     
     func test_save_failsOnInsertionErrorOnSuccessfulDeletion(){
@@ -114,13 +113,13 @@ class CacheFeedUseCaseTests:XCTestCase{
         let (store,sut) = makeSut(currentTimeStamp: {date})
         let items = [uniqueItem()]
         let insertionError = anyError()
-
+        
         expect(sut: sut, toCompleteWithError: insertionError, when: {
             store.completeDeletionSuccessFully()
             store.completeInsertion(with: insertionError)
         })
-       
-                
+        
+        
     }
     
     func test_save_succeedsOnSuccessfulCacheInsertion(){
@@ -131,7 +130,7 @@ class CacheFeedUseCaseTests:XCTestCase{
             store.completeDeletionSuccessFully()
             store.completeInsertionSuccessfully()
         })
-       
+        
         
     }
     
@@ -169,7 +168,7 @@ class CacheFeedUseCaseTests:XCTestCase{
         store.completeDeletionSuccessFully()
         sut = nil
         store.completeInsertion(with: anyError())
-
+        
         
         XCTAssertTrue(receivedError.isEmpty)
         
@@ -212,12 +211,12 @@ class CacheFeedUseCaseTests:XCTestCase{
     class FeedStoreSpy:FeedStore{
         typealias deleteCompletion = (Error?) -> Void
         typealias insertCompletion = (Error?) -> Void
-
+        
         var deleteCacheFeedCallCount = 0
         
         var deletionCompletion = [deleteCompletion]()
         var insertionCompletion = [insertCompletion]()
-
+        
         
         enum ReceivedMessages:Equatable{
             case deleteCacheFeed
@@ -225,7 +224,7 @@ class CacheFeedUseCaseTests:XCTestCase{
         }
         
         var receivedMessages = [ReceivedMessages]()
-
+        
         func deleteCacheFeed(completion:@escaping (Error?) -> Void){
             deletionCompletion.append(completion)
             receivedMessages.append(.deleteCacheFeed)

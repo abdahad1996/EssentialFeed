@@ -27,6 +27,8 @@ class LocalFeedStore{
         self.currentTimeStamp = currentTimeStamp
     }
     
+   
+    
     func save(items:[FeedItem],completion:@escaping (Error?) -> Void ){
         store.deleteCacheFeed {[weak self] error in
             guard let self = self else{return}
@@ -35,15 +37,19 @@ class LocalFeedStore{
                 completion(cacheDeletionError)
             }
             else{
-                self.store.insert(items,timeStamp: self.currentTimeStamp(), completion: {[weak self] error in
-                    guard let self = self else{return}
-                    
-                    completion(error)
-                    
-                    
-                })
+               cache(items: items, with: completion)
             }
         }
+    }
+    
+    private func cache(items:[FeedItem],with completion:@escaping (Error?) -> Void ) {
+        self.store.insert(items,timeStamp: self.currentTimeStamp(), completion: {[weak self] error in
+            guard let self = self else{return}
+            
+            completion(error)
+            
+            
+        })
     }
     
     

@@ -59,7 +59,6 @@ class CacheFeedUseCaseTests:XCTestCase{
     func test_save_failsOnDeletionError(){
         let date = Date()
         let (store,sut) = makeSut(currentTimeStamp: {date})
-        let items = [uniqueItem()]
         let deletionError = anyError()
         
         
@@ -75,7 +74,6 @@ class CacheFeedUseCaseTests:XCTestCase{
     func test_save_failsOnInsertionErrorOnSuccessfulDeletion(){
         let date = Date()
         let (store,sut) = makeSut(currentTimeStamp: {date})
-        let items = [uniqueItem()]
         let insertionError = anyError()
         
         expect(sut: sut, toCompleteWithError: insertionError, when: {

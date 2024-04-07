@@ -34,7 +34,7 @@ public class LocalFeedStore{
     
     private func cache(items:[FeedItem],with completion:@escaping (Error?) -> Void ) {
         self.store.insert(items,timeStamp: self.currentTimeStamp(), completion: {[weak self] error in
-            guard let self = self else{return}
+            guard let _ = self else{return}
             
             completion(error)
             

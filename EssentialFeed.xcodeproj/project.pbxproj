@@ -24,6 +24,7 @@
 		6538F7062B6095E000421684 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545037182B407B4A00D914C3 /* XCTestCase+MemoryLeakTracking.swift */; };
 		65B17BA92BC0D4DB00290489 /* CacheFeedUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B17BA82BC0D4DB00290489 /* CacheFeedUseCaseTests.swift */; };
 		65E09E852BC2D2CE0051D5C8 /* LocalFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E09E842BC2D2CE0051D5C8 /* LocalFeedLoader.swift */; };
+		65E09E872BC2D37C0051D5C8 /* FeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E09E862BC2D37C0051D5C8 /* FeedStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,7 @@
 		6538F7072B609A5F00421684 /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
 		65B17BA82BC0D4DB00290489 /* CacheFeedUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheFeedUseCaseTests.swift; sourceTree = "<group>"; };
 		65E09E842BC2D2CE0051D5C8 /* LocalFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFeedLoader.swift; sourceTree = "<group>"; };
+		65E09E862BC2D37C0051D5C8 /* FeedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,6 +193,7 @@
 			isa = PBXGroup;
 			children = (
 				65E09E842BC2D2CE0051D5C8 /* LocalFeedLoader.swift */,
+				65E09E862BC2D37C0051D5C8 /* FeedStore.swift */,
 			);
 			path = "Feed Cache";
 			sourceTree = "<group>";
@@ -333,6 +336,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65E09E872BC2D37C0051D5C8 /* FeedStore.swift in Sources */,
 				54DB2B092B377932008ADABC /* HttpClient.swift in Sources */,
 				5409C4662B30ED6C00B7AFB6 /* RemoteFeedLoader.swift in Sources */,
 				54F8D4742B2EAC7D00C62D91 /* FeedLoader.swift in Sources */,

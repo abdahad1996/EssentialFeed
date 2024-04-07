@@ -52,8 +52,9 @@ class LocalFeedStore{
         self.currentTimeStamp = currentTimeStamp
     }
     
-    func save(items:[FeedItem]){
+    func save(items:[FeedItem],completion:@escaping (Error?) -> Void ){
         store.deleteCacheFeed {[unowned self] error in
+            completion(error)
             if error == nil{
                 self.store.insert(items,timeStamp: self.currentTimeStamp())
             }
@@ -74,7 +75,7 @@ class CacheFeedUseCaseTests:XCTestCase{
         
         let (store,sut) = makeSut()
         let items = [uniqueItem()]
-        sut.save(items:items)
+        sut.save(items:items, completion: {_ in})
         
         XCTAssertEqual(store.receivedMessages, [.deleteCacheFeed])
     }
@@ -84,8 +85,8 @@ class CacheFeedUseCaseTests:XCTestCase{
         let items = [uniqueItem()]
         let deletionError = anyError()
         
-        sut.save(items: items)
-        
+        sut.save(items:items, completion: {_ in})
+
         store.completeDeletion(with: deletionError)
 
         XCTAssertEqual(store.receivedMessages, [.deleteCacheFeed])
@@ -98,7 +99,7 @@ class CacheFeedUseCaseTests:XCTestCase{
         let (store,sut) = makeSut(currentTimeStamp: {date})
         let items = [uniqueItem()]
        
-        sut.save(items: items)
+        sut.save(items:items, completion: {_ in})
         store.completeDeletionSuccessFully()
        
 
@@ -106,6 +107,23 @@ class CacheFeedUseCaseTests:XCTestCase{
 
 
 
+    }
+    
+    func test_save_failsOnDeletionError(){
+        let date = Date()
+        let (store,sut) = makeSut(currentTimeStamp: {date})
+        let items = [uniqueItem()]
+        let deletionError = anyError()
+
+        var receievedError:NSError?
+        sut.save(items: items) { error in
+            receievedError = error as? NSError
+        }
+        
+        store.completeDeletion(with: deletionError)
+        
+        XCTAssertEqual(deletionError, receievedError)
+        
     }
     
     func makeSut(currentTimeStamp:@escaping () -> Date = Date.init,file:StaticString = #file, line:UInt = #line) -> (FeedStore,LocalFeedStore){

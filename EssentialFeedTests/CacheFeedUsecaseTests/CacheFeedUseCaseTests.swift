@@ -140,13 +140,13 @@ class CacheFeedUseCaseTests:XCTestCase{
     }
     
     func expect(sut:LocalFeedStore,toCompleteWithError expectedError:NSError?,when action:()->Void,file:StaticString = #file,line:UInt = #line){
-        var receievedError:NSError?
+        var receievedResults = [LocalFeedStore.saveResult]()
         sut.save(items: [uniqueItem()]) { error in
-            receievedError = error as? NSError
+            receievedResults.append(error)
         }
         
         action()
-        XCTAssertEqual(receievedError,expectedError)
+        XCTAssertEqual(receievedResults.map{$0 as NSError?},[expectedError])
     }
     
     func makeSut(currentTimeStamp:@escaping () -> Date = Date.init,file:StaticString = #file, line:UInt = #line) -> (FeedStoreSpy,LocalFeedStore){

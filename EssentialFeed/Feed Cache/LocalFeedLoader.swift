@@ -25,8 +25,8 @@ public class LocalFeedStore{
             case .failure(let error):
                 completion(.failure(error))
                 
-            default:
-                break
+            case .success(let _):
+                completion(.success([]))
             }
         }
     }

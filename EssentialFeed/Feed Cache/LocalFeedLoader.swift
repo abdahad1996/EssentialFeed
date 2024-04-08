@@ -18,6 +18,9 @@ public class LocalFeedStore{
         self.currentTimeStamp = currentTimeStamp
     }
     
+    public func load(){
+        store.retrieve()
+    }
     
     
     public func save(items:[FeedImage],completion:@escaping (saveResult) -> Void ){
@@ -33,12 +36,16 @@ public class LocalFeedStore{
         }
     }
     
+    
+    
     private func cache(items:[FeedImage],with completion:@escaping (saveResult) -> Void ) {
         self.store.insert(items.toLocal(),timeStamp: self.currentTimeStamp(), completion: {[weak self] error in
             guard let _ = self else{return}
             completion(error)
         })
     }
+    
+    
     
 }
 

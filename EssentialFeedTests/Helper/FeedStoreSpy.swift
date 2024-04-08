@@ -8,7 +8,9 @@
 import Foundation
 import EssentialFeed
 // Mark:Helper
- class FeedStoreSpy:FeedStore{
+class FeedStoreSpy:FeedStore{
+    
+    
     private var deletionCompletion = [deleteCompletion]()
     private var insertionCompletion = [insertCompletion]()
     private(set) var receivedMessages = [ReceivedMessages]()
@@ -16,6 +18,7 @@ import EssentialFeed
     enum ReceivedMessages:Equatable{
         case deleteCacheFeed
         case insert(items:[LocalFeedImage],timeStamp:Date)
+        case retrieve
     }
     
      func deleteCacheFeed(completion:@escaping deleteCompletion){
@@ -42,4 +45,10 @@ import EssentialFeed
         receivedMessages.append(.insert(items: items, timeStamp: timeStamp))
         insertionCompletion.append(completion)
     }
+     
+    
+    func retrieve() {
+        receivedMessages.append(.retrieve)
+    }
+     
 }

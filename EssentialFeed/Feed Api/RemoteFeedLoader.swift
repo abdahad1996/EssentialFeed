@@ -44,7 +44,7 @@ public class RemoteFeedLoader:FeedLoader{
             let remoteFeedItems =  try FeedItemsMapper.map(data, response)
             return .success(remoteFeedItems.toModels())
         }
-        catch (let error) {
+        catch (_) {
           return .failure(RemoteFeedLoader.Error.invalidData)
         }
      }

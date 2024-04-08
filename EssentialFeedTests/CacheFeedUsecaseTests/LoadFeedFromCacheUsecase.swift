@@ -32,49 +32,6 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
         return (store,localFeedStore)
     }
     
-    // Mark:Helper
-    class FeedStoreSpy:FeedStore{
-        typealias deleteCompletion = (Error?) -> Void
-        typealias insertCompletion = (Error?) -> Void
-        
-        var deleteCacheFeedCallCount = 0
-        
-        var deletionCompletion = [deleteCompletion]()
-        var insertionCompletion = [insertCompletion]()
-        
-        
-        enum ReceivedMessages:Equatable{
-            case deleteCacheFeed
-            case insert(items:[LocalFeedImage],timeStamp:Date)
-        }
-        
-        var receivedMessages = [ReceivedMessages]()
-        
-        func deleteCacheFeed(completion:@escaping (Error?) -> Void){
-            deletionCompletion.append(completion)
-            receivedMessages.append(.deleteCacheFeed)
-        }
-        
-        func completeDeletion(with error:Error,at index:Int = 0){
-            deletionCompletion[index](error)
-        }
-        
-        func completeDeletionSuccessFully(at index:Int = 0){
-            deletionCompletion[index](nil)
-        }
-        
-        func completeInsertion(with error:Error, at index:Int = 0){
-            insertionCompletion[index](error)
-        }
-        func completeInsertionSuccessfully(at index: Int = 0){
-            insertionCompletion[index](nil)
-        }
-        
-        func insert(_ items:[LocalFeedImage],timeStamp:Date,completion:@escaping (Error?) -> Void){
-            receivedMessages.append(.insert(items: items, timeStamp: timeStamp))
-            insertionCompletion.append(completion)
-        }
-    }
     
     
     

@@ -12,14 +12,15 @@ public class LocalFeedStore{
     private let currentTimeStamp:() -> Date
     
     public typealias saveResult = Error?
-    
+    public typealias loadResult = Error?
+
     public init(store: FeedStore,currentTimeStamp:@escaping () -> Date) {
         self.store = store
         self.currentTimeStamp = currentTimeStamp
     }
     
-    public func load(){
-        store.retrieve()
+    public func load(completion: @escaping (loadResult)-> Void){
+        store.retrieve(completion: completion)
     }
     
     

@@ -9,10 +9,9 @@ import Foundation
 import EssentialFeed
 // Mark:Helper
 class FeedStoreSpy:FeedStore{
-    
-    
     private var deletionCompletion = [deleteCompletion]()
     private var insertionCompletion = [insertCompletion]()
+    private var retrievalCompletion = [retrieveCompletion]()
     private(set) var receivedMessages = [ReceivedMessages]()
     
     enum ReceivedMessages:Equatable{
@@ -47,8 +46,13 @@ class FeedStoreSpy:FeedStore{
     }
      
     
-    func retrieve() {
+    func retrieve(completion:@escaping retrieveCompletion) {
         receivedMessages.append(.retrieve)
+        retrievalCompletion.append(completion)
+    }
+    
+    func completeRetrieval(with error:Error, at index:Int = 0){
+        retrievalCompletion[index](error)
     }
      
 }

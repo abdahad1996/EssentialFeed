@@ -20,9 +20,23 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
     func test_load_requestsCacheRetrieval(){
         let (store,sut) = makeSut()
         
-        sut.load()
+        sut.load{_ in}
         
         XCTAssertEqual(store.receivedMessages, [.retrieve])
+    }
+    
+    func test_load_failsOnRetrievalError(){
+        let (store,sut) = makeSut()
+        let retrievalError = anyError()
+        
+        var receivedErrors = [Error?]()
+        sut.load { receivedError in
+            receivedErrors.append(receivedError)
+        }
+        
+        store.completeRetrieval(with:retrievalError)
+        
+        XCTAssertEqual(receivedErrors.map{$0 as NSError?}, [retrievalError])
     }
     
     func makeSut(
@@ -40,7 +54,9 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
         return (store,localFeedStore)
     }
     
-    
+    func anyError() -> NSError {
+        return NSError(domain: "any error", code: 0, userInfo: nil)
+    }
     
     
 }

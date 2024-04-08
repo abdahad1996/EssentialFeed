@@ -195,4 +195,5 @@ class CacheFeedUseCaseTests:XCTestCase{
         return NSError(domain: "any error", code: 0, userInfo: nil)
     }
     
+
 }

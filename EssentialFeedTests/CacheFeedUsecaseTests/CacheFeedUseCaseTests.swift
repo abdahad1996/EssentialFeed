@@ -49,7 +49,6 @@ class CacheFeedUseCaseTests:XCTestCase{
         let items = uniqueImages()
         
         
-        let receivedItems = [LocalFeedImage]()
         sut.save(items:items.models, completion: {_ in})
         store.completeDeletionSuccessFully()
         

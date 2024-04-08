@@ -143,12 +143,16 @@ class CacheFeedUseCaseTests:XCTestCase{
     
     func expect(sut:LocalFeedStore,toCompleteWithError expectedError:NSError?,when action:()->Void,file:StaticString = #file,line:UInt = #line){
         var receievedResults = [LocalFeedStore.saveResult]()
+        let expectation = expectation(description: "wait for save completion")
+        
         sut.save(items: [uniqueItem()]) { error in
             receievedResults.append(error)
+            expectation.fulfill()
         }
         
         action()
         XCTAssertEqual(receievedResults.map{$0 as NSError?},[expectedError])
+        wait(for: [expectation],timeout: 0.1)
     }
     
     func makeSut(currentTimeStamp:@escaping () -> Date = Date.init,file:StaticString = #file, line:UInt = #line) -> (FeedStoreSpy,LocalFeedStore){

@@ -23,7 +23,7 @@ class CacheFeedUseCaseTests:XCTestCase{
     func test_save_requestsCacheDeletion(){
         
         let (store,sut) = makeSut()
-        let items = uniqueItems()
+        let items = uniqueImages()
         sut.save(items:items.models, completion: {_ in})
         
         XCTAssertEqual(store.receivedMessages, [.deleteCacheFeed])
@@ -31,7 +31,7 @@ class CacheFeedUseCaseTests:XCTestCase{
     
     func test_save_doesNotRequestCacheInsertionOnDeletionError(){
         let (store,sut) = makeSut()
-        let items = uniqueItems()
+        let items = uniqueImages()
         let deletionError = anyError()
         
         sut.save(items:items.models, completion: {_ in})
@@ -46,10 +46,10 @@ class CacheFeedUseCaseTests:XCTestCase{
     func test_save_requestsNewCacheWithTimeStampInsertionOnSuccessfulDeletion(){
         let date = Date()
         let (store,sut) = makeSut(currentTimeStamp: {date})
-        let items = uniqueItems()
+        let items = uniqueImages()
         
         
-        let receivedItems = [LocalFeedItem]()
+        let receivedItems = [LocalFeedImage]()
         sut.save(items:items.models, completion: {_ in})
         store.completeDeletionSuccessFully()
         
@@ -102,7 +102,7 @@ class CacheFeedUseCaseTests:XCTestCase{
         var sut:LocalFeedStore?
         let store = FeedStoreSpy()
         sut = LocalFeedStore(store:store, currentTimeStamp:  Date.init)
-        let items = uniqueItems()
+        let items = uniqueImages()
         
         var receivedError = [LocalFeedStore.saveResult]()
         sut?.save(items: items.models, completion: { error in
@@ -124,7 +124,7 @@ class CacheFeedUseCaseTests:XCTestCase{
         let store = FeedStoreSpy()
         sut = LocalFeedStore(store:store, currentTimeStamp:  Date.init)
         
-        let items = uniqueItems()
+        let items = uniqueImages()
         var receivedError = [LocalFeedStore.saveResult]()
         
         sut?.save(items:items.models , completion: { error in
@@ -149,7 +149,7 @@ class CacheFeedUseCaseTests:XCTestCase{
         var receievedResults = [LocalFeedStore.saveResult]()
         let expectation = expectation(description: "wait for save completion")
         
-        sut.save(items: [uniqueItem()]) { error in
+        sut.save(items: [uniqueImage()]) { error in
             receievedResults.append(error)
             expectation.fulfill()
         }
@@ -174,16 +174,16 @@ class CacheFeedUseCaseTests:XCTestCase{
         return (store,localFeedStore)
     }
     
-    private func uniqueItem() -> FeedItem{
-        return FeedItem(id: UUID(), description: "any", location: "any", imageURL: anyUrl())
+    private func uniqueImage() -> FeedImage{
+        return FeedImage(id: UUID(), description: "any", location: "any", imageURL: anyUrl())
     }
     
-    private func uniqueItems() -> (
-        models:[FeedItem],
-        local:[LocalFeedItem]
+    private func uniqueImages() -> (
+        models:[FeedImage],
+        local:[LocalFeedImage]
     ){
-        let models = [uniqueItem(),uniqueItem()]
-        let local = models.map{LocalFeedItem(id: $0.id,description: $0.description,location: $0.location, imageURL: $0.imageURL)}
+        let models = [uniqueImage(),uniqueImage()]
+        let local = models.map{LocalFeedImage(id: $0.id,description: $0.description,location: $0.location, imageURL: $0.url)}
         
         return (models,local)
     }
@@ -209,7 +209,7 @@ class CacheFeedUseCaseTests:XCTestCase{
         
         enum ReceivedMessages:Equatable{
             case deleteCacheFeed
-            case insert(items:[LocalFeedItem],timeStamp:Date)
+            case insert(items:[LocalFeedImage],timeStamp:Date)
         }
         
         var receivedMessages = [ReceivedMessages]()
@@ -234,7 +234,7 @@ class CacheFeedUseCaseTests:XCTestCase{
             insertionCompletion[index](nil)
         }
         
-        func insert(_ items:[LocalFeedItem],timeStamp:Date,completion:@escaping (Error?) -> Void){
+        func insert(_ items:[LocalFeedImage],timeStamp:Date,completion:@escaping (Error?) -> Void){
             receivedMessages.append(.insert(items: items, timeStamp: timeStamp))
             insertionCompletion.append(completion)
         }

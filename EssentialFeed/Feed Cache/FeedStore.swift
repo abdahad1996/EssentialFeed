@@ -10,7 +10,7 @@ import Foundation
 public protocol FeedStore{
     typealias deleteCompletion = (LocalFeedStore.saveResult) -> Void
     typealias insertCompletion = (LocalFeedStore.saveResult) -> Void
-    typealias retrieveCompletion = (LocalFeedStore.saveResult) -> Void
+    typealias retrieveCompletion = (LocalFeedStore.loadResult) -> Void
     
     func deleteCacheFeed(
         completion:@escaping deleteCompletion)

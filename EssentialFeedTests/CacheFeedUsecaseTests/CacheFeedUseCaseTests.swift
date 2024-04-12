@@ -10,9 +10,6 @@ import XCTest
 import EssentialFeed
 
 
-
-
-
 class CacheFeedUseCaseTests:XCTestCase{
     func test_init_doesNotMessageStoreUponCreation(){
         let (store,_) = makeSut()
@@ -66,8 +63,6 @@ class CacheFeedUseCaseTests:XCTestCase{
         expect(sut: sut, toCompleteWithError: deletionError, when: {
             store.completeDeletion(with: deletionError)
         })
-        
-        
         
         
     }
@@ -131,16 +126,11 @@ class CacheFeedUseCaseTests:XCTestCase{
             
         })
         
-        
         store.completeDeletionSuccessFully()
         sut = nil
         store.completeInsertion(with: anyError())
         
-        
         XCTAssertTrue(receivedError.isEmpty)
-        
-        
-        
         
     }
     
@@ -194,6 +184,5 @@ class CacheFeedUseCaseTests:XCTestCase{
     func anyError() -> NSError {
         return NSError(domain: "any error", code: 0, userInfo: nil)
     }
-    
 
 }

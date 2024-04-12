@@ -20,14 +20,17 @@ public class LocalFeedStore{
     }
     
     public func load(completion: @escaping (loadResult)-> Void){
-        store.retrieve { loadResult in
-            switch loadResult {
-            case .failure(let error):
-                completion(.failure(error))
-                
-            case .success(let _):
+        store.retrieve { retrieveResult in
+            switch retrieveResult {
+            case .empty:
                 completion(.success([]))
+            case let .found(localImages,timeStamp):
+                completion(.success(localImages.toDomain()))
+
+            case let .failure(error):
+                completion(.failure(error))
             }
+             
         }
     }
     
@@ -61,6 +64,12 @@ public class LocalFeedStore{
 private extension Array where Element == FeedImage{
     func toLocal() -> [LocalFeedImage] {
         return map{LocalFeedImage(id: $0.id,description:$0.description,location:$0.location ,imageURL: $0.url)}
+    }
+}
+
+private extension Array where Element == LocalFeedImage{
+    func toDomain() -> [FeedImage] {
+        return map{FeedImage(id: $0.id, description: $0.description, location:  $0.location, imageURL: $0.url)}
     }
 }
 

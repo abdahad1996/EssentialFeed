@@ -30,7 +30,7 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
         let retrievalError = anyError()
 
         expect(sut: sut, completeWith:.failure(retrievalError)) {
-            store.completeRetrieval(with:.failure(retrievalError))
+            store.completeRetrieval(with: retrievalError)
         }
     }
     
@@ -38,7 +38,20 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
         
         let (store,sut) = makeSut()
         expect(sut: sut, completeWith:.success([])) {
-            store.completeRetrieval(with: .success([]))
+            store.completeRetrievalWithEmptyCache()
+        }
+    }
+    
+    func test_load_deliversCachedImagesOnLessThanSevenDaysOldCache() {
+        let fixedDate = Date()
+        let feedImages = uniqueImages()
+        let lessThanSevenDaysOldTimeStamp = fixedDate.adding(days:-7).adding(seconds:-1)
+        
+        let (store,sut) = makeSut(currentTimeStamp: {fixedDate})
+        
+        expect(sut: sut, completeWith: .success(feedImages.models)) {
+            store.completeRetrieval(with: feedImages.local, timeStamp: lessThanSevenDaysOldTimeStamp)
+            
         }
     }
     
@@ -62,8 +75,8 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
         let exp = expectation(description: "wait for completion")
         sut.load { receivedResult in
             switch (receivedResult,expectedResult) {
-            case let (.success(receivedImages), .success(expectedResult)):
-                XCTAssertEqual(receivedImages, [],file:file,line: line)
+            case let (.success(receivedImages), .success(expectedImages)):
+                XCTAssertEqual(receivedImages, expectedImages,file:file,line: line)
                 
             case let (.failure(receivedError as NSError), .failure(expectedError as NSError)) :
             XCTAssertEqual(receivedError, expectedError,file:file,line: line)
@@ -85,5 +98,31 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
         return NSError(domain: "any error", code: 0, userInfo: nil)
     }
     
+    private func uniqueImage() -> FeedImage{
+        return FeedImage(id: UUID(), description: "any", location: "any", imageURL: anyUrl())
+    }
     
+    private func uniqueImages() -> (
+        models:[FeedImage],
+        local:[LocalFeedImage]
+    ){
+        let models = [uniqueImage(),uniqueImage()]
+        let local = models.map{LocalFeedImage(id: $0.id,description: $0.description,location: $0.location, imageURL: $0.url)}
+        
+        return (models,local)
+    }
+    
+    func anyUrl() -> URL {
+        return URL(string: "http://any-url.com")!
+    }
+    
+}
+
+private extension Date{
+    func adding(days:Int) -> Self {
+        return Calendar(identifier: .gregorian).date(byAdding: .day,value: days,to: self)!
+    }
+    func adding(seconds:TimeInterval) -> Self {
+        return self + seconds
+    }
 }

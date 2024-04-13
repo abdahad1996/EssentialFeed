@@ -24,6 +24,7 @@ public class LocalFeedStore{
         store.retrieve { [unowned self] retrieveResult in
             switch retrieveResult {
             case let .failure(error):
+                store.deleteCacheFeed{_ in}
                 completion(.failure(error))
                 
             case let .found(localImages,timeStamp) where self.validateCache(timeStamp):

@@ -10,7 +10,8 @@ import Foundation
 public class LocalFeedStore{
     private let store:FeedStore
     private let currentTimeStamp:() -> Date
-    
+    private let calendar = Calendar(identifier: .gregorian)
+
     public typealias saveResult = Error?
     public typealias loadResult = LoadFeedResult
 
@@ -22,23 +23,28 @@ public class LocalFeedStore{
     public func load(completion: @escaping (loadResult)-> Void){
         store.retrieve { [unowned self] retrieveResult in
             switch retrieveResult {
-            case .empty,.found:
-                completion(.success([]))
-            
+            case let .failure(error):
+                completion(.failure(error))
+                
             case let .found(localImages,timeStamp) where self.validateCache(timeStamp):
                 completion(.success(localImages.toDomain()))
 
             
-            case let .failure(error):
-                completion(.failure(error))
+            case .empty,.found:
+                completion(.success([]))
+            
+           
             }
              
         }
     }
     
+    
+    private var maxCacheAgeInDays:Int {
+        return 7
+    }
     private func validateCache(_ timeStamp:Date) -> Bool{
-        let calendar = Calendar(identifier: .gregorian)
-        guard let maxCacheAge = calendar.date(byAdding: .day, value: 7, to: timeStamp) else {
+        guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timeStamp) else {
             return false
         }
         print(currentTimeStamp() < maxCacheAge)

@@ -142,6 +142,24 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
 
         
     }
+    
+    func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
+        var store = FeedStoreSpy()
+        var sut:LocalFeedStore? = LocalFeedStore(store: store, currentTimeStamp: Date.init)
+        
+        var receivedResult = [LocalFeedStore.loadResult]()
+        
+        sut?.load(completion: { result in
+            receivedResult.append(result)
+        })
+        sut = nil
+        
+        store.completeRetrievalWithEmptyCache()
+        
+        XCTAssertTrue(receivedResult.isEmpty)
+        
+        
+    }
     func makeSut(
         currentTimeStamp:@escaping () -> Date = Date.init,
         file:StaticString = #file,

@@ -20,13 +20,15 @@ public class LocalFeedStore{
     }
     
     public func load(completion: @escaping (loadResult)-> Void){
-        store.retrieve { retrieveResult in
+        store.retrieve { [unowned self] retrieveResult in
             switch retrieveResult {
-            case .empty:
+            case .empty,.found:
                 completion(.success([]))
-            case let .found(localImages,timeStamp):
+            
+            case let .found(localImages,timeStamp) where self.validateCache(timeStamp):
                 completion(.success(localImages.toDomain()))
 
+            
             case let .failure(error):
                 completion(.failure(error))
             }
@@ -34,7 +36,17 @@ public class LocalFeedStore{
         }
     }
     
-    
+    private func validateCache(_ timeStamp:Date) -> Bool{
+        let calendar = Calendar(identifier: .gregorian)
+        guard let maxCacheAge = calendar.date(byAdding: .day, value: 7, to: timeStamp) else {
+            return false
+        }
+        print(currentTimeStamp() < maxCacheAge)
+        print(currentTimeStamp())
+        print(maxCacheAge)
+
+        return currentTimeStamp() < maxCacheAge
+    }
     public func save(items:[FeedImage],completion:@escaping (saveResult) -> Void ){
         store.deleteCacheFeed {[weak self] error in
             guard let self = self else{return}

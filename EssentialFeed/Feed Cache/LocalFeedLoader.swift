@@ -30,8 +30,11 @@ public class LocalFeedStore{
             case let .found(localImages,timeStamp) where self.validateCache(timeStamp):
                 completion(.success(localImages.toDomain()))
 
-            
-            case .empty,.found:
+            case .empty:
+                completion(.success([]))
+                
+            case .found:
+                store.deleteCacheFeed{_ in}
                 completion(.success([]))
             
            

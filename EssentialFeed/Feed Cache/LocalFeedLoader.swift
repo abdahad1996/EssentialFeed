@@ -10,25 +10,18 @@ import Foundation
 private final class CachePolicy {
     
     private let calendar = Calendar(identifier: .gregorian)
-    private let currentTimeStamp:() -> Date
 
     private var maxCacheAgeInDays:Int {
         return 7
     }
-    
-    init(currentTimeStamp: @escaping () -> Date) {
-        self.currentTimeStamp = currentTimeStamp
-    }
-    
-     func validateCache(_ timeStamp:Date) -> Bool{
+
+    func validateCache(_ timeStamp:Date,against date:Date) -> Bool{
         guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timeStamp) else {
             return false
         }
-        print(currentTimeStamp() < maxCacheAge)
-        print(currentTimeStamp())
-        print(maxCacheAge)
+      
 
-        return currentTimeStamp() < maxCacheAge
+        return date < maxCacheAge
     }
 }
 
@@ -37,13 +30,12 @@ public class LocalFeedStore{
 
     public typealias saveResult = Error?
     public typealias loadResult = LoadFeedResult
-    private let cachePolicy : CachePolicy
+    private let cachePolicy : CachePolicy = CachePolicy()
     let currentTimeStamp:() -> Date
 
 
-    public init(store: FeedStore, currentTimeStamp: @escaping () -> Date) {
+    public init(store: FeedStore,currentTimeStamp: @escaping () -> Date) {
         self.store = store
-        self.cachePolicy = CachePolicy(currentTimeStamp: currentTimeStamp)
         self.currentTimeStamp = currentTimeStamp
     }
     
@@ -55,7 +47,7 @@ public class LocalFeedStore{
                 store.deleteCacheFeed{_ in}
                 completion(.failure(error))
                 
-            case let .found(localImages,timeStamp) where cachePolicy.validateCache(timeStamp):
+            case let .found(localImages,timeStamp) where cachePolicy.validateCache(timeStamp, against: currentTimeStamp()):
                 completion(.success(localImages.toDomain()))
 
             case .empty:

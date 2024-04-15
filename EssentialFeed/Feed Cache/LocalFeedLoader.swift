@@ -27,7 +27,7 @@ public class LocalFeedStore:FeedLoader{
                 store.deleteCacheFeed{_ in}
             case let .found(_,timeStamp) where !CachePolicy.validateCache(timeStamp, against: currentTimeStamp()):
                 self.store.deleteCacheFeed{_ in}
-            default: break
+             default: break
             }
             
         }
@@ -78,7 +78,7 @@ extension LocalFeedStore {
     
     private func cache(items:[FeedImage],with completion:@escaping (saveResult) -> Void ) {
         self.store.insert(items.toLocal(),timeStamp: currentTimeStamp(), completion: {[weak self] error in
-            guard let self = self else{return}
+            guard let _ = self else{return}
             completion(error)
         })
     }

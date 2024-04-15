@@ -9,11 +9,11 @@ import Foundation
 import XCTest
 import EssentialFeed
 
- func uniqueImage() -> FeedImage{
+func uniqueImage() -> FeedImage{
     return FeedImage(id: UUID(), description: "any", location: "any", imageURL: anyUrl())
 }
 
- func uniqueImages() -> (
+func uniqueImages() -> (
     models:[FeedImage],
     local:[LocalFeedImage]
 ){
@@ -31,7 +31,11 @@ func anyError() -> NSError {
     return NSError(domain: "any error", code: 0, userInfo: nil)
 }
 
- extension Date{
+extension Date{
+    
+    func minusFeedCacheMaxAge() -> Date {
+        return adding(days: -7)
+    }
     func adding(days:Int) -> Self {
         return Calendar(identifier: .gregorian).date(byAdding: .day,value: days,to: self)!
     }

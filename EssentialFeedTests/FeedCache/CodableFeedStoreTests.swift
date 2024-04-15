@@ -26,11 +26,11 @@ class CodableFeedStore {
         public let url: URL
         
         init(_ image: LocalFeedImage) {
-                    id = image.id
-                    description = image.description
-                    location = image.location
-                    url = image.url
-                }
+            id = image.id
+            description = image.description
+            location = image.location
+            url = image.url
+        }
         
         var local:LocalFeedImage{
             return LocalFeedImage(id: id,description: description,location: location, imageURL: url)
@@ -47,7 +47,7 @@ class CodableFeedStore {
         let decoder = JSONDecoder()
         let cache = try! decoder.decode(Cache.self, from: data)
         completion(.found(feed: cache.localFeed, timeStamp: cache.timeStamp))
-       
+        
     }
     
     func insert(_ items:[LocalFeedImage],timeStamp:Date,completion:@escaping FeedStore.insertCompletion){
@@ -61,17 +61,18 @@ class CodableFeedStore {
 class CodableFeedStoreTest:XCTestCase{
     
     override func setUp() {
-            super.setUp()
-
-           
-            try? FileManager.default.removeItem(at: testSpecificStoreURL())
-        }
-
-        override func tearDown() {
-            super.tearDown()
-
-            try? FileManager.default.removeItem(at: testSpecificStoreURL())
-        }
+        super.setUp()
+        
+        setUpEmptyStoreState()
+    }
+    
+    
+    
+    override func tearDown() {
+        super.tearDown()
+        
+        undoStoreArtifact()
+    }
     func test_retrieve_deliversEmptyCacheOnEmptyCache(){
         let sut = makeSUT()
         
@@ -100,7 +101,7 @@ class CodableFeedStoreTest:XCTestCase{
                     break
                 default:
                     XCTFail("Expected retrieving twice from empty cache to deliver same empty result, got \(firstResult) and \(secondResult) instead")
-
+                    
                 }
                 exp.fulfill()
             }
@@ -125,7 +126,7 @@ class CodableFeedStoreTest:XCTestCase{
                 case let .found(retrievedItems,retrievedTimeStamp):
                     XCTAssertEqual(insertedItems, retrievedItems)
                     XCTAssertEqual(insertedTimeStamp, retrievedTimeStamp)
-
+                    
                 default:
                     XCTFail("expected found result with \(insertedItems), \(insertedTimeStamp) but got \(retrievedResult) instead")
                     
@@ -138,13 +139,26 @@ class CodableFeedStoreTest:XCTestCase{
     }
     
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> CodableFeedStore {
-            let sut = CodableFeedStore(storeURL: testSpecificStoreURL())
-            trackForMemoryLeaks(sut, file: file, line: line)
-            return sut
-        }
+        let sut = CodableFeedStore(storeURL: testSpecificStoreURL())
+        trackForMemoryLeaks(sut, file: file, line: line)
+        return sut
+    }
     
     
     private func testSpecificStoreURL() -> URL {
         return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("\(type(of:self)).store")
     }
+    
+    private func setUpEmptyStoreState() {
+        deleteStoreArtifact()
+    }
+    
+    private func undoStoreArtifact() {
+        deleteStoreArtifact()
+    }
+    
+    func deleteStoreArtifact() {
+        try? FileManager.default.removeItem(at: testSpecificStoreURL())
+    }
+    
 }

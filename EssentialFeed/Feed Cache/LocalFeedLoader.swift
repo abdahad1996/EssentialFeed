@@ -10,8 +10,6 @@ import Foundation
 public class LocalFeedStore:FeedLoader{
     private let store:FeedStore
 
-    public typealias saveResult = Error?
-    public typealias loadResult = LoadFeedResult
     let currentTimeStamp:() -> Date
 
 
@@ -19,6 +17,27 @@ public class LocalFeedStore:FeedLoader{
         self.store = store
         self.currentTimeStamp = currentTimeStamp
     }
+    
+    
+    public func validateCache(){
+        store.retrieve {[weak self] result in
+            guard let self = self else{return}
+            switch result {
+            case .failure:
+                store.deleteCacheFeed{_ in}
+            case let .found(_,timeStamp) where !CachePolicy.validateCache(timeStamp, against: currentTimeStamp()):
+                self.store.deleteCacheFeed{_ in}
+            default: break
+            }
+            
+        }
+         
+    }
+    
+}
+
+extension LocalFeedStore {
+    public typealias loadResult = LoadFeedResult
     
     public func load(completion: @escaping (loadResult)-> Void){
         store.retrieve { [weak self] retrieveResult in
@@ -37,7 +56,12 @@ public class LocalFeedStore:FeedLoader{
              
         }
     }
-   
+
+}
+
+extension LocalFeedStore {
+    public typealias saveResult = Error?
+
     public func save(items:[FeedImage],completion:@escaping (saveResult) -> Void ){
         store.deleteCacheFeed {[weak self] error in
             guard let self = self else{return}
@@ -59,22 +83,9 @@ public class LocalFeedStore:FeedLoader{
         })
     }
     
-    public func validateCache(){
-        store.retrieve {[weak self] result in
-            guard let self = self else{return}
-            switch result {
-            case .failure:
-                store.deleteCacheFeed{_ in}
-            case let .found(_,timeStamp) where !CachePolicy.validateCache(timeStamp, against: currentTimeStamp()):
-                self.store.deleteCacheFeed{_ in}
-            default: break
-            }
-            
-        }
-         
-    }
     
 }
+
 
 private extension Array where Element == FeedImage{
     func toLocal() -> [LocalFeedImage] {

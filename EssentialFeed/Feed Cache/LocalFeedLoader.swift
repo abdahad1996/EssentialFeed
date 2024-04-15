@@ -25,7 +25,6 @@ public class LocalFeedStore{
             guard let self = self else {return}
             switch retrieveResult {
             case let .failure(error):
-//                store.deleteCacheFeed{_ in}
                 completion(.failure(error))
                 
             case let .found(localImages,timeStamp) where CachePolicy.validateCache(timeStamp, against: currentTimeStamp()):
@@ -66,8 +65,15 @@ public class LocalFeedStore{
     }
     
     public func validateCache(){
-        store.retrieve{_ in}
-        store.deleteCacheFeed{_ in}
+        store.retrieve {[unowned self] result in
+            switch result {
+            case .failure(let error):
+                store.deleteCacheFeed{_ in}
+            default: break
+            }
+            
+        }
+         
     }
     
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class LocalFeedStore{
+public class LocalFeedStore:FeedLoader{
     private let store:FeedStore
 
     public typealias saveResult = Error?
@@ -54,7 +54,7 @@ public class LocalFeedStore{
     
     private func cache(items:[FeedImage],with completion:@escaping (saveResult) -> Void ) {
         self.store.insert(items.toLocal(),timeStamp: currentTimeStamp(), completion: {[weak self] error in
-            guard let _ = self else{return}
+            guard let self = self else{return}
             completion(error)
         })
     }

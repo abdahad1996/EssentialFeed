@@ -34,14 +34,12 @@ public class LocalFeedStore{
                 completion(.success([]))
                 
             case .found:
-                store.deleteCacheFeed{_ in}
                 completion(.success([]))
             
             }
              
         }
     }
-    
    
     public func save(items:[FeedImage],completion:@escaping (saveResult) -> Void ){
         store.deleteCacheFeed {[weak self] error in
@@ -67,8 +65,10 @@ public class LocalFeedStore{
     public func validateCache(){
         store.retrieve {[unowned self] result in
             switch result {
-            case .failure(let error):
+            case .failure:
                 store.deleteCacheFeed{_ in}
+            case let .found(_,timeStamp) where !CachePolicy.validateCache(timeStamp, against: currentTimeStamp()):
+                self.store.deleteCacheFeed{_ in}
             default: break
             }
             

@@ -9,13 +9,13 @@ import Foundation
 
 private final class CachePolicy {
     
-    private let calendar = Calendar(identifier: .gregorian)
+    private static let calendar = Calendar(identifier: .gregorian)
 
-    private var maxCacheAgeInDays:Int {
+    private static var maxCacheAgeInDays:Int {
         return 7
     }
 
-    func validateCache(_ timeStamp:Date,against date:Date) -> Bool{
+   static func validateCache(_ timeStamp:Date,against date:Date) -> Bool{
         guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timeStamp) else {
             return false
         }
@@ -30,7 +30,6 @@ public class LocalFeedStore{
 
     public typealias saveResult = Error?
     public typealias loadResult = LoadFeedResult
-    private let cachePolicy : CachePolicy = CachePolicy()
     let currentTimeStamp:() -> Date
 
 
@@ -47,7 +46,7 @@ public class LocalFeedStore{
                 store.deleteCacheFeed{_ in}
                 completion(.failure(error))
                 
-            case let .found(localImages,timeStamp) where cachePolicy.validateCache(timeStamp, against: currentTimeStamp()):
+            case let .found(localImages,timeStamp) where CachePolicy.validateCache(timeStamp, against: currentTimeStamp()):
                 completion(.success(localImages.toDomain()))
 
             case .empty:

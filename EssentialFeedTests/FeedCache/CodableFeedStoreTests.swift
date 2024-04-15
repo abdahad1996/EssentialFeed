@@ -71,7 +71,7 @@ class CodableFeedStoreTest:XCTestCase{
             try? FileManager.default.removeItem(at: storeURL)
         }
     func test_retrieve_deliversEmptyCacheOnEmptyCache(){
-        let sut = CodableFeedStore()
+        let sut = makeSut()
         
         let exp = expectation(description: "wait for completion")
         sut.retrieve{ result in
@@ -88,7 +88,7 @@ class CodableFeedStoreTest:XCTestCase{
     }
     
     func test_retrieveTwice_hasNoSideEffectOnEmptyCache(){
-        let sut = CodableFeedStore()
+        let sut = makeSut()
         
         let exp = expectation(description: "wait for completion")
         sut.retrieve{ firstResult in
@@ -111,7 +111,7 @@ class CodableFeedStoreTest:XCTestCase{
     
     func test_retrieveAfterInsertingToEmptyCache_deliversInsertedValues() {
         
-        let sut = CodableFeedStore()
+        let sut = makeSut()
         let insertedItems = uniqueImages().local
         let insertedTimeStamp = Date()
         let exp = expectation(description: "wait for completion")
@@ -131,21 +131,12 @@ class CodableFeedStoreTest:XCTestCase{
             }
             exp.fulfill()
         }
-//        sut.insert{ firstResult in
-//            sut.retrieve{ secondResult in
-//                switch (firstResult,secondResult) {
-//                case (.empty,.empty):
-//                    break
-//                default:
-//                    XCTFail("Expected retrieving twice from empty cache to deliver same empty result, got \(firstResult) and \(secondResult) instead")
-//
-//                }
-//                exp.fulfill()
-//            }
-//            
-//        }
         
         wait(for: [exp],timeout: 0.1)
     }
     
+    private func makeSut() -> CodableFeedStore{
+        let sut = CodableFeedStore()
+        return sut
+    }
 }

@@ -7,16 +7,43 @@
 
 import Foundation
 
+private final class CachePolicy {
+    
+    private let calendar = Calendar(identifier: .gregorian)
+    private let currentTimeStamp:() -> Date
+
+    private var maxCacheAgeInDays:Int {
+        return 7
+    }
+    
+    init(currentTimeStamp: @escaping () -> Date) {
+        self.currentTimeStamp = currentTimeStamp
+    }
+    
+     func validateCache(_ timeStamp:Date) -> Bool{
+        guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timeStamp) else {
+            return false
+        }
+        print(currentTimeStamp() < maxCacheAge)
+        print(currentTimeStamp())
+        print(maxCacheAge)
+
+        return currentTimeStamp() < maxCacheAge
+    }
+}
+
 public class LocalFeedStore{
     private let store:FeedStore
-    private let currentTimeStamp:() -> Date
-    private let calendar = Calendar(identifier: .gregorian)
 
     public typealias saveResult = Error?
     public typealias loadResult = LoadFeedResult
+    private let cachePolicy : CachePolicy
+    let currentTimeStamp:() -> Date
 
-    public init(store: FeedStore,currentTimeStamp:@escaping () -> Date) {
+
+    public init(store: FeedStore, currentTimeStamp: @escaping () -> Date) {
         self.store = store
+        self.cachePolicy = CachePolicy(currentTimeStamp: currentTimeStamp)
         self.currentTimeStamp = currentTimeStamp
     }
     
@@ -28,7 +55,7 @@ public class LocalFeedStore{
                 store.deleteCacheFeed{_ in}
                 completion(.failure(error))
                 
-            case let .found(localImages,timeStamp) where self.validateCache(timeStamp):
+            case let .found(localImages,timeStamp) where cachePolicy.validateCache(timeStamp):
                 completion(.success(localImages.toDomain()))
 
             case .empty:
@@ -45,19 +72,7 @@ public class LocalFeedStore{
     }
     
     
-    private var maxCacheAgeInDays:Int {
-        return 7
-    }
-    private func validateCache(_ timeStamp:Date) -> Bool{
-        guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timeStamp) else {
-            return false
-        }
-        print(currentTimeStamp() < maxCacheAge)
-        print(currentTimeStamp())
-        print(maxCacheAge)
-
-        return currentTimeStamp() < maxCacheAge
-    }
+   
     public func save(items:[FeedImage],completion:@escaping (saveResult) -> Void ){
         store.deleteCacheFeed {[weak self] error in
             guard let self = self else{return}
@@ -74,7 +89,7 @@ public class LocalFeedStore{
     
     
     private func cache(items:[FeedImage],with completion:@escaping (saveResult) -> Void ) {
-        self.store.insert(items.toLocal(),timeStamp: self.currentTimeStamp(), completion: {[weak self] error in
+        self.store.insert(items.toLocal(),timeStamp: currentTimeStamp(), completion: {[weak self] error in
             guard let _ = self else{return}
             completion(error)
         })

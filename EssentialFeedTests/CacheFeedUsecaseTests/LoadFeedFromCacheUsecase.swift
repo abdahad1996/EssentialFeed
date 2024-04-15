@@ -106,6 +106,8 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
         let lessThanSevenDaysOldTimeStamp = fixedDate.adding(days:-7).adding(seconds:1)
         
         let (store,sut) = makeSut(currentTimeStamp: {fixedDate})
+        sut.load{_ in}
+
         
         store.completeRetrieval(with: feedImages.local, timeStamp: lessThanSevenDaysOldTimeStamp)
             

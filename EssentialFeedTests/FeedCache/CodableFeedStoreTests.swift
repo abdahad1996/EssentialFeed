@@ -90,14 +90,8 @@ class CodableFeedStoreTest:XCTestCase{
         let sut = makeSUT()
         let insertedItems = uniqueImages().local
         let insertedTimeStamp = Date()
-        let exp = expectation(description: "wait for completion")
         
-        sut.insert(insertedItems,timeStamp: insertedTimeStamp){ error in
-            XCTAssertNil(error,"expected feed to be inserted successfully")
-            exp.fulfill()
-        }
-        
-        wait(for: [exp],timeout: 0.1)
+        insert(sut, items: insertedItems, timeStamp: insertedTimeStamp)
         expect(sut, toRetrieve: .found(feed: insertedItems, timeStamp: insertedTimeStamp))
     }
     
@@ -106,14 +100,8 @@ class CodableFeedStoreTest:XCTestCase{
         let sut = makeSUT()
         let insertedItems = uniqueImages().local
         let insertedTimeStamp = Date()
-        let exp = expectation(description: "wait for completion")
         
-        sut.insert(insertedItems,timeStamp: insertedTimeStamp){ error in
-            XCTAssertNil(error,"expected feed to be inserted successfully")
-            exp.fulfill()
-        }
-        
-        wait(for: [exp],timeout: 0.1)
+        insert(sut, items: insertedItems, timeStamp: insertedTimeStamp)
         expect(sut, toRetrieveTwice: .found(feed: insertedItems, timeStamp: insertedTimeStamp))
     }
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> CodableFeedStore {
@@ -127,6 +115,17 @@ class CodableFeedStoreTest:XCTestCase{
         expect(sut, toRetrieve: expectedResult)
 
         
+    }
+    private func insert(_ sut:CodableFeedStore,items:[LocalFeedImage],timeStamp:Date,file: StaticString = #file, line: UInt = #line){
+        let exp = expectation(description: "wait for completion")
+        
+        sut.insert(items, timeStamp: timeStamp) { errorResult in
+            XCTAssertNil(errorResult,"expected feed to be inserted successfully")
+            exp.fulfill()
+        }
+        
+        wait(for: [exp],timeout: 0.1)
+
     }
     private func expect(_ sut:CodableFeedStore,toRetrieve expectedResult:RetrieveCacheFeedResult,file: StaticString = #file, line: UInt = #line){
         

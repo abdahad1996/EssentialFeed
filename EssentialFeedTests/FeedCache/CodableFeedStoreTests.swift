@@ -85,7 +85,7 @@ class CodableFeedStoreTest:XCTestCase{
     }
     
     
-    func test_retrieveAfterInsertingToEmptyCache_deliversInsertedValues() {
+    func test_retrieve_deliversFoundValuesOnNonEmptyCache() {
         
         let sut = makeSUT()
         let insertedItems = uniqueImages().local
@@ -104,6 +104,8 @@ class CodableFeedStoreTest:XCTestCase{
         insert(sut, items: insertedItems, timeStamp: insertedTimeStamp)
         expect(sut, toRetrieveTwice: .found(feed: insertedItems, timeStamp: insertedTimeStamp))
     }
+    
+    
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> CodableFeedStore {
         let sut = CodableFeedStore(storeURL: testSpecificStoreURL())
         trackForMemoryLeaks(sut, file: file, line: line)

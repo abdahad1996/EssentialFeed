@@ -80,6 +80,7 @@ extension LocalFeedStore {
         self.store.insert(items.toLocal(),timeStamp: currentTimeStamp(), completion: {[weak self] error in
             guard let _ = self else{return}
             completion(error)
+            
         })
     }
     

@@ -44,9 +44,15 @@ class CodableFeedStore {
         guard let data = try? Data(contentsOf: storeURL) else{
             return completion(.empty)
         }
-        let decoder = JSONDecoder()
-        let cache = try! decoder.decode(Cache.self, from: data)
-        completion(.found(feed: cache.localFeed, timeStamp: cache.timeStamp))
+        
+        do {
+            let decoder = JSONDecoder()
+            let cache = try decoder.decode(Cache.self, from: data)
+            completion(.found(feed: cache.localFeed, timeStamp: cache.timeStamp))
+            
+        }catch {
+            completion(.failure(error))
+        }
         
     }
     
@@ -106,6 +112,18 @@ class CodableFeedStoreTest:XCTestCase{
     }
     
     
+    func test_retrieve_deliversFailureOnRetrievalError() {
+        
+        let sut = makeSUT()
+        let retrievalError = anyError()
+      
+        try! "invalid Data".write(to: testSpecificStoreURL(), atomically: false, encoding: .utf8)
+        
+        expect(sut, toRetrieve:.failure(retrievalError))
+    }
+    
+    
+    
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> CodableFeedStore {
         let sut = CodableFeedStore(storeURL: testSpecificStoreURL())
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -136,6 +154,8 @@ class CodableFeedStoreTest:XCTestCase{
         sut.retrieve{ retrievedResult in
             switch (retrievedResult,expectedResult) {
             case (.empty,.empty):
+                break
+            case (.failure,.failure):
                 break
             case let (.found(receivedFeed,receivedTimeStamp),.found(feed: expectedFeed, timeStamp: expectedFeedTimeStamp)):
                 XCTAssertEqual(receivedFeed, expectedFeed)

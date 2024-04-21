@@ -222,13 +222,13 @@ class CodableFeedStoreTest:XCTestCase{
         
     }
     
-    private func makeSUT(_ storeURL:URL? = nil,file: StaticString = #file, line: UInt = #line) -> CodableFeedStore {
+    private func makeSUT(_ storeURL:URL? = nil,file: StaticString = #file, line: UInt = #line) -> FeedStore {
         let sut = CodableFeedStore(storeURL: storeURL ?? testSpecificStoreURL())
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
     
-    private func expect(_ sut:CodableFeedStore,toRetrieveTwice expectedResult:RetrieveCacheFeedResult,file: StaticString = #file, line: UInt = #line){
+    private func expect(_ sut:FeedStore,toRetrieveTwice expectedResult:RetrieveCacheFeedResult,file: StaticString = #file, line: UInt = #line){
         expect(sut, toRetrieve: expectedResult)
         expect(sut, toRetrieve: expectedResult)
 
@@ -236,7 +236,7 @@ class CodableFeedStoreTest:XCTestCase{
     }
     
     @discardableResult
-    private func insert(_ sut:CodableFeedStore,items:[LocalFeedImage],timeStamp:Date,file: StaticString = #file, line: UInt = #line) -> Error?{
+    private func insert(_ sut:FeedStore,items:[LocalFeedImage],timeStamp:Date,file: StaticString = #file, line: UInt = #line) -> Error?{
         let exp = expectation(description: "wait for completion")
         
         var receivedError:Error?
@@ -251,7 +251,7 @@ class CodableFeedStoreTest:XCTestCase{
     }
     
     @discardableResult
-    private func delete(_ sut:CodableFeedStore,file: StaticString = #file, line: UInt = #line) -> Error?{
+    private func delete(_ sut:FeedStore,file: StaticString = #file, line: UInt = #line) -> Error?{
         let exp = expectation(description: "wait for completion")
         
         var receivedError:Error?
@@ -264,7 +264,7 @@ class CodableFeedStoreTest:XCTestCase{
         return receivedError
 
     }
-    private func expect(_ sut:CodableFeedStore,toRetrieve expectedResult:RetrieveCacheFeedResult,file: StaticString = #file, line: UInt = #line){
+    private func expect(_ sut:FeedStore,toRetrieve expectedResult:RetrieveCacheFeedResult,file: StaticString = #file, line: UInt = #line){
         
         let exp = expectation(description: "wait for completion")
         

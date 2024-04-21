@@ -43,7 +43,7 @@ class CodableFeedStoreTest:XCTestCase,FailableFeedStoreSpecs{
         let insertedItems = uniqueImages().local
         let insertedTimeStamp = Date()
         
-        insert(sut, items: insertedItems, timeStamp: insertedTimeStamp)
+        insert((insertedItems,insertedTimeStamp),to:sut)
         expect(sut, toRetrieve: .found(feed: insertedItems, timeStamp: insertedTimeStamp))
     }
     
@@ -53,7 +53,7 @@ class CodableFeedStoreTest:XCTestCase,FailableFeedStoreSpecs{
         let insertedItems = uniqueImages().local
         let insertedTimeStamp = Date()
         
-        insert(sut, items: insertedItems, timeStamp: insertedTimeStamp)
+        insert((insertedItems,insertedTimeStamp),to:sut)
         expect(sut, toRetrieve: .found(feed: insertedItems, timeStamp: insertedTimeStamp))
 
     }
@@ -87,12 +87,14 @@ class CodableFeedStoreTest:XCTestCase,FailableFeedStoreSpecs{
         let firstItems = uniqueImages().local
         let firstTimeStamp = Date()
         
-        insert(sut, items: firstItems, timeStamp: firstTimeStamp)
+        insert((firstItems,firstTimeStamp),to:sut)
+
         
         let secondItems = uniqueImages().local
         let secondTimeStamp = Date()
         
-        insert(sut, items: secondItems, timeStamp: secondTimeStamp)
+        insert((secondItems,secondTimeStamp),to:sut)
+
         
         expect(sut, toRetrieve:.found(feed: secondItems, timeStamp: secondTimeStamp))
     }
@@ -105,7 +107,8 @@ class CodableFeedStoreTest:XCTestCase,FailableFeedStoreSpecs{
         let insertedItems = uniqueImages().local
         let insertedTimeStamp = Date()
         
-        let insertionError = insert(sut, items: insertedItems, timeStamp: insertedTimeStamp)
+        let insertionError =  insert((insertedItems,insertedTimeStamp),to:sut)
+
         XCTAssertNil(insertionError, "Expected to insert cache successfully")
         
     }
@@ -113,10 +116,10 @@ class CodableFeedStoreTest:XCTestCase,FailableFeedStoreSpecs{
     func test_insert_deliversNoErrorOnNonEmptyCache() {
         let sut = makeSUT()
         
-        insert(sut,items: uniqueImages().local, timeStamp: Date())
-        
-        let insertionError = insert(sut,items: uniqueImages().local, timeStamp: Date())
-        
+        insert((uniqueImages().local,Date()),to:sut)
+
+        let insertionError =  insert((uniqueImages().local,Date()),to:sut)
+
         XCTAssertNil(insertionError, "Expected to override cache successfully")
     }
     
@@ -127,7 +130,8 @@ class CodableFeedStoreTest:XCTestCase,FailableFeedStoreSpecs{
         let insertedItems = uniqueImages().local
         let insertedTimeStamp = Date()
         
-        insert(sut, items: insertedItems, timeStamp: insertedTimeStamp)
+        insert((insertedItems,insertedTimeStamp),to:sut)
+
         expect(sut, toRetrieve: .empty)
     }
     
@@ -138,7 +142,7 @@ class CodableFeedStoreTest:XCTestCase,FailableFeedStoreSpecs{
         let insertedItems = uniqueImages().local
         let insertedTimeStamp = Date()
         
-        let insertionError = insert(sut, items: insertedItems, timeStamp: insertedTimeStamp)
+        let insertionError = insert((insertedItems,insertedTimeStamp),to:sut)
         XCTAssertNotNil(insertionError,"Expected insertion to fail")
 
     }
@@ -146,7 +150,7 @@ class CodableFeedStoreTest:XCTestCase,FailableFeedStoreSpecs{
     func test_delete_deliversNoErrorOnEmptyCache() {
         let sut = makeSUT()
         
-        let deletionError =  delete(sut)
+        let deletionError =  deleteCache(from: sut)
         XCTAssertNil(deletionError, "Expected empty cache deletion to succeed")
         
     }
@@ -154,7 +158,7 @@ class CodableFeedStoreTest:XCTestCase,FailableFeedStoreSpecs{
     func test_delete_hasNoSideEffectsOnEmptyCache() {
         let sut = makeSUT()
         
-        delete(sut)
+        deleteCache(from: sut)
         
         expect(sut, toRetrieve: .empty)
     }
@@ -167,9 +171,9 @@ class CodableFeedStoreTest:XCTestCase,FailableFeedStoreSpecs{
         let insertedItems = uniqueImages().local
         let insertedTimeStamp = Date()
         
-        insert(sut, items: insertedItems, timeStamp: insertedTimeStamp)
+        insert((insertedItems,insertedTimeStamp),to:sut)
         
-        let deletionError = delete(sut)
+        let deletionError = deleteCache(from: sut)
         XCTAssertNil(deletionError, "Expected non-empty cache deletion to succeed")
         
     }
@@ -179,9 +183,9 @@ class CodableFeedStoreTest:XCTestCase,FailableFeedStoreSpecs{
         let insertedItems = uniqueImages().local
         let insertedTimeStamp = Date()
         
-        insert(sut, items: insertedItems, timeStamp: insertedTimeStamp)
+        insert((insertedItems,insertedTimeStamp),to:sut)
         
-        delete(sut)
+        deleteCache(from: sut)
         
         expect(sut, toRetrieve: .empty)
     }
@@ -189,7 +193,7 @@ class CodableFeedStoreTest:XCTestCase,FailableFeedStoreSpecs{
         let noDeletePermissionURL = cachesDirectory()
         let sut = makeSUT(noDeletePermissionURL)
         
-        let deletionError = delete(sut)
+        let deletionError = deleteCache(from: sut)
         XCTAssertNotNil(deletionError, "Expected cache deletion to fail")
 
     }
@@ -198,7 +202,7 @@ class CodableFeedStoreTest:XCTestCase,FailableFeedStoreSpecs{
         let noDeletePermissionUrl = cachesDirectory()
         let sut = makeSUT(noDeletePermissionUrl)
         
-        delete(sut)
+        deleteCache(from: sut)
         expect(sut, toRetrieve: .empty)
         
     }
@@ -238,69 +242,6 @@ class CodableFeedStoreTest:XCTestCase,FailableFeedStoreSpecs{
         return sut
     }
     
-    private func expect(_ sut:FeedStore,toRetrieveTwice expectedResult:RetrieveCacheFeedResult,file: StaticString = #file, line: UInt = #line){
-        expect(sut, toRetrieve: expectedResult)
-        expect(sut, toRetrieve: expectedResult)
-        
-        
-    }
-    
-    @discardableResult
-    private func insert(_ sut:FeedStore,items:[LocalFeedImage],timeStamp:Date,file: StaticString = #file, line: UInt = #line) -> Error?{
-        let exp = expectation(description: "wait for completion")
-        
-        var receivedError:Error?
-        sut.insert(items, timeStamp: timeStamp) { errorResult in
-            receivedError = errorResult
-            exp.fulfill()
-        }
-        
-        wait(for: [exp],timeout: 1)
-        return receivedError
-        
-    }
-    
-    @discardableResult
-    private func delete(_ sut:FeedStore,file: StaticString = #file, line: UInt = #line) -> Error?{
-        let exp = expectation(description: "wait for completion")
-        
-        var receivedError:Error?
-        sut.deleteCacheFeed{ errorResult in
-            receivedError = errorResult
-            exp.fulfill()
-        }
-        
-        wait(for: [exp],timeout: 1)
-        return receivedError
-        
-    }
-    private func expect(_ sut:FeedStore,toRetrieve expectedResult:RetrieveCacheFeedResult,file: StaticString = #file, line: UInt = #line){
-        
-        let exp = expectation(description: "wait for completion")
-        
-        sut.retrieve{ retrievedResult in
-            switch (retrievedResult,expectedResult) {
-            case (.empty,.empty):
-                break
-            case (.failure,.failure):
-                break
-            case let (.found(receivedFeed,receivedTimeStamp),.found(feed: expectedFeed, timeStamp: expectedFeedTimeStamp)):
-                XCTAssertEqual(receivedFeed, expectedFeed)
-                XCTAssertEqual(receivedTimeStamp, expectedFeedTimeStamp)
-                
-                
-            default:
-                XCTFail("Expected to retrieve \(expectedResult), got \(retrievedResult) instead", file: file, line: line)
-                
-            }
-            exp.fulfill()
-        }
-        
-        
-        
-        wait(for: [exp],timeout: 1)
-        
-    }
     
     private func testSpecificStoreURL() -> URL {
         return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("\(type(of:self)).store")

@@ -34,7 +34,7 @@ private extension NSManagedObjectModel {
         return bundle
             .url(forResource: name, withExtension: "momd")
             .flatMap{NSManagedObjectModel(contentsOf: $0)}
-            
+        
     }
 }
 
@@ -46,17 +46,59 @@ public class CoreDataFeedStore:FeedStore{
     public init(storeURL:URL,bundle:Bundle = .main) throws{
         container = try NSPersistentContainer.load(modelName: "FeedStore", url: storeURL, in: bundle)
         context = container.newBackgroundContext()
-
+        
     }
     public func deleteCacheFeed(completion: @escaping deleteCompletion) {
-         container
+//        container
     }
     
-    public func insert(_ items: [EssentialFeed.LocalFeedImage], timeStamp: Date, completion: @escaping insertCompletion) {
-         
+    public func insert(_ items: [LocalFeedImage], timeStamp: Date, completion: @escaping insertCompletion)  {
+        let context = self.context
+        
+        context.perform {
+            do {
+                let cache = ManagedCache(context:  context)
+                cache.timestamp = timeStamp
+                cache.feed = NSOrderedSet(array: items.map({ localFeed in
+                    let managedFeed = ManagedFeedImage(context: context)
+                    managedFeed.id = localFeed.id
+                    managedFeed.imageDescription = localFeed.description
+                    managedFeed.location = localFeed.location
+                    managedFeed.url = localFeed.url
+                    return managedFeed
+                }))
+                
+                try context.save()
+                completion(nil)
+                
+                
+            }catch {
+                completion(error)
+            }
+        }
+        
     }
-    
+     
     public func retrieve(completion: @escaping retrieveCompletion) {
-        completion(.empty)
-    }
+             let context = self.context
+            context.perform {
+                do {
+                    let request = NSFetchRequest<ManagedCache>(entityName: ManagedCache.entity().name!)
+                    request.returnsObjectsAsFaults = false
+                    if let cache = try context.fetch(request).first {
+                        completion(.found(
+                            feed: cache.feed
+                                .compactMap { ($0 as? ManagedFeedImage) }
+                                .map {
+                                    LocalFeedImage(id: $0.id, description: $0.imageDescription, location: $0.location, imageURL: $0.url)
+                                },
+                            timeStamp: cache.timestamp))
+                    } else {
+                        completion(.empty)
+                    }
+                } catch {
+                    completion(.failure(error))
+                }
+            }
+        }
 }

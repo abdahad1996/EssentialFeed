@@ -59,14 +59,7 @@ public class CoreDataFeedStore:FeedStore{
             do {
                 let cache = ManagedCache(context:  context)
                 cache.timestamp = timeStamp
-                cache.feed = NSOrderedSet(array: items.map({ localFeed in
-                    let managedFeed = ManagedFeedImage(context: context)
-                    managedFeed.id = localFeed.id
-                    managedFeed.imageDescription = localFeed.description
-                    managedFeed.location = localFeed.location
-                    managedFeed.url = localFeed.url
-                    return managedFeed
-                }))
+                cache.feed = ManagedFeedImage.images(items: items, context: context)
                 
                 try context.save()
                 completion(nil)
@@ -87,11 +80,7 @@ public class CoreDataFeedStore:FeedStore{
                     request.returnsObjectsAsFaults = false
                     if let cache = try context.fetch(request).first {
                         completion(.found(
-                            feed: cache.feed
-                                .compactMap { ($0 as? ManagedFeedImage) }
-                                .map {
-                                    LocalFeedImage(id: $0.id, description: $0.imageDescription, location: $0.location, imageURL: $0.url)
-                                },
+                            feed: cache.localFeed,
                             timeStamp: cache.timestamp))
                     } else {
                         completion(.empty)

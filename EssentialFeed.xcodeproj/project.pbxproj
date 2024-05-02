@@ -41,6 +41,7 @@
 		65E09E8F2BC37B330051D5C8 /* FeedStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E09E8E2BC37B330051D5C8 /* FeedStoreSpy.swift */; };
 		65EC5CEF2BE3172700B71FCA /* CoreDataFeedStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EC5CEE2BE3172700B71FCA /* CoreDataFeedStoreTests.swift */; };
 		65EC5CF22BE319C700B71FCA /* FeedStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 65EC5CF02BE319C700B71FCA /* FeedStore.xcdatamodeld */; };
+		65EC5CF42BE39B9900B71FCA /* CoreDataFeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EC5CF32BE39B9900B71FCA /* CoreDataFeedStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,6 +97,7 @@
 		65E09E8E2BC37B330051D5C8 /* FeedStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedStoreSpy.swift; sourceTree = "<group>"; };
 		65EC5CEE2BE3172700B71FCA /* CoreDataFeedStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataFeedStoreTests.swift; sourceTree = "<group>"; };
 		65EC5CF12BE319C700B71FCA /* FeedStore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FeedStore.xcdatamodel; sourceTree = "<group>"; };
+		65EC5CF32BE39B9900B71FCA /* CoreDataFeedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataFeedStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -250,6 +252,7 @@
 				651657AC2BCCA908004C383B /* FeedCachePolicy.swift */,
 				651657D82BD492F0004C383B /* CodableFeedStore.swift */,
 				65EC5CF02BE319C700B71FCA /* FeedStore.xcdatamodeld */,
+				65EC5CF32BE39B9900B71FCA /* CoreDataFeedStore.swift */,
 			);
 			path = "Feed Cache";
 			sourceTree = "<group>";
@@ -392,6 +395,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65EC5CF42BE39B9900B71FCA /* CoreDataFeedStore.swift in Sources */,
 				65E09E8B2BC374800051D5C8 /* LocalFeedImage.swift in Sources */,
 				65E09E872BC2D37C0051D5C8 /* FeedStore.swift in Sources */,
 				54DB2B092B377932008ADABC /* HttpClient.swift in Sources */,

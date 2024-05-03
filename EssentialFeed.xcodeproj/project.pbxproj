@@ -44,6 +44,7 @@
 		65EC5CF42BE39B9900B71FCA /* CoreDataFeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EC5CF32BE39B9900B71FCA /* CoreDataFeedStore.swift */; };
 		65EC5CF72BE4011900B71FCA /* ManagedFeedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EC5CF62BE4011900B71FCA /* ManagedFeedImage.swift */; };
 		65EC5CFB2BE42FBC00B71FCA /* ManagedCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EC5CFA2BE42FBC00B71FCA /* ManagedCache.swift */; };
+		65EC5CFD2BE46AF200B71FCA /* CoreDataHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EC5CFC2BE46AF200B71FCA /* CoreDataHelpers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,6 +103,7 @@
 		65EC5CF32BE39B9900B71FCA /* CoreDataFeedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataFeedStore.swift; sourceTree = "<group>"; };
 		65EC5CF62BE4011900B71FCA /* ManagedFeedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedFeedImage.swift; sourceTree = "<group>"; };
 		65EC5CFA2BE42FBC00B71FCA /* ManagedCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedCache.swift; sourceTree = "<group>"; };
+		65EC5CFC2BE46AF200B71FCA /* CoreDataHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelpers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -275,6 +277,7 @@
 				651657D82BD492F0004C383B /* CodableFeedStore.swift */,
 				65EC5CF32BE39B9900B71FCA /* CoreDataFeedStore.swift */,
 				65EC5CF52BE400FD00B71FCA /* CoreData */,
+				65EC5CFC2BE46AF200B71FCA /* CoreDataHelpers.swift */,
 			);
 			path = Infrastructure;
 			sourceTree = "<group>";
@@ -423,6 +426,7 @@
 				54DB2B092B377932008ADABC /* HttpClient.swift in Sources */,
 				5409C4662B30ED6C00B7AFB6 /* RemoteFeedLoader.swift in Sources */,
 				65EC5CF72BE4011900B71FCA /* ManagedFeedImage.swift in Sources */,
+				65EC5CFD2BE46AF200B71FCA /* CoreDataHelpers.swift in Sources */,
 				54F8D4742B2EAC7D00C62D91 /* FeedLoader.swift in Sources */,
 				65EC5CF22BE319C700B71FCA /* FeedStore.xcdatamodeld in Sources */,
 				6538F6F72B6093DA00421684 /* URLSessionHttpClient.swift in Sources */,

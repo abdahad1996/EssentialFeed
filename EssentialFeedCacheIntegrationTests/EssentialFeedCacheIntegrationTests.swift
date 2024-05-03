@@ -19,22 +19,34 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
          undoStoreArtifact()
     }
     
-    func test_load_deliversNoItemsOnEmptyCache() {
-        let sut = makeSUT()
-        
-        let exp = expectation(description: "wait for load completion")
-        sut.load { result in
-            switch result {
-            case .success(let imageFeed):
-                XCTAssertEqual(imageFeed, [],"Expected empty feed")
-            case .failure(let error):
-                XCTFail("Expected successful feed result, got \(error) instead")
+    func test_load_deliversItemsSavedOnASeparateInstance() {
+            let sutToPerformSave = makeSUT()
+            let sutToPerformLoad = makeSUT()
+            let feed = uniqueImages().models
+
+            let saveExp = expectation(description: "Wait for save completion")
+        sutToPerformSave.save(items: feed) { saveError in
+                XCTAssertNil(saveError, "Expected to save feed successfully")
+                saveExp.fulfill()
             }
-            exp.fulfill()
+            wait(for: [saveExp], timeout: 1.0)
+
+            let loadExp = expectation(description: "Wait for load completion")
+            sutToPerformLoad.load { loadResult in
+                switch loadResult {
+                case let .success(imageFeed):
+                    XCTAssertEqual(imageFeed, feed)
+
+                case let .failure(error):
+                    XCTFail("Expected successful feed result, got \(error) instead")
+                }
+
+                loadExp.fulfill()
+            }
+            wait(for: [loadExp], timeout: 1.0)
         }
-        
-        wait(for: [exp],timeout: 1)
-    }
+    
+    
     private func setupEmptyStoreState() {
         deleteStoreArtifact()
     }

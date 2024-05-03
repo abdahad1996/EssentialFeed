@@ -48,9 +48,14 @@ public class CoreDataFeedStore:FeedStore{
         context = container.newBackgroundContext()
         
     }
-    public func deleteCacheFeed(completion: @escaping deleteCompletion) {
+    
+    private func perform(action:@escaping (NSManagedObjectContext) -> Void) {
         let context = self.context
-        context.perform {
+        context.perform{action(context)}
+         
+    }
+    public func deleteCacheFeed(completion: @escaping deleteCompletion) {
+        perform { context in
             do{
                 try ManagedCache.find(context: context).map{context.delete($0)}.map(context.save)
                 completion(nil)
@@ -62,9 +67,7 @@ public class CoreDataFeedStore:FeedStore{
     }
     
     public func insert(_ items: [LocalFeedImage], timeStamp: Date, completion: @escaping insertCompletion)  {
-        let context = self.context
-        
-        context.perform {
+        perform { context in
             do {
                 let cache = try ManagedCache.findNewInstance(context: context)
                 cache.timestamp = timeStamp
@@ -81,8 +84,7 @@ public class CoreDataFeedStore:FeedStore{
         
     }
     public func retrieve(completion: @escaping retrieveCompletion) {
-             let context = self.context
-            context.perform {
+        perform { context in
                 do {
                     if let cache = try ManagedCache.find(context: context) {
                         completion(.found(

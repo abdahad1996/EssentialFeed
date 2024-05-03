@@ -13,6 +13,8 @@ class ManagedCache:NSManagedObject{
     @NSManaged var timestamp:Date
     @NSManaged var feed:NSOrderedSet
     
+}
+extension ManagedCache {
     var localFeed:[LocalFeedImage] {
         return feed.compactMap{($0 as? ManagedFeedImage)}.map{$0.local}
     }
@@ -27,7 +29,7 @@ class ManagedCache:NSManagedObject{
         try find(context: context).map(context.delete)
         return ManagedCache(context: context)
     }
+    
 }
-
 
 

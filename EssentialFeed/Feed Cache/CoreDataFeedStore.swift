@@ -49,7 +49,16 @@ public class CoreDataFeedStore:FeedStore{
         
     }
     public func deleteCacheFeed(completion: @escaping deleteCompletion) {
-        completion(.none)
+        let context = self.context
+        context.perform {
+            do{
+                try ManagedCache.find(context: context).map{context.delete($0)}.map(context.save)
+                completion(nil)
+            }catch {
+                completion(error)
+            }
+            
+        }
     }
     
     public func insert(_ items: [LocalFeedImage], timeStamp: Date, completion: @escaping insertCompletion)  {

@@ -39,6 +39,30 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
 
            expect(sutToPerformLoad, toLoad: feed)
         }
+    
+    func test_save_overridesItemsSavedOnASeparateInstance() {
+            let sutToPerformFirstSave = makeSUT()
+            let sutToPerformLastSave = makeSUT()
+            let sutToPerformLoad = makeSUT()
+            let firstFeed = uniqueImages().models
+            let latestFeed = uniqueImages().models
+
+            let saveExp1 = expectation(description: "Wait for save completion")
+        sutToPerformFirstSave.save(items: firstFeed) { saveError in
+                XCTAssertNil(saveError, "Expected to save feed successfully")
+                saveExp1.fulfill()
+            }
+            wait(for: [saveExp1], timeout: 1.0)
+
+            let saveExp2 = expectation(description: "Wait for save completion")
+        sutToPerformLastSave.save(items: latestFeed) { saveError in
+                XCTAssertNil(saveError, "Expected to save feed successfully")
+                saveExp2.fulfill()
+            }
+            wait(for: [saveExp2], timeout: 1.0)
+
+            expect(sutToPerformLoad, toLoad: latestFeed)
+        }
     private func setupEmptyStoreState() {
         deleteStoreArtifact()
     }

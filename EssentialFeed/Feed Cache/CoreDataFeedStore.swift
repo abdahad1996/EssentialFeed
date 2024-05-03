@@ -49,7 +49,7 @@ public class CoreDataFeedStore:FeedStore{
         
     }
     public func deleteCacheFeed(completion: @escaping deleteCompletion) {
-//        container
+        completion(.none)
     }
     
     public func insert(_ items: [LocalFeedImage], timeStamp: Date, completion: @escaping insertCompletion)  {

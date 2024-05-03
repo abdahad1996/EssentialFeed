@@ -13,7 +13,7 @@ import EssentialFeed
 
 class CoreDataFeedStoreTests:XCTestCase,FeedStoreSpecs{
     func test_retrieve_deliversEmptyOnEmptyCache() {
-         let sut = makeSUT()
+        let sut = makeSUT()
         
         assertThatRetrieveDeliversEmptyOnEmptyCache(on:sut)
     }
@@ -49,23 +49,24 @@ class CoreDataFeedStoreTests:XCTestCase,FeedStoreSpecs{
     }
     
     func test_delete_deliversNoErrorOnEmptyCache() {
-         
+        let sut = makeSUT()
+        assertThatDeleteDeliversNoErrorOnEmptyCache(on: sut)
     }
     
     func test_delete_hasNoSideEffectsOnEmptyCache() {
-         
+        
     }
     
     func test_delete_deliversNoErrorOnNonEmptyCache() {
-         
+        
     }
     
     func test_delete_emptiesPreviouslyInsertedCache() {
-         
+        
     }
     
     func test_storeSideEffects_runSerially() {
-         
+        
     }
     
     func makeSUT(file: StaticString = #file, line: UInt = #line) -> FeedStore{

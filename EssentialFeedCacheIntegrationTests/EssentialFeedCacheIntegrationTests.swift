@@ -10,6 +10,15 @@ import EssentialFeed
 
 final class EssentialFeedCacheIntegrationTests: XCTestCase {
 
+    override func setUp() {
+        super.setUp()
+         setupEmptyStoreState()
+    }
+    override func tearDown()  {
+        super.tearDown()
+         undoStoreArtifact()
+    }
+    
     func test_load_deliversNoItemsOnEmptyCache() {
         let sut = makeSUT()
         
@@ -26,6 +35,18 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         
         wait(for: [exp],timeout: 1)
     }
+    private func setupEmptyStoreState() {
+        deleteStoreArtifact()
+    }
+    
+    private func undoStoreArtifact() {
+       deleteStoreArtifact()
+    }
+    
+    private func deleteStoreArtifact() {
+        try? FileManager.default.removeItem(at: testSpecificStoreURL())
+    }
+    
     private func makeSUT(file:StaticString = #file,line:UInt = #line) -> LocalFeedStore {
         let storeBundle = Bundle(for: CoreDataFeedStore.self)
         let storeURL = testSpecificStoreURL()

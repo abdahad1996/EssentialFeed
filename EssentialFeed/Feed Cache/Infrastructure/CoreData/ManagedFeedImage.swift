@@ -27,10 +27,12 @@ class ManagedFeedImage:NSManagedObject{
         }))
     }
      
+    
     var local:LocalFeedImage {
         return LocalFeedImage(id: id, description: imageDescription,location: location,imageURL: url)
     }
 
+    
 }
 //extension Managedfeed {
 //    internal static func images(from localFeed: [LocalFeedImage], in context: NSManagedObjectContext) -> NSOrderedSet {

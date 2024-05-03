@@ -22,6 +22,11 @@ class ManagedCache:NSManagedObject{
         request.returnsObjectsAsFaults = false
         return try context.fetch(request).first
     }
+    
+    static func findNewInstance(context:NSManagedObjectContext) throws -> ManagedCache {
+        try find(context: context).map(context.delete)
+        return ManagedCache(context: context)
+    }
 }
 
 

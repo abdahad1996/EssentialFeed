@@ -19,15 +19,15 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         undoStoreArtifact()
     }
     
-    func test_load_deliversNoItemsOnEmptyCache() {
-        let sut = makeSUT()
+    func test_load_deliversNoItemsOnEmptyCache() throws {
+        let sut = try makeSUT()
         
         expect(sut, toLoad: [])
     }
     
-    func test_load_deliversItemsSavedOnASeparateInstance() {
-        let sutToPerformSave = makeSUT()
-        let sutToPerformLoad = makeSUT()
+    func test_load_deliversItemsSavedOnASeparateInstance() throws{
+        let sutToPerformSave = try makeSUT()
+        let sutToPerformLoad = try makeSUT()
         let feed = uniqueImages().models
         
         
@@ -35,10 +35,10 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         expect(sutToPerformLoad, toLoad: feed)
     }
     
-    func test_save_overridesItemsSavedOnASeparateInstance() {
-        let sutToPerformFirstSave = makeSUT()
-        let sutToPerformLastSave = makeSUT()
-        let sutToPerformLoad = makeSUT()
+    func test_save_overridesItemsSavedOnASeparateInstance() throws {
+        let sutToPerformFirstSave = try makeSUT()
+        let sutToPerformLastSave = try makeSUT()
+        let sutToPerformLoad = try makeSUT()
         let firstFeed = uniqueImages().models
         let latestFeed = uniqueImages().models
         
@@ -59,10 +59,10 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         try? FileManager.default.removeItem(at: testSpecificStoreURL())
     }
     
-    private func makeSUT(file:StaticString = #file,line:UInt = #line) -> LocalFeedStore {
+    private func makeSUT(file:StaticString = #file,line:UInt = #line) throws -> LocalFeedStore {
         let storeBundle = Bundle(for: CoreDataFeedStore.self)
         let storeURL = testSpecificStoreURL()
-        let store = try! CoreDataFeedStore(storeURL: storeURL, bundle: storeBundle)
+        let store = try CoreDataFeedStore(storeURL: storeURL, bundle: storeBundle)
         let sut = LocalFeedStore(store: store, currentTimeStamp: Date.init)
         trackForMemoryLeaks(store)
         trackForMemoryLeaks(sut)

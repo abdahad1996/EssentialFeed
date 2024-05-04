@@ -905,7 +905,7 @@
 			);
 			currentVersion = 65EC5CF12BE319C700B71FCA /* FeedStore.xcdatamodel */;
 			name = FeedStore.xcdatamodeld;
-			path = "/Users/abdulahadjamal/EssentialFeed/EssentialFeed/Feed Cache/FeedStore.xcdatamodeld";
+			path = "FeedStore.xcdatamodeld";
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

@@ -50,7 +50,7 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
         let (store,sut) = makeSut(currentTimeStamp: {fixedDate})
         
         expect(sut: sut, completeWith: .success(feedImages.models)) {
-            store.completeRetrieval(with: feedImages.local, timeStamp: nonExpiredCacheTimeStamp)
+            store.completeRetrieval(with: feedImages.local, timestamp: nonExpiredCacheTimeStamp)
             
         }
     }
@@ -63,7 +63,7 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
         let (store,sut) = makeSut(currentTimeStamp: {fixedDate})
         
         expect(sut: sut, completeWith: .success([])) {
-            store.completeRetrieval(with: feedImages.local, timeStamp: expiringCacheTimeStamp)
+            store.completeRetrieval(with: feedImages.local, timestamp: expiringCacheTimeStamp)
             
         }
     }
@@ -75,7 +75,7 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
         let (store,sut) = makeSut(currentTimeStamp: {fixedDate})
         
         expect(sut: sut, completeWith: .success([])) {
-            store.completeRetrieval(with: feedImages.local, timeStamp: expiredCacheTimeStamp)
+            store.completeRetrieval(with: feedImages.local, timestamp: expiredCacheTimeStamp)
             
         }
     }
@@ -108,7 +108,7 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
         sut.load{_ in}
 
         
-        store.completeRetrieval(with: feedImages.local, timeStamp: nonExpiredCacheTimeStamp)
+        store.completeRetrieval(with: feedImages.local, timestamp: nonExpiredCacheTimeStamp)
             
         XCTAssertEqual(store.receivedMessages, [.retrieve])
 
@@ -123,7 +123,7 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
         let (store,sut) = makeSut(currentTimeStamp: {fixedDate})
         
         sut.load{_ in}
-        store.completeRetrieval(with: feedImages.local, timeStamp: expiringCacheTimeStamp)
+        store.completeRetrieval(with: feedImages.local, timestamp: expiringCacheTimeStamp)
             
         XCTAssertEqual(store.receivedMessages, [.retrieve])
 
@@ -137,7 +137,7 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
         let (store,sut) = makeSut(currentTimeStamp: {fixedDate})
         
         sut.load{_ in}
-        store.completeRetrieval(with: feedImages.local, timeStamp: expiredCacheTimeStamp)
+        store.completeRetrieval(with: feedImages.local, timestamp: expiredCacheTimeStamp)
             
         XCTAssertEqual(store.receivedMessages, [.retrieve,])
 
@@ -146,9 +146,9 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
     
     func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
         var store = FeedStoreSpy()
-        var sut:LocalFeedStore? = LocalFeedStore(store: store, currentTimeStamp: Date.init)
+        var sut:LocalFeedLoader? = LocalFeedLoader(store: store, currentDate: Date.init)
         
-        var receivedResult = [LocalFeedStore.loadResult]()
+        var receivedResult = [LocalFeedLoader.LoadResult]()
         
         sut?.load(completion: { result in
             receivedResult.append(result)
@@ -167,16 +167,16 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
         line:UInt = #line
     ) -> (
         FeedStoreSpy,
-        LocalFeedStore
+        LocalFeedLoader
     ){
         let store = FeedStoreSpy()
-        let localFeedStore = LocalFeedStore(store: store, currentTimeStamp: currentTimeStamp)
+        let localFeedStore = LocalFeedLoader(store: store, currentDate: currentTimeStamp)
         trackForMemoryLeaks(store,file: file,line: line)
         trackForMemoryLeaks(localFeedStore,file: file,line: line)
         return (store,localFeedStore)
     }
     
-    func expect(sut:LocalFeedStore,completeWith expectedResult:FeedLoader.Result,when action:()->Void,file:StaticString = #file,line:UInt = #line){
+    func expect(sut:LocalFeedLoader,completeWith expectedResult:FeedLoader.Result,when action:()->Void,file:StaticString = #file,line:UInt = #line){
                
         let exp = expectation(description: "wait for completion")
         sut.load { receivedResult in

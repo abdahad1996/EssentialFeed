@@ -9,8 +9,9 @@ import Foundation
 import CoreData
  
 public class CoreDataFeedStore:FeedStore{
+    
     private let container:NSPersistentContainer
-    let context: NSManagedObjectContext
+    private let context: NSManagedObjectContext
     
     
     public init(storeURL:URL,bundle:Bundle = .main) throws{
@@ -24,48 +25,38 @@ public class CoreDataFeedStore:FeedStore{
         context.perform{action(context)}
          
     }
-    public func deleteCacheFeed(completion: @escaping deleteCompletion) {
+    
+    public func deleteCachedFeed(completion: @escaping DeletionCompletion) {
         perform { context in
-            do{
+                    
+            completion(Result{
                 try ManagedCache.find(context: context).map{context.delete($0)}.map(context.save)
-                completion(nil)
-            }catch {
-                completion(error)
-            }
+            })
             
         }
     }
     
-    public func insert(_ items: [LocalFeedImage], timeStamp: Date, completion: @escaping insertCompletion)  {
+    public func insert(_ items: [LocalFeedImage], timestamp timeStamp: Date, completion: @escaping InsertionCompletion)  {
         perform { context in
-            do {
+            completion(Result{
                 let cache = try ManagedCache.findNewInstance(context: context)
                 cache.timestamp = timeStamp
                 cache.feed = ManagedFeedImage.images(items: items, context: context)
                 
                 try context.save()
-                completion(nil)
                 
-                
-            }catch {
-                completion(error)
-            }
+            })
         }
         
     }
-    public func retrieve(completion: @escaping retrieveCompletion) {
+    
+    public func retrieve(completion: @escaping RetrievalCompletion) {
         perform { context in
-                do {
-                    if let cache = try ManagedCache.find(context: context) {
-                        completion(.found(
-                            feed: cache.localFeed,
-                            timeStamp: cache.timestamp))
-                    } else {
-                        completion(.empty)
+            completion( Result {
+                try ManagedCache.find(context: context).map{
+                        return CachedFeed(feed: $0.localFeed, timestamp: $0.timestamp)
                     }
-                } catch {
-                    completion(.failure(error))
-                }
+                })
             }
         }
 }

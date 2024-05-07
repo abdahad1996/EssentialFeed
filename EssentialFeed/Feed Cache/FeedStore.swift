@@ -7,19 +7,27 @@
 
 import Foundation
 
-public enum RetrieveCacheFeedResult{
-    case empty
-    case found(feed:[LocalFeedImage],timeStamp:Date)
-    case failure(Error)
-}
-public protocol FeedStore{
-    typealias deleteCompletion = (LocalFeedStore.saveResult) -> Void
-    typealias insertCompletion = (LocalFeedStore.saveResult) -> Void
-    typealias retrieveCompletion = (RetrieveCacheFeedResult) -> Void
+public typealias CachedFeed = (feed: [LocalFeedImage], timestamp: Date)
+
+public protocol FeedStore {
+    typealias DeletionResult = Result<Void, Error>
+    typealias DeletionCompletion = (DeletionResult) -> Void
     
-    func deleteCacheFeed(
-        completion:@escaping deleteCompletion)
-    func insert(_ items:[LocalFeedImage],timeStamp:Date,completion:@escaping insertCompletion)
+    typealias InsertionResult = Result<Void, Error>
+    typealias InsertionCompletion = (InsertionResult) -> Void
     
-    func retrieve(completion:@escaping retrieveCompletion)
+    typealias RetrievalResult = Result<CachedFeed?, Error>
+    typealias RetrievalCompletion = (RetrievalResult) -> Void
+
+    /// The completion handler can be invoked in any thread.
+    /// Clients are responsible to dispatch to appropriate threads, if needed.
+    func deleteCachedFeed(completion: @escaping DeletionCompletion)
+    
+    /// The completion handler can be invoked in any thread.
+    /// Clients are responsible to dispatch to appropriate threads, if needed.
+    func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion)
+    
+    /// The completion handler can be invoked in any thread.
+    /// Clients are responsible to dispatch to appropriate threads, if needed.
+    func retrieve(completion: @escaping RetrievalCompletion)
 }

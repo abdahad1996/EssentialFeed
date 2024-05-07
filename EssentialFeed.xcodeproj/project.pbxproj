@@ -48,6 +48,7 @@
 		65EC5D0F2BE5278100B71FCA /* FeedCacheTestsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651657AE2BCCAACC004C383B /* FeedCacheTestsHelper.swift */; };
 		65EC5D1E2BE9CFD600B71FCA /* LocalFeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EC5D1D2BE9CFD600B71FCA /* LocalFeedStore.swift */; };
 		65EC5D2C2BEA564000B71FCA /* EssentialFeediOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65EC5D242BEA563F00B71FCA /* EssentialFeediOS.framework */; };
+		65EC5D402BEAEDFA00B71FCA /* FeedViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EC5D3F2BEAEDFA00B71FCA /* FeedViewControllerTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -127,6 +128,7 @@
 		65EC5D2B2BEA564000B71FCA /* EssentialFeediOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeediOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		65EC5D392BEA571300B71FCA /* EssentialFeediOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialFeediOS.xctestplan; sourceTree = "<group>"; };
 		65EC5D3E2BEA5B6500B71FCA /* CI_macOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = CI_macOS.xctestplan; path = ../CI_macOS.xctestplan; sourceTree = "<group>"; };
+		65EC5D3F2BEAEDFA00B71FCA /* FeedViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewControllerTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -354,6 +356,7 @@
 		65EC5D2F2BEA564000B71FCA /* EssentialFeediOSTests */ = {
 			isa = PBXGroup;
 			children = (
+				65EC5D3F2BEAEDFA00B71FCA /* FeedViewControllerTests.swift */,
 			);
 			path = EssentialFeediOSTests;
 			sourceTree = "<group>";
@@ -514,6 +517,7 @@
 					};
 					65EC5D2A2BEA564000B71FCA = {
 						CreatedOnToolsVersion = 15.3;
+						LastSwiftMigration = 1530;
 					};
 				};
 			};
@@ -661,6 +665,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65EC5D402BEAEDFA00B71FCA /* FeedViewControllerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1076,6 +1081,7 @@
 		65EC5D372BEA564000B71FCA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ADTR2923N7;
@@ -1090,6 +1096,7 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -1098,6 +1105,7 @@
 		65EC5D382BEA564000B71FCA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ADTR2923N7;

@@ -27,7 +27,6 @@ class FeedViewController:UITableViewController {
         
         onViewDidAppear = { vc in
             vc.onViewDidAppear = nil
-            vc.refreshControl?.beginRefreshing()
             vc.load()
         }
         
@@ -39,6 +38,7 @@ class FeedViewController:UITableViewController {
     }
     
     @objc func load(){
+        refreshControl?.beginRefreshing()
         loader?.load(completion: { [refreshControl] _ in
             refreshControl?.endRefreshing()
         })
@@ -66,7 +66,7 @@ final class FeedViewControllerTests:XCTestCase{
     
     func test_viewDidLoad_showsLoadingIndicator(){
          
-        let (sut,loader) =  makeSUT()
+        let (sut,_) =  makeSUT()
         
         sut.loadViewIfNeeded()
         sut.replaceRefreshControlWithFakeForiOS17Support()
@@ -84,8 +84,8 @@ final class FeedViewControllerTests:XCTestCase{
         sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
         
-        loader.completion(with: .success([]))
-        
+        loader.completion(with:[])
+
         XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
     }
     
@@ -102,6 +102,42 @@ final class FeedViewControllerTests:XCTestCase{
         sut.refreshControl?.simulatePullToRefresh()
         
         XCTAssertEqual(loader.loadCallCount, 2)
+    }
+    
+    func test_pullToRefresh_showsLoadingIndicator() {
+        
+        let (sut,loader) =  makeSUT()
+        
+        sut.loadViewIfNeeded()
+        sut.replaceRefreshControlWithFakeForiOS17Support()
+        sut.simulateAppearance()
+        loader.completion(with:[])
+        XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
+
+        sut.refreshControl?.simulatePullToRefresh()
+        
+        XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
+
+    }
+    
+    func test_pullToRefresh_hidesLoadingIndicatorOnLoaderCompletion() {
+        let (sut,loader) =  makeSUT()
+        
+        sut.loadViewIfNeeded()
+        sut.replaceRefreshControlWithFakeForiOS17Support()
+        sut.simulateAppearance()
+        loader.completion(with:[])
+        XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
+
+        sut.refreshControl?.simulatePullToRefresh()
+        XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
+
+        loader.completion(with:[])
+        XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
+
+        
+        
+        
     }
     
     private func makeSUT(file:StaticString = #file,line:UInt = #line) -> (FeedViewController,loaderSpy) {
@@ -124,8 +160,8 @@ class loaderSpy:FeedLoader{
         completions.append(completion)
     }
     
-    func completion(with success:FeedLoader.Result,index:Int = 0){
-        completions[index](success)
+    func completion(with feed:[FeedImage],index:Int = 0){
+        completions[index](.success(feed))
     }
     
     

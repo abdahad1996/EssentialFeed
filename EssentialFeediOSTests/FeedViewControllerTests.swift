@@ -47,101 +47,45 @@ class FeedViewController:UITableViewController {
 
 
 final class FeedViewControllerTests:XCTestCase{
-    func test_init_doesNotCallLoad(){
-      
-        let (sut,loader) =  makeSUT()
-        
-        XCTAssertEqual(loader.loadCallCount, 0)
-    }
     
-    func test_viewDidLoad_loadsFeed(){
-         
+    func test_loadFeedActions_requestFeedFromLoader(){
         let (sut,loader) =  makeSUT()
-        
-        sut.loadViewIfNeeded()
-        sut.simulateAppearance()
-        
-        XCTAssertEqual(loader.loadCallCount, 1)
-    }
-    
-    func test_viewDidLoad_showsLoadingIndicator(){
-         
-        let (sut,_) =  makeSUT()
-        
+        XCTAssertEqual(loader.loadCallCount, 0, "Expected no loading requests before view is loaded")
         sut.loadViewIfNeeded()
         sut.replaceRefreshControlWithFakeForiOS17Support()
 
         sut.simulateAppearance()
+        XCTAssertEqual(loader.loadCallCount, 1, "Expected a loading request once view is loaded")
+
+        sut.simulateUserInitiatedFeedReload()
+
+        XCTAssertEqual(loader.loadCallCount, 2, "Expected another loading request once user initiates a reload")
         
-        XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
+        
+        sut.simulateUserInitiatedFeedReload()
+
+        XCTAssertEqual(loader.loadCallCount, 3, "Expected yet another loading request once user initiates another reload")
     }
-    
-    func test_viewDidLoad_hidesLoadingIndicatorOnLoaderCompletion(){
-         
+    func test_loadingFeedIndicator_isVisibleWhileLoadingFeed() {
         let (sut,loader) =  makeSUT()
         
         sut.loadViewIfNeeded()
         sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
-        
-        loader.completion(with:[])
+        XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once view is loaded")
 
-        XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
-    }
-    
-    
-    func test_pullsToRefresh_loadsFeed(){
-         
-        let (sut,loader) =  makeSUT()
+
+        loader.completion(with:[],at: 0)
+        XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once loading is completed")
+        
  
-        sut.loadViewIfNeeded()
-        sut.replaceRefreshControlWithFakeForiOS17Support()
-
-        sut.simulateAppearance()
-
         sut.simulateUserInitiatedFeedReload()
-
-        XCTAssertEqual(loader.loadCallCount, 2)
+        XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once user initiates a reload")
         
-        
-        sut.simulateUserInitiatedFeedReload()
-
-        XCTAssertEqual(loader.loadCallCount, 3)
-    }
-    
-    func test_userInitiatedFeedReload_showsLoadingIndicator() {
-        
-        let (sut,loader) =  makeSUT()
-        
-        sut.loadViewIfNeeded()
-        sut.replaceRefreshControlWithFakeForiOS17Support()
-        sut.simulateAppearance()
-        loader.completion(with:[])
-        XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
-
-        sut.simulateUserInitiatedFeedReload()
-
-        XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
-
-    }
-    
-    func test_userInitiatedFeedReload_hidesLoadingIndicatorOnLoaderCompletion() {
-        let (sut,loader) =  makeSUT()
-        
-        sut.loadViewIfNeeded()
-        sut.replaceRefreshControlWithFakeForiOS17Support()
-        sut.simulateAppearance()
-        loader.completion(with:[])
-        XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
-
-        sut.simulateUserInitiatedFeedReload()
-        XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
-
-        loader.completion(with:[])
-        XCTAssertEqual(sut.refreshControl?.isRefreshing, false)
+        loader.completion(with:[],at:1)
+        XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user initiated loading is completed")
         
     }
-    
     private func makeSUT(file:StaticString = #file,line:UInt = #line) -> (FeedViewController,loaderSpy) {
         let loader = loaderSpy()
         let sut =  FeedViewController(loader: loader)
@@ -162,7 +106,7 @@ class loaderSpy:FeedLoader{
         completions.append(completion)
     }
     
-    func completion(with feed:[FeedImage],index:Int = 0){
+    func completion(with feed:[FeedImage],at index:Int = 0){
         completions[index](.success(feed))
     }
     
@@ -173,6 +117,9 @@ private extension FeedViewController{
             refreshControl?.simulatePullToRefresh()
         }
     
+    var isShowingLoadingIndicator: Bool {
+            return refreshControl?.isRefreshing == true
+        }
     
     func replaceRefreshControlWithFakeForiOS17Support(){
         let fake = FakeRefreshControl()

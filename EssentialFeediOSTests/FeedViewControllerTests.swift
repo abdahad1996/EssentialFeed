@@ -268,6 +268,28 @@ final class FeedViewControllerTests:XCTestCase{
         
     }
     
+    func test_feedImageView_preloadsImageURLWhenNearVisible() {
+        
+        let image0 = makeImage(url: URL(string: "http://url-0.com")!)
+        let image1 = makeImage(url: URL(string: "http://url-1.com")!)
+        let (sut, loader) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        
+        sut.replaceRefreshControlWithFakeForiOS17Support()
+        sut.simulateAppearance()
+        
+        loader.completionWithSuccess(with: [image0, image1])
+        XCTAssertEqual(loader.loadedImageURLs, [], "Expected no image URL requests until image is near visible")
+
+        sut.simulateFeedImageViewNearVisible(at: 0)
+        XCTAssertEqual(loader.loadedImageURLs, [image0.url], "Expected first image URL request once first image is near visible")
+
+        sut.simulateFeedImageViewNearVisible(at: 1)
+        XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url], "Expected second image URL request once second image is near visible")
+        
+    }
+    
     //MARK: HELPERS
     private func assertThat(_ sut: FeedViewController, isRendering feed: [FeedImage], file: StaticString = #file, line: UInt = #line) {
         guard sut.numberOfRenderedFeedImageViews() == feed.count else {
@@ -389,6 +411,11 @@ private extension FeedViewController{
         delegate?.tableView?(tableView, didEndDisplaying: cell!, forRowAt: indexPath)
     }
     
+    func simulateFeedImageViewNearVisible(at index:Int){
+        let datasource = tableView.prefetchDataSource
+        let indexPath = IndexPath(row: index, section: numberOfSections)
+        datasource?.tableView(tableView, prefetchRowsAt: [indexPath])
+    }
     
     func simulateUserInitiatedFeedReload() {
         refreshControl?.simulatePullToRefresh()

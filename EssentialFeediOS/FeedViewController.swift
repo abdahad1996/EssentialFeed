@@ -51,13 +51,13 @@ public class FeedViewController:UITableViewController {
     @objc func load(){
         refreshControl?.beginRefreshing()
         loader?.load(completion: { [weak self] result in
-           
+            
             if let images = try? result.get()  {
                 self?.tableModel = images
                 
                 self?.tableView.reloadData()
             }
-          
+            
             self?.refreshControl?.endRefreshing()
         })
     }
@@ -74,12 +74,21 @@ public class FeedViewController:UITableViewController {
         cell.feedImageView.image = nil
         cell.feedImageContainer.startShimmering()
         cell.feedImageRetryButton.isHidden = true
-        tasks[indexPath] = imageLoader?.loadImageData(from: tableModel[indexPath.row].url, completion: { [weak cell]  result in
-            cell?.feedImageContainer.stopShimmering()
-            let data = try? result.get()
-            cell?.feedImageView.image = data.map(UIImage.init) ?? nil
-            cell?.feedImageRetryButton.isHidden = (data != nil)
-        })
+        
+        let loadImage = { [weak self,weak cell ] in
+            guard let self = self else{return}
+            
+            self.tasks[indexPath] = self.imageLoader?.loadImageData(from: tableModel[indexPath.row].url, completion: { [weak cell]  result in
+                cell?.feedImageContainer.stopShimmering()
+                let data = try? result.get()
+                cell?.feedImageView.image = data.map(UIImage.init) ?? nil
+                cell?.feedImageRetryButton.isHidden = (data != nil)
+            })
+        }
+       
+        
+        cell.onRetry = loadImage
+        loadImage()
         
         return cell
     }
@@ -97,9 +106,17 @@ public class FeedImageCell:UITableViewCell{
     public let feedImageContainer = UIView()
     public let feedImageView = UIImageView()
     
-    public let feedImageRetryButton = UIButton()
-
+    private(set) public lazy var feedImageRetryButton: UIButton = {
+        let button = UIButton()
+        button.addTarget(self, action: #selector(retryButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    var onRetry: (() -> Void)?
+    
+    @objc private func retryButtonTapped() {
+        onRetry?()
+    }
     
     
-
 }

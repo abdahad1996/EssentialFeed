@@ -144,16 +144,51 @@ final class FeedViewControllerTests:XCTestCase{
         
         XCTAssertEqual(sut.numberOfRenderedFeedImageViews(), 2)
         XCTAssertEqual(loader.cancelledImageURLs, [], "Expected no cancelled image URL requests until image is not visible")
-
-                sut.simulateFeedImageViewNotVisible(at: 0)
-                XCTAssertEqual(loader.cancelledImageURLs, [image0.url], "Expected one cancelled image URL request once first image is not visible anymore")
-
-                sut.simulateFeedImageViewNotVisible(at: 1)
-                XCTAssertEqual(loader.cancelledImageURLs, [image0.url, image1.url], "Expected two cancelled image URL requests once second image is also not visible anymore")
+        
+        sut.simulateFeedImageViewNotVisible(at: 0)
+        XCTAssertEqual(loader.cancelledImageURLs, [image0.url], "Expected one cancelled image URL request once first image is not visible anymore")
+        
+        sut.simulateFeedImageViewNotVisible(at: 1)
+        XCTAssertEqual(loader.cancelledImageURLs, [image0.url, image1.url], "Expected two cancelled image URL requests once second image is also not visible anymore")
         
         
     }
     
+    func test_feedImageViewLoadingIndicator_isVisibleWhileLoadingImage() {
+        let (sut,loader) =  makeSUT()
+        let image0 = makeImage(description: "a description", location: "a location")
+        let image1 = makeImage(description: "a description", location: "a location")
+        
+        sut.loadViewIfNeeded()
+        sut.replaceRefreshControlWithFakeForiOS17Support()
+        sut.simulateAppearance()
+        
+        loader.completionWithSuccess(with:[image0,image1])
+        XCTAssertEqual(sut.numberOfRenderedFeedImageViews(), 2)
+        
+        
+        let cell0 = sut.simulateFeedImageViewVisible(at: 0)
+        let cell1 = sut.simulateFeedImageViewVisible(at: 1)
+        
+        XCTAssertEqual(cell0?.isShowingImageLoadingIndicator, true, "Expected loading indicator for first view while loading first image")
+        XCTAssertEqual(cell1?.isShowingImageLoadingIndicator, true, "Expected loading indicator for second view while loading second image")
+        
+        loader.completeImageLoading(at: 0)
+        XCTAssertEqual(cell0?.isShowingImageLoadingIndicator, false, "Expected no loading indicator for first view once first image loading completes successfully")
+        XCTAssertEqual(cell1?.isShowingImageLoadingIndicator, true, "Expected no loading indicator state change for second view once first image loading completes successfully")
+        
+        loader.completeImageLoadingWithError(at: 1)
+        XCTAssertEqual(cell0?.isShowingImageLoadingIndicator, false, "Expected no loading indicator state change for first view once second image loading completes with error")
+        XCTAssertEqual(cell1?.isShowingImageLoadingIndicator, false, "Expected no loading indicator for second view once second image loading completes with error")
+        
+        
+        
+        
+        
+        
+    }
+    
+    //MARK: HELPERS
     private func assertThat(_ sut: FeedViewController, isRendering feed: [FeedImage], file: StaticString = #file, line: UInt = #line) {
         guard sut.numberOfRenderedFeedImageViews() == feed.count else {
             return XCTFail("Expected \(feed.count) images, got \(sut.numberOfRenderedFeedImageViews()) instead.", file: file, line: line)
@@ -192,9 +227,8 @@ final class FeedViewControllerTests:XCTestCase{
     }
 }
 
+//MARK: SPY
 class loaderSpy:FeedLoader,FeedImageLoader{
-   
-    
     
     
     // MARK: - FeedLoader
@@ -219,9 +253,13 @@ class loaderSpy:FeedLoader,FeedImageLoader{
     
     // MARK: - FeedImageDataLoader
     
-    private(set) var loadedImageURLs = [URL]()
+    private var imageRequests = [(url:URL,completion:(FeedImageLoader.Result) -> Void )]()
+    
+    var loadedImageURLs:[URL]{
+        return imageRequests.map{$0.url}
+    }
     private(set) var cancelledImageURLs = [URL]()
-
+    
     
     private struct TaskSpy:FeedImageDataLoaderTask{
         public let cancelTask:() -> Void
@@ -230,24 +268,35 @@ class loaderSpy:FeedLoader,FeedImageLoader{
         }
         
     }
-    func loadImageData(from url: URL) -> FeedImageDataLoaderTask {
-        loadedImageURLs.append(url)
+    
+    
+    func loadImageData(from url: URL, completion: @escaping (FeedImageLoader.Result) -> Void) -> FeedImageDataLoaderTask {
+        
+        
+        imageRequests.append((url,completion))
+        
         return TaskSpy { [weak self ] in
             self?.cancelledImageURLs.append(url)
         }
     }
     
-     
-    
-    
+    func completeImageLoading(with imageData:Data = Data(),at index:Int) {
+        imageRequests[index].completion(.success(imageData))
+    }
+    func completeImageLoadingWithError(at index:Int) {
+        let error = NSError(domain: "any", code: 0)
+        imageRequests[index].completion(.failure(error))
+    }
     
 }
+
+//MARK: CONTROLLER EXTENSIONS
 private extension FeedViewController{
     
     //triggers image requests as cell is initalized
     @discardableResult
-    func simulateFeedImageViewVisible(at index:Int) -> UITableViewCell? {
-       return feedImageView(at: index)
+    func simulateFeedImageViewVisible(at index:Int) -> FeedImageCell? {
+        return feedImageView(at: index)
         
     }
     
@@ -292,10 +341,10 @@ private extension FeedViewController{
         return 0
     }
     
-    func feedImageView(at index:Int) -> UITableViewCell? {
+    func feedImageView(at index:Int) -> FeedImageCell? {
         let ds = tableView.dataSource
         let indexpath = IndexPath(row: index, section: numberOfSections)
-        return ds?.tableView(tableView, cellForRowAt: indexpath)
+        return ds?.tableView(tableView, cellForRowAt: indexpath) as? FeedImageCell
     }
 }
 
@@ -309,6 +358,11 @@ private extension FeedImageCell{
     var descriptionText:String? {
         return descriptionLabel.text
     }
+    
+    var isShowingImageLoadingIndicator:Bool{
+        return feedImageContainer.isShimmering
+    }
+    
 }
 private extension UIRefreshControl {
     func simulatePullToRefresh(){

@@ -223,13 +223,21 @@ class loaderSpy:FeedLoader,FeedImageLoader{
     private(set) var cancelledImageURLs = [URL]()
 
     
-    func loadImageData(from url: URL) {
+    private struct TaskSpy:FeedImageDataLoaderTask{
+        public let cancelTask:() -> Void
+        func cancel() {
+            cancelTask()
+        }
+        
+    }
+    func loadImageData(from url: URL) -> FeedImageDataLoaderTask {
         loadedImageURLs.append(url)
+        return TaskSpy { [weak self ] in
+            self?.cancelledImageURLs.append(url)
+        }
     }
     
-    func cancelImageRequest(from url: URL){
-        cancelledImageURLs.append(url)
-    }
+     
     
     
     

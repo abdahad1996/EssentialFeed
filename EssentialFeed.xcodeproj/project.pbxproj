@@ -422,6 +422,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		65B43EF22C04023300983405 /* Feed UI */ = {
+			isa = PBXGroup;
+			children = (
+				65B43EDB2C03FDE500983405 /* Views */,
+				65B43EDA2C03FDDF00983405 /* Controllers */,
+			);
+			path = "Feed UI";
+			sourceTree = "<group>";
+		};
 		65E09E832BC2D2B80051D5C8 /* Feed Cache */ = {
 			isa = PBXGroup;
 			children = (
@@ -465,8 +474,7 @@
 		65EC5D252BEA563F00B71FCA /* EssentialFeediOS */ = {
 			isa = PBXGroup;
 			children = (
-				65B43EDB2C03FDE500983405 /* Views */,
-				65B43EDA2C03FDDF00983405 /* Controllers */,
+				65B43EF22C04023300983405 /* Feed UI */,
 			);
 			path = EssentialFeediOS;
 			sourceTree = "<group>";

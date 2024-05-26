@@ -507,15 +507,7 @@ private extension FeedImageCell{
     }
     
 }
-private extension UIRefreshControl {
-    func simulatePullToRefresh(){
-        allTargets.forEach({ target in
-            actions(forTarget: target, forControlEvent: .valueChanged)?.forEach({
-                (target as NSObject).perform(Selector($0))
-            })
-        })
-    }
-}
+
 
 private extension UIButton {
     func simulateTap() {
@@ -527,20 +519,5 @@ private extension UIButton {
     }
 }
 
-
-
-private class FakeRefreshControl:UIRefreshControl{
-    private var _isRefreshing = false
-    override var isRefreshing: Bool {
-        return _isRefreshing
-    }
-    override func beginRefreshing() {
-        _isRefreshing = true
-    }
-    
-    override func endRefreshing() {
-        _isRefreshing = false
-    }
-}
 
 

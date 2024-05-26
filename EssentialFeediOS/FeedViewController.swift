@@ -97,7 +97,7 @@ public class FeedViewController:UITableViewController,UITableViewDataSourcePrefe
     }
     
     public override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        tasks[indexPath]?.cancel()
+        cancelTask(forRowAt: indexPath)
     }
     
     public func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
@@ -105,6 +105,15 @@ public class FeedViewController:UITableViewController,UITableViewDataSourcePrefe
             self.tasks[indexPath] = self.imageLoader?.loadImageData(from: tableModel[indexPath.row].url, completion: {_ in})
         }
     }
+    public func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
+        indexPaths.forEach(cancelTask)
+    }
+         
+      func cancelTask(forRowAt indexPath:IndexPath) {
+            self.tasks[indexPath]?.cancel()
+            self.tasks[indexPath] = nil
+        }
+    
 }
 
 

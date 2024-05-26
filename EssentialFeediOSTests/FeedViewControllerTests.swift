@@ -290,6 +290,25 @@ final class FeedViewControllerTests:XCTestCase{
         
     }
     
+    func test_feedImageView_cancelsImageURLPreloadingWhenNotNearVisibleAnymore() {
+            let image0 = makeImage(url: URL(string: "http://url-0.com")!)
+            let image1 = makeImage(url: URL(string: "http://url-1.com")!)
+            let (sut, loader) = makeSUT()
+
+            sut.loadViewIfNeeded()
+        sut.replaceRefreshControlWithFakeForiOS17Support()
+        sut.simulateAppearance()
+        
+            loader.completionWithSuccess(with: [image0, image1])
+            XCTAssertEqual(loader.cancelledImageURLs, [], "Expected no cancelled image URL requests until image is not near visible")
+
+            sut.simulateFeedImageViewNotNearVisible(at: 0)
+            XCTAssertEqual(loader.cancelledImageURLs, [image0.url], "Expected first cancelled image URL request once first image is not near visible anymore")
+
+            sut.simulateFeedImageViewNotNearVisible(at: 1)
+            XCTAssertEqual(loader.cancelledImageURLs, [image0.url, image1.url], "Expected second cancelled image URL request once second image is not near visible anymore")
+        }
+    
     //MARK: HELPERS
     private func assertThat(_ sut: FeedViewController, isRendering feed: [FeedImage], file: StaticString = #file, line: UInt = #line) {
         guard sut.numberOfRenderedFeedImageViews() == feed.count else {
@@ -371,7 +390,6 @@ class loaderSpy:FeedLoader,FeedImageLoader{
         
     }
     
-    
     func loadImageData(from url: URL, completion: @escaping (FeedImageLoader.Result) -> Void) -> FeedImageDataLoaderTask {
         
         
@@ -417,6 +435,13 @@ private extension FeedViewController{
         datasource?.tableView(tableView, prefetchRowsAt: [indexPath])
     }
     
+    func simulateFeedImageViewNotNearVisible(at index:Int){
+        simulateFeedImageViewNearVisible(at: index)
+        let datasource = tableView.prefetchDataSource
+        let indexPath = IndexPath(row: index, section: numberOfSections)
+
+        datasource?.tableView?(tableView, cancelPrefetchingForRowsAt: [indexPath])
+    }
     func simulateUserInitiatedFeedReload() {
         refreshControl?.simulatePullToRefresh()
     }

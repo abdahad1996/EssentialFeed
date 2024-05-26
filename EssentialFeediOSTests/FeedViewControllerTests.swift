@@ -41,14 +41,14 @@ final class FeedViewControllerTests:XCTestCase{
         XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once view is loaded")
 
 
-        loader.completion(at: 0)
+        loader.completionWithSuccess(at: 0)
         XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once loading is completed")
         
  
         sut.simulateUserInitiatedFeedReload()
         XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once user initiates a reload")
         
-        loader.completion(at:1)
+        loader.completionWithSuccess(at:1)
         XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user initiated loading is completed")
         
     }
@@ -63,7 +63,7 @@ final class FeedViewControllerTests:XCTestCase{
         sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
         
-        loader.completion(with:[image0])
+        loader.completionWithSuccess(with:[image0])
         
         XCTAssertEqual(sut.numberOfRenderedFeedImageViews(),1)
 
@@ -75,9 +75,27 @@ final class FeedViewControllerTests:XCTestCase{
         
         
         sut.simulateUserInitiatedFeedReload()
-        loader.completion(with:[image0,image1,image2,image3])
+        loader.completionWithSuccess(with:[image0,image1,image2,image3])
         assertThat(sut,isRendering:[image0,image1,image2,image3])
 
+    }
+    
+    func test_LoadCompletion_doesNotAlterCurrentRenderingStateOnError(){
+        let (sut,loader) =  makeSUT()
+        let image0 = makeImage(description: "a description", location: "a location")
+
+        sut.loadViewIfNeeded()
+        sut.replaceRefreshControlWithFakeForiOS17Support()
+        sut.simulateAppearance()
+        
+        loader.completionWithSuccess(with:[image0])
+        
+        assertThat(sut, isRendering: [image0])
+        
+        sut.simulateUserInitiatedFeedReload()
+        loader.completionLoadingWithError(at: 1)
+        
+        assertThat(sut, isRendering: [image0])
     }
     
     private func assertThat(_ sut: FeedViewController, isRendering feed: [FeedImage], file: StaticString = #file, line: UInt = #line) {
@@ -128,8 +146,13 @@ class loaderSpy:FeedLoader{
         completions.append(completion)
     }
     
-    func completion(with feed:[FeedImage] = [],at index:Int = 0){
+    func completionWithSuccess(with feed:[FeedImage] = [],at index:Int = 0){
         completions[index](.success(feed))
+    }
+    
+    func completionLoadingWithError(at index:Int = 0){
+        let error = NSError(domain: "an error", code: 2)
+        completions[index](.failure(error))
     }
     
     
@@ -208,3 +231,5 @@ private class FakeRefreshControl:UIRefreshControl{
         _isRefreshing = false
     }
 }
+
+

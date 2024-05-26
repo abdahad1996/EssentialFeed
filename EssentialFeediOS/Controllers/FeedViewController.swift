@@ -17,7 +17,7 @@ public protocol FeedImageLoader {
 }
 
 
-public class FeedViewController:UITableViewController,UITableViewDataSourcePrefetching {
+public final class FeedViewController:UITableViewController,UITableViewDataSourcePrefetching {
     
     
     private var loader:FeedLoader?

@@ -131,6 +131,28 @@ final class FeedViewControllerTests:XCTestCase{
         
         
     }
+    func test_feedImageView_cancelsImageLoadingWhenNotVisibleAnymore() {
+        let (sut,loader) =  makeSUT()
+        let image0 = makeImage(description: "a description", location: "a location")
+        let image1 = makeImage(description: "a description", location: "a location")
+        
+        sut.loadViewIfNeeded()
+        sut.replaceRefreshControlWithFakeForiOS17Support()
+        sut.simulateAppearance()
+        
+        loader.completionWithSuccess(with:[image0,image1])
+        
+        XCTAssertEqual(sut.numberOfRenderedFeedImageViews(), 2)
+        XCTAssertEqual(loader.cancelledImageURLs, [], "Expected no cancelled image URL requests until image is not visible")
+
+                sut.simulateFeedImageViewNotVisible(at: 0)
+                XCTAssertEqual(loader.cancelledImageURLs, [image0.url], "Expected one cancelled image URL request once first image is not visible anymore")
+
+                sut.simulateFeedImageViewNotVisible(at: 1)
+                XCTAssertEqual(loader.cancelledImageURLs, [image0.url, image1.url], "Expected two cancelled image URL requests once second image is also not visible anymore")
+        
+        
+    }
     
     private func assertThat(_ sut: FeedViewController, isRendering feed: [FeedImage], file: StaticString = #file, line: UInt = #line) {
         guard sut.numberOfRenderedFeedImageViews() == feed.count else {
@@ -171,6 +193,8 @@ final class FeedViewControllerTests:XCTestCase{
 }
 
 class loaderSpy:FeedLoader,FeedImageLoader{
+   
+    
     
     
     // MARK: - FeedLoader
@@ -196,9 +220,15 @@ class loaderSpy:FeedLoader,FeedImageLoader{
     // MARK: - FeedImageDataLoader
     
     private(set) var loadedImageURLs = [URL]()
+    private(set) var cancelledImageURLs = [URL]()
+
     
     func loadImageData(from url: URL) {
         loadedImageURLs.append(url)
+    }
+    
+    func cancelImageRequest(from url: URL){
+        cancelledImageURLs.append(url)
     }
     
     
@@ -207,10 +237,22 @@ class loaderSpy:FeedLoader,FeedImageLoader{
 private extension FeedViewController{
     
     //triggers image requests as cell is initalized
-    func simulateFeedImageViewVisible(at index:Int) {
-        let cell = feedImageView(at: index)
+    @discardableResult
+    func simulateFeedImageViewVisible(at index:Int) -> UITableViewCell? {
+       return feedImageView(at: index)
         
     }
+    
+    //triggers delegate method
+    func simulateFeedImageViewNotVisible(at index:Int) {
+        let cell = simulateFeedImageViewVisible(at: index)
+        
+        let delegate = tableView.delegate
+        let indexPath = IndexPath(row: index, section: numberOfSections)
+        delegate?.tableView?(tableView, didEndDisplaying: cell!, forRowAt: indexPath)
+    }
+    
+    
     func simulateUserInitiatedFeedReload() {
         refreshControl?.simulatePullToRefresh()
     }

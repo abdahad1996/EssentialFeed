@@ -8,19 +8,21 @@
 import UIKit
 import EssentialFeed
 
+
 public final class FeedViewController:UITableViewController,UITableViewDataSourcePrefetching {
     
     
     public var refreshController:FeedRefreshViewController?
-    private var imageLoader:FeedImageLoader?
     private var onViewDidAppear:((FeedViewController) -> Void)?
-    private var tableModel = [FeedImage]()
-    var cellControllers = [IndexPath: FeedImageCellController]()
+    var tableModel = [FeedImageCellController](){
+        didSet {
+            self.tableView.reloadData()
+        }
+    }
     
-    public convenience init(loader: FeedLoader,imageLoader:FeedImageLoader) {
+     convenience init(refreshController:FeedRefreshViewController) {
         self.init()
-        self.refreshController = FeedRefreshViewController(feedLoader: loader)
-        self.imageLoader = imageLoader
+        self.refreshController = refreshController
     }
     
     public override func viewDidLoad() {
@@ -34,10 +36,7 @@ public final class FeedViewController:UITableViewController,UITableViewDataSourc
             vc.refreshController?.refresh()
         }
         
-        refreshController?.onRefresh = { [weak self] feed in
-            self?.tableModel = feed
-            self?.tableView.reloadData()
-        }
+         
         
     }
     public override func viewIsAppearing(_ animated: Bool) {
@@ -72,13 +71,11 @@ public final class FeedViewController:UITableViewController,UITableViewDataSourc
         }
     
     private func removeCellControllers(forRowAt indexPath:IndexPath){
-        cellControllers[indexPath] = nil
+        tableModel[indexPath.row].cancel()
     }
     
     private func cellController(forRowAt indexPath:IndexPath) -> FeedImageCellController{
-        let cellController = FeedImageCellController(model: tableModel[indexPath.row], imageLoader: imageLoader!)
-        cellControllers[indexPath] = cellController
-        return cellController
+        return tableModel[indexPath.row]
     }
     
 }

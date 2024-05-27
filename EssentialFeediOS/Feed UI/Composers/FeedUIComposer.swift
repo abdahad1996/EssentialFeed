@@ -7,6 +7,7 @@
 
 import Foundation
 import EssentialFeed
+import UIKit
 
 public final class FeedUIComposer {
     private init(){}
@@ -36,7 +37,8 @@ public final class FeedUIComposer {
                 return FeedImageCellController(
                     viewModel: FeedImageCellViewModel(
                         model: feed,
-                        imageLoader:imageLoader
+                        imageLoader:imageLoader,
+                        transformer: UIImage.init
                     )
                 )
             })

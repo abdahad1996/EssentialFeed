@@ -12,7 +12,10 @@ public final class FeedUIComposer {
     private init(){}
     
     
-    public static func feedComposedWith(loader: FeedLoader,imageLoader:FeedImageLoader) -> FeedViewController{
+    public static func feedComposedWith(
+        loader: FeedLoader,
+        imageLoader:FeedImageLoader
+    ) -> FeedViewController{
         let viewModel = FeedViewModel(feedLoader: loader)
         let refreshController = FeedRefreshViewController(viewModel: viewModel)
 
@@ -21,10 +24,21 @@ public final class FeedUIComposer {
       return feedViewController
     }
     
-    private static func adaptFeedToCellControllers(_ feedViewController: FeedViewController, _ imageLoader: any FeedImageLoader) -> ([FeedImage]) -> Void {
+    private static func adaptFeedToCellControllers(
+        _ feedViewController: FeedViewController,
+        _ imageLoader: any FeedImageLoader
+    ) -> (
+        [FeedImage]
+    ) -> Void {
         return { [weak feedViewController] feed in
-            feedViewController?.tableModel = feed.map({ feed in
-                return FeedImageCellController(model: feed, imageLoader:imageLoader)
+            feedViewController?.tableModel = feed.map({
+                feed in
+                return FeedImageCellController(
+                    viewModel: FeedImageCellViewModel(
+                        model: feed,
+                        imageLoader:imageLoader
+                    )
+                )
             })
             
         }

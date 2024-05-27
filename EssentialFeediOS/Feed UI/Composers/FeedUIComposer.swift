@@ -11,16 +11,21 @@ import EssentialFeed
 public final class FeedUIComposer {
     private init(){}
     
+    
     public static func feedComposedWith(loader: FeedLoader,imageLoader:FeedImageLoader) -> FeedViewController{
         let refreshController = FeedRefreshViewController(feedLoader: loader)
 
         let feedViewController = FeedViewController(refreshController: refreshController)
-        refreshController.onRefresh = { [weak feedViewController] feed in
+        refreshController.onRefresh = adaptFeedToCellControllers(feedViewController, imageLoader)
+      return feedViewController
+    }
+    
+    private static func adaptFeedToCellControllers(_ feedViewController: FeedViewController, _ imageLoader: any FeedImageLoader) -> ([FeedImage]) -> Void {
+        return { [weak feedViewController] feed in
             feedViewController?.tableModel = feed.map({ feed in
                 return FeedImageCellController(model: feed, imageLoader:imageLoader)
             })
-             
+            
         }
-      return feedViewController
     }
 }

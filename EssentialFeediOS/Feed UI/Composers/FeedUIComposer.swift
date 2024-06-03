@@ -35,7 +35,7 @@ public final class FeedUIComposer {
             feedViewController?.tableModel = feed.map({
                 feed in
                 return FeedImageCellController(
-                    viewModel: FeedImageCellViewModel(
+                    viewModel: FeedImageViewModel(
                         model: feed,
                         imageLoader:imageLoader,
                         transformer: UIImage.init

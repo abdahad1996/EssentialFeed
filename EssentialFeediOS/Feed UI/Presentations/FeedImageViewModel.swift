@@ -8,7 +8,7 @@
 import Foundation
 import EssentialFeed
 
-public final class FeedImageCellViewModel<Image>{
+public final class FeedImageViewModel<Image>{
     typealias Observer<T> = (T) -> Void
     private let model:FeedImage
     private var task:FeedImageDataLoaderTask?

@@ -17,32 +17,40 @@ public final class FeedUIComposer {
         loader: FeedLoader,
         imageLoader:FeedImageLoader
     ) -> FeedViewController{
-        let viewModel = FeedViewModel(feedLoader: loader)
-        let refreshController = FeedRefreshViewController(viewModel: viewModel)
+        let presenter = FeedPresenter(feedLoader: loader)
+        let refreshController = FeedRefreshViewController(presenter: presenter)
+        presenter.feedLoadingView = refreshController
 
         let feedViewController = FeedViewController(refreshController: refreshController)
-        viewModel.onFeedLoad = adaptFeedToCellControllers(feedViewController, imageLoader)
+        let adapter = FeedViewAdapter(imageLoader: imageLoader)
+        adapter.feedViewController = feedViewController
+        
+        presenter.feedView = adapter
       return feedViewController
     }
     
-    private static func adaptFeedToCellControllers(
-        _ feedViewController: FeedViewController,
-        _ imageLoader: any FeedImageLoader
-    ) -> (
-        [FeedImage]
-    ) -> Void {
-        return { [weak feedViewController] feed in
-            feedViewController?.tableModel = feed.map({
-                feed in
-                return FeedImageCellController(
-                    viewModel: FeedImageViewModel(
-                        model: feed,
-                        imageLoader:imageLoader,
-                        transformer: UIImage.init
-                    )
-                )
-            })
-            
-        }
+}
+
+class FeedViewAdapter:FeedView{
+    weak var feedViewController: FeedViewController?
+    let imageLoader:  FeedImageLoader
+    
+    init(imageLoader: FeedImageLoader) {
+        self.imageLoader = imageLoader
     }
+    func display(feed: [FeedImage]) {
+        
+        feedViewController?.tableModel = feed.map({
+            feed in
+            return FeedImageCellController(
+                viewModel: FeedImageViewModel(
+                    model: feed,
+                    imageLoader:imageLoader,
+                    transformer: UIImage.init
+                )
+            )
+        })
+    }
+    
+    
 }

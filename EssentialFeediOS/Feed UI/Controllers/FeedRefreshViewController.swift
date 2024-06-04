@@ -15,7 +15,11 @@ public final class FeedRefreshViewController: NSObject {
     
     public lazy var view: UIRefreshControl = loadView()
     
-    var delegate:FeedRefreshViewControllerDelegate?
+    let delegate:FeedRefreshViewControllerDelegate
+    
+    init(delegate: FeedRefreshViewControllerDelegate) {
+        self.delegate = delegate
+    }
     
      
     
@@ -26,7 +30,7 @@ public final class FeedRefreshViewController: NSObject {
     }
     
     @objc func refresh() {
-        delegate?.didRequestFeedRefresh()
+        delegate.didRequestFeedRefresh()
     }
     
     

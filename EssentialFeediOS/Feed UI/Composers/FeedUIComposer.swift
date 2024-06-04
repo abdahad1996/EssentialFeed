@@ -17,18 +17,18 @@ public final class FeedUIComposer {
         loader: FeedLoader,
         imageLoader:FeedImageLoader
     ) -> FeedViewController{
-        let presenter = FeedPresenter(feedLoader: loader)
-        let feedLoaderPresentationAdapter = FeedLoaderPresentationAdapter(presenter: presenter,loader: loader)
-        let refreshController = FeedRefreshViewController()
-        refreshController.delegate = feedLoaderPresentationAdapter
-    
-        presenter.feedLoadingView = WeakRefVirtualProxy(refreshController)
-
-        let feedViewController = FeedViewController(refreshController: refreshController)
-        let adapter = FeedViewAdapter(imageLoader: imageLoader)
-        adapter.feedViewController = feedViewController
         
-        presenter.feedView = adapter
+        let feedLoaderPresentationAdapter = FeedLoaderPresentationAdapter(loader: loader)
+        let refreshController = FeedRefreshViewController(delegate: feedLoaderPresentationAdapter)
+        let feedViewController = FeedViewController(refreshController: refreshController)
+
+        
+        feedLoaderPresentationAdapter.presenter = FeedPresenter(feedLoadingView: WeakRefVirtualProxy(refreshController), feedView: FeedViewAdapter(feedViewController: feedViewController, imageLoader: imageLoader))
+
+
+        
+        
+        
       return feedViewController
     }
     
@@ -36,23 +36,23 @@ public final class FeedUIComposer {
 
 class FeedLoaderPresentationAdapter:FeedRefreshViewControllerDelegate {
     
-    let presenter:FeedPresenter
+    var presenter:FeedPresenter?
     let loader:FeedLoader
     
-    init(presenter: FeedPresenter, loader: FeedLoader) {
-        self.presenter = presenter
+    init( loader: FeedLoader) {
+       
         self.loader = loader
     }
     
     func didRequestFeedRefresh(){
-        presenter.didStartLoadingFeed()
+        presenter?.didStartLoadingFeed()
         
         loader.load {[weak self] result in
             switch result {
             case .success(let feed):
-                self?.presenter.didFinishLoadingFeed(with: feed)
+                self?.presenter?.didFinishLoadingFeed(with: feed)
             case let .failure(error):
-                self?.presenter.didFinishLoadingFeed(with: error)
+                self?.presenter?.didFinishLoadingFeed(with: error)
             }
             
         }
@@ -80,8 +80,9 @@ class FeedViewAdapter:FeedView{
     weak var feedViewController: FeedViewController?
     let imageLoader:  FeedImageLoader
     
-    init(imageLoader: FeedImageLoader) {
+    init(feedViewController:FeedViewController,imageLoader: FeedImageLoader) {
         self.imageLoader = imageLoader
+        self.feedViewController = feedViewController
     }
     
     func display(_ viewModel: FeedViewModel) {

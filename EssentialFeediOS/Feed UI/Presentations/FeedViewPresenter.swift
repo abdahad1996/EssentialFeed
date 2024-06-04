@@ -9,9 +9,8 @@ import Foundation
 import EssentialFeed
 
 
-protocol FeedLoadingView:AnyObject{
+protocol FeedLoadingView{
     func display(isLoading:Bool)
-     
 }
 
 protocol FeedView{
@@ -19,7 +18,7 @@ protocol FeedView{
 }
 class FeedPresenter {
     private let feedLoader: FeedLoader
-    weak var feedLoadingView:FeedLoadingView?
+    var feedLoadingView:FeedLoadingView?
     var feedView:FeedView?
 
     init(feedLoader: FeedLoader) {
@@ -27,15 +26,12 @@ class FeedPresenter {
     }
     
     func loadFeed() {
-//        onLoadingStateChange?(true)
         feedLoadingView?.display(isLoading: true)
         feedLoader.load { [weak self] result in
              
             if let feed = try? result.get() {
-//                self?.onFeedLoad?(feed)
                 self?.feedView?.display(feed: feed)
             }
-//            self?.onLoadingStateChange?(false)
             self?.feedLoadingView?.display(isLoading: false)
 
         }

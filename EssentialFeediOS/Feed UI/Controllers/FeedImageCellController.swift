@@ -7,52 +7,53 @@
 
 import UIKit
 
-
-final class FeedImageCellController {
-    private let viewModel:FeedImageViewModel<UIImage>
-    init(viewModel: FeedImageViewModel<UIImage>) {
-        self.viewModel = viewModel
+protocol FeedImageCellControllerDelegate {
+    func didRequestImage()
+    func didCancelImageRequest()
+    
+}
+final class FeedImageCellController:FeedImageView {
+    
+    
+    let delegate:FeedImageCellControllerDelegate
+    private lazy var cell = FeedImageCell()
+    
+    init(delegate: FeedImageCellControllerDelegate) {
+        self.delegate = delegate
     }
     
     public func view() -> UITableViewCell {
-        let cell = binded(FeedImageCell())
-        viewModel.loadImageData()
+        delegate.didRequestImage()
         
         return cell
     }
     
-    func binded(_ cell:FeedImageCell) -> FeedImageCell{
-         
+    func display(_ viewModel: FeedImageViewModel<UIImage>){
+        
         
         cell.locationContainer.isHidden = !viewModel.hasLocation
         cell.locationLabel.text = viewModel.location
         cell.descriptionLabel.text = viewModel.description
         
-        cell.onRetry = viewModel.loadImageData
-        viewModel.onImageLoadingStateChange = {[weak cell]  isLoading in
-            cell?.feedImageContainer.isShimmering = isLoading
-            
-        }
+        cell.onRetry = delegate.didRequestImage
         
-        viewModel.onShouldRetryImageLoadStateChange = {[weak cell] shouldRetry in
-            cell?.feedImageRetryButton.isHidden = !shouldRetry
-            
-        }
-        viewModel.onImageLoad = { [weak cell] image in
-            cell?.feedImageView.image = image
-        }
+        cell.feedImageContainer.isShimmering = viewModel.isLoading
         
-        return cell
-       
+        
+        
+        cell.feedImageRetryButton.isHidden = !viewModel.shouldRetry
+        
+        
+        cell.feedImageView.image = viewModel.image
         
     }
     
     func preload(){
-        viewModel.loadImageData()
+        delegate.didRequestImage()
     }
     
     func cancel(){
-        viewModel.cancelImageDataLoad()
+        delegate.didCancelImageRequest()
     }
 }
 

@@ -10,7 +10,7 @@ import UIKit
 public final class FeedRefreshViewController: NSObject {
     
     public lazy var view: UIRefreshControl = loadView()
-
+    
     let presenter:FeedPresenter
     
     init(presenter: FeedPresenter) {
@@ -31,8 +31,9 @@ public final class FeedRefreshViewController: NSObject {
 }
 
 extension FeedRefreshViewController:FeedLoadingView{
-    func display(isLoading: Bool) {
-        if isLoading {
+    func display(_ viewModel: FeedLoadingViewModel) {
+        
+        if viewModel.isLoading {
             view.beginRefreshing()
         }else{
             view.endRefreshing()

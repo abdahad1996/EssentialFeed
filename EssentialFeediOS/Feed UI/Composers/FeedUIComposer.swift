@@ -20,16 +20,21 @@ public final class FeedUIComposer {
         
         let feedLoaderPresentationAdapter = FeedLoaderPresentationAdapter(loader: loader)
         let refreshController = FeedRefreshViewController(delegate: feedLoaderPresentationAdapter)
-        let feedViewController = FeedViewController(refreshController: refreshController)
+        
+        let bundle = Bundle(for: FeedViewController.self)
+                let storyboard = UIStoryboard(name: "Feed", bundle: bundle)
+                let feedController = storyboard.instantiateInitialViewController() as! FeedViewController
+                feedController.refreshController = refreshController
+//        let feedViewController = FeedViewController(refreshController: refreshController)
 
         
-        feedLoaderPresentationAdapter.presenter = FeedPresenter(feedLoadingView: WeakRefVirtualProxy(refreshController), feedView: FeedViewAdapter(feedViewController: feedViewController, imageLoader: imageLoader))
+        feedLoaderPresentationAdapter.presenter = FeedPresenter(feedLoadingView: WeakRefVirtualProxy(refreshController), feedView: FeedViewAdapter(feedViewController: feedController, imageLoader: imageLoader))
 
 
         
         
         
-      return feedViewController
+      return feedController
     }
     
 }

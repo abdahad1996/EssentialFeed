@@ -55,7 +55,7 @@ public final class FeedViewController:UITableViewController,UITableViewDataSourc
     }
     public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        return cellController(forRowAt: indexPath).view()
+        return cellController(forRowAt: indexPath).view(in: tableView)
         
     }
     
@@ -65,7 +65,7 @@ public final class FeedViewController:UITableViewController,UITableViewDataSourc
     
     public func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         indexPaths.forEach { indexPath in
-           _ = cellController(forRowAt: indexPath).view()
+            _ = cellController(forRowAt: indexPath).view(in: tableView)
         }
     }
     public func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {

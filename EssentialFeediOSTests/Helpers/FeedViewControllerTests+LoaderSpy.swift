@@ -25,7 +25,7 @@ class loaderSpy:FeedLoader,FeedImageLoader{
         feedRequests.append(completion)
     }
     
-    func completionWithSuccess(with feed:[FeedImage] = [],at index:Int = 0){
+    func completeFeedLoading(with feed:[FeedImage] = [],at index:Int = 0){
         feedRequests[index](.success(feed))
     }
     

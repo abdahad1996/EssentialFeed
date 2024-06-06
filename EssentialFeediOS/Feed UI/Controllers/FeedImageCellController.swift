@@ -14,7 +14,6 @@ protocol FeedImageCellControllerDelegate {
 }
 final class FeedImageCellController:FeedImageView {
     
-    
     let delegate:FeedImageCellControllerDelegate
     private var cell: FeedImageCell?
     
@@ -38,12 +37,16 @@ final class FeedImageCellController:FeedImageView {
         cell?.locationLabel.text = viewModel.location
         cell?.descriptionLabel.text = viewModel.description
         cell?.feedImageView.setImageAnimated(viewModel.image)
-        cell?.onRetry = delegate.didRequestImage
+        
+        cell?.onRetry = { [weak self] in
+                    self?.delegate.didRequestImage()
+                }
+        
+        cell?.onReuse = { [weak self] in
+                    self?.releaseCellForReuse()
+                }
         
         cell?.feedImageContainer.isShimmering = viewModel.isLoading
-        
-        
-        
         cell?.feedImageRetryButton.isHidden = !viewModel.shouldRetry
         
         

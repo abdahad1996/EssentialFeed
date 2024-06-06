@@ -41,14 +41,14 @@ final class FeedViewControllerTests:XCTestCase{
         XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once view is loaded")
         
         
-        loader.completionWithSuccess(at: 0)
+        loader.completeFeedLoading(at: 0)
         XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once loading is completed")
         
         
         sut.simulateUserInitiatedFeedReload()
         XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once user initiates a reload")
         
-        loader.completionWithSuccess(at:1)
+        loader.completeFeedLoading(at:1)
         XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user initiated loading is completed")
         
         sut.simulateUserInitiatedFeedReload()
@@ -68,7 +68,7 @@ final class FeedViewControllerTests:XCTestCase{
         sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
         
-        loader.completionWithSuccess(with:[image0])
+        loader.completeFeedLoading(with:[image0])
         
         XCTAssertEqual(sut.numberOfRenderedFeedImageViews(),1)
         
@@ -80,7 +80,7 @@ final class FeedViewControllerTests:XCTestCase{
         
         
         sut.simulateUserInitiatedFeedReload()
-        loader.completionWithSuccess(with:[image0,image1,image2,image3])
+        loader.completeFeedLoading(with:[image0,image1,image2,image3])
         assertThat(sut,isRendering:[image0,image1,image2,image3])
         
     }
@@ -95,7 +95,7 @@ final class FeedViewControllerTests:XCTestCase{
         
         XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once view is loaded")
         
-        loader.completionWithSuccess(with:[image0])
+        loader.completeFeedLoading(with:[image0])
         XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once loading completes successfully")
         
         assertThat(sut, isRendering: [image0])
@@ -118,7 +118,7 @@ final class FeedViewControllerTests:XCTestCase{
         sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
         
-        loader.completionWithSuccess(with:[image0,image1])
+        loader.completeFeedLoading(with:[image0,image1])
         
         XCTAssertEqual(sut.numberOfRenderedFeedImageViews(), 2)
         XCTAssertEqual(loader.loadedImageURLs, [], "Expected no image URL requests until views become visible")
@@ -140,7 +140,7 @@ final class FeedViewControllerTests:XCTestCase{
         sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
         
-        loader.completionWithSuccess(with:[image0,image1])
+        loader.completeFeedLoading(with:[image0,image1])
         
         XCTAssertEqual(sut.numberOfRenderedFeedImageViews(), 2)
         XCTAssertEqual(loader.cancelledImageURLs, [], "Expected no cancelled image URL requests until image is not visible")
@@ -162,7 +162,7 @@ final class FeedViewControllerTests:XCTestCase{
         sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
         
-        loader.completionWithSuccess(with:[image0,image1])
+        loader.completeFeedLoading(with:[image0,image1])
         XCTAssertEqual(sut.numberOfRenderedFeedImageViews(), 2)
         
         
@@ -191,7 +191,7 @@ final class FeedViewControllerTests:XCTestCase{
         sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
         
-        loader.completionWithSuccess(with:[image0,image1])
+        loader.completeFeedLoading(with:[image0,image1])
         XCTAssertEqual(sut.numberOfRenderedFeedImageViews(), 2)
         
         let view0 = sut.simulateFeedImageViewVisible(at: 0)
@@ -219,7 +219,7 @@ final class FeedViewControllerTests:XCTestCase{
         sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
         
-        loader.completionWithSuccess(with:[image0,image1])
+        loader.completeFeedLoading(with:[image0,image1])
         
         
         let view0 = sut.simulateFeedImageViewVisible(at: 0)
@@ -250,7 +250,7 @@ final class FeedViewControllerTests:XCTestCase{
         sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
         
-        loader.completionWithSuccess(with: [image0, image1])
+        loader.completeFeedLoading(with: [image0, image1])
         
         let view0 = sut.simulateFeedImageViewVisible(at: 0)
         let view1 = sut.simulateFeedImageViewVisible(at: 1)
@@ -279,7 +279,7 @@ final class FeedViewControllerTests:XCTestCase{
         sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
         
-        loader.completionWithSuccess(with: [image0, image1])
+        loader.completeFeedLoading(with: [image0, image1])
         XCTAssertEqual(loader.loadedImageURLs, [], "Expected no image URL requests until image is near visible")
 
         sut.simulateFeedImageViewNearVisible(at: 0)
@@ -299,7 +299,7 @@ final class FeedViewControllerTests:XCTestCase{
         sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
         
-            loader.completionWithSuccess(with: [image0, image1])
+            loader.completeFeedLoading(with: [image0, image1])
             XCTAssertEqual(loader.cancelledImageURLs, [], "Expected no cancelled image URL requests until image is not near visible")
 
             sut.simulateFeedImageViewNotNearVisible(at: 0)
@@ -318,7 +318,7 @@ final class FeedViewControllerTests:XCTestCase{
         sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
     
-        loader.completionWithSuccess(with: [image0])
+        loader.completeFeedLoading(with: [image0])
         
         let cell:FeedImageCell? = sut.simulateFeedImageViewNotVisible(at: 0)
         loader.completeImageLoading(with: anyImageData(), at: 0)
@@ -327,6 +327,26 @@ final class FeedViewControllerTests:XCTestCase{
         
     }
 
+    func test_feedImageView_doesNotShowDataFromPreviousRequestWhenCellIsReused() throws {
+        let image0 = makeImage(url: URL(string: "http://url-1.com")!)
+        let image1 = makeImage(url: URL(string: "http://url-1.com")!)
+
+        let (sut, loader) = makeSUT()
+
+        sut.loadViewIfNeeded()
+        sut.replaceRefreshControlWithFakeForiOS17Support()
+        sut.simulateAppearance()
+        
+            loader.completeFeedLoading(with: [image0, image1])
+
+            let view0 = try XCTUnwrap(sut.simulateFeedImageViewVisible(at: 0))
+            view0.prepareForReuse()
+
+            let imageData0 = UIImage.make(withColor: .red).pngData()!
+            loader.completeImageLoading(with: imageData0, at: 0)
+
+            XCTAssertEqual(view0.renderedImage, .none, "Expected no image state change for reused view once image loading completes successfully")
+        }
     
     private func makeSUT(file:StaticString = #file,line:UInt = #line) -> (FeedViewController,loaderSpy) {
         let loader = loaderSpy()

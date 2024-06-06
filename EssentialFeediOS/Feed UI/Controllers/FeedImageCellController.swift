@@ -67,6 +67,9 @@ final class FeedImageCellController:FeedImageView {
         cell = nil
     }
     
+    func setCell(_ cell: FeedImageCell) {
+            self.cell = cell
+        }
     
 }
 

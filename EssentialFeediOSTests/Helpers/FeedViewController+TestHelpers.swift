@@ -12,6 +12,7 @@ import EssentialFeediOS
 extension FeedViewController{
     
     //triggers image requests as cell is initalized
+    //cellforrow
     @discardableResult
     func simulateFeedImageViewVisible(at index:Int) -> FeedImageCell? {
         return feedImageView(at: index)
@@ -21,6 +22,7 @@ extension FeedViewController{
     
     //MARK: triggers delegate method
     
+    //didEndDisplaying
     @discardableResult
     func simulateFeedImageViewNotVisible(at index:Int) -> FeedImageCell? {
         let cell = simulateFeedImageViewVisible(at: index)
@@ -31,12 +33,26 @@ extension FeedViewController{
         return cell
     }
     
+    //willDisplay
+    @discardableResult
+    func simulateFeedImageBecomingVisibleAgain(at row: Int) -> FeedImageCell? {
+        let view = simulateFeedImageViewNotVisible(at: row)
+        
+        let delegate = tableView.delegate
+        let index = IndexPath(row: row, section: numberOfSections)
+        delegate?.tableView?(tableView, willDisplay: view!, forRowAt: index)
+        
+        return view
+    }
+    
+    //prefetching
     func simulateFeedImageViewNearVisible(at index:Int){
         let datasource = tableView.prefetchDataSource
         let indexPath = IndexPath(row: index, section: numberOfSections)
         datasource?.tableView(tableView, prefetchRowsAt: [indexPath])
     }
     
+    //prefetching
     func simulateFeedImageViewNotNearVisible(at index:Int){
         simulateFeedImageViewNearVisible(at: index)
         let datasource = tableView.prefetchDataSource

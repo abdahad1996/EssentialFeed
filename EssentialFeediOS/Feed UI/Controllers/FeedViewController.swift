@@ -59,6 +59,11 @@ public final class FeedViewController:UITableViewController,UITableViewDataSourc
         
     }
     
+    public override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let cellController = cellController(forRowAt: indexPath)
+        (cell as? FeedImageCell).map(cellController.setCell)
+        cellController.preload()
+    }
     public override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         removeCellControllers(forRowAt: indexPath)
     }

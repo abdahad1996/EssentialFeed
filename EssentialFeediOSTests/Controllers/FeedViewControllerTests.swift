@@ -348,6 +348,28 @@ final class FeedViewControllerTests:XCTestCase{
             XCTAssertEqual(view0.renderedImage, .none, "Expected no image state change for reused view once image loading completes successfully")
         }
     
+    func test_feedImageView_recapturesCellOnWillDisplayCell() {
+        let image0 = makeImage(url: URL(string: "http://url-1.com")!)
+        let image1 = makeImage(url: URL(string: "http://url-1.com")!)
+
+        let (sut, loader) = makeSUT()
+
+        sut.loadViewIfNeeded()
+        sut.replaceRefreshControlWithFakeForiOS17Support()
+        sut.simulateAppearance()
+        
+            loader.completeFeedLoading(with: [image0, image1])
+
+            // simulate that the cell is off screen for a short time
+            let cell = sut.simulateFeedImageBecomingVisibleAgain(at: 0)
+
+            let imageData0 = UIImage.make(withColor: .red).pngData()!
+            loader.completeImageLoading(with: imageData0, at: 0)
+
+
+            XCTAssertEqual(cell?.renderedImage, imageData0)
+        }
+    
     private func makeSUT(file:StaticString = #file,line:UInt = #line) -> (FeedViewController,loaderSpy) {
         let loader = loaderSpy()
         let sut =  FeedUIComposer.feedComposedWith(loader: loader, imageLoader: loader)

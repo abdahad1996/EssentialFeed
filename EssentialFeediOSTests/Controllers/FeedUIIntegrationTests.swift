@@ -381,14 +381,13 @@ final class FeedUIIntegrationTests:XCTestCase{
         }
     
     func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {
-        
         let (sut, loader) = makeSUT()
 
         sut.loadViewIfNeeded()
         sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
         
-        let exp = expectation(description: "")
+        let exp = expectation(description: "Wait for background queue")
         DispatchQueue.global().async {
             loader.completeFeedLoading(at: 0)
             exp.fulfill()
@@ -398,6 +397,26 @@ final class FeedUIIntegrationTests:XCTestCase{
         
         
     }
+    
+    func test_loadImageDataCompletion_dispatchesFromBackgroundToMainThread() {
+        let image0 = makeImage(url: URL(string: "http://url-1.com")!)
+            let (sut, loader) = makeSUT()
+
+        sut.loadViewIfNeeded()
+        sut.replaceRefreshControlWithFakeForiOS17Support()
+        sut.simulateAppearance()
+        
+            loader.completeFeedLoading(with: [image0])
+            _ = sut.simulateFeedImageViewVisible(at: 0)
+
+            let exp = expectation(description: "Wait for background queue")
+            DispatchQueue.global().async {
+                loader.completeImageLoading(with: self.anyImageData(), at: 0)
+                exp.fulfill()
+            }
+            wait(for: [exp], timeout: 1.0)
+        }
+    
     private func makeSUT(file:StaticString = #file,line:UInt = #line) -> (FeedViewController,loaderSpy) {
         let loader = loaderSpy()
         let sut =  FeedUIComposer.feedComposedWith(loader: loader, imageLoader: loader)

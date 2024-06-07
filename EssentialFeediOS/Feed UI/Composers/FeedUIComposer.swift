@@ -64,20 +64,6 @@ class FeedLoaderPresentationAdapter:FeedViewControllerDelegate {
         }
     }
 }
-class WeakRefVirtualProxy<T:AnyObject>{
-    
-    weak var object:T?
-    
-    init(_ object: T?) {
-        self.object = object
-    }
-}
-extension WeakRefVirtualProxy:FeedLoadingView where T:FeedLoadingView{
-    func display(_ viewModel: FeedLoadingViewModel) {
-        object?.display(viewModel)
-    }
-    
-}
 
 
 
@@ -105,11 +91,7 @@ class FeedViewAdapter:FeedView{
     
 }
 
-extension WeakRefVirtualProxy: FeedImageView where T: FeedImageView, T.Image == UIImage {
-    func display(_ model: FeedImageViewModel<UIImage>) {
-        object?.display(model)
-    }
-}
+
 class FeedImageDataLoaderPresentationAdapter<View:FeedImageView,Image>:FeedImageCellControllerDelegate where View.Image == Image {
     private var task:FeedImageDataLoaderTask?
     let imageLoader:FeedImageLoader

@@ -7,13 +7,13 @@
 
 import UIKit
 
-protocol FeedRefreshViewControllerDelegate {
+protocol FeedViewControllerDelegate {
     func didRequestFeedRefresh()
 }
 
 public final class FeedViewController:UITableViewController,UITableViewDataSourcePrefetching,FeedLoadingView {
     
-    var delegate:FeedRefreshViewControllerDelegate?
+    var delegate:FeedViewControllerDelegate?
     private var onViewDidAppear:((FeedViewController) -> Void)?
     var tableModel = [FeedImageCellController](){
         didSet {

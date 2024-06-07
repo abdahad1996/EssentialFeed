@@ -17,17 +17,35 @@ public final class FeedViewController:UITableViewController,UITableViewDataSourc
     private var onViewDidAppear:((FeedViewController) -> Void)?
     var tableModel = [FeedImageCellController](){
         didSet {
-            self.tableView.reloadData()
+            if Thread.isMainThread {
+                tableView.reloadData()
+            } else {
+                DispatchQueue.main.async { [weak self ] in
+                    self?.tableView.reloadData()
+                }
+            }
         }
     }
     
     func display(_ viewModel: FeedLoadingViewModel) {
         
-        if viewModel.isLoading {
-            refreshControl?.beginRefreshing()
+        if Thread.isMainThread {
+            if viewModel.isLoading {
+                refreshControl?.beginRefreshing()
+            }else{
+               refreshControl?.endRefreshing()
+            }
         }else{
-            refreshControl?.endRefreshing()
+            
+            DispatchQueue.main.async { [weak self ] in
+                if viewModel.isLoading {
+                    self?.refreshControl?.beginRefreshing()
+                }else{
+                    self?.refreshControl?.endRefreshing()
+                }
+            }
         }
+        
     }
     
     public override func viewDidLoad() {
@@ -49,7 +67,7 @@ public final class FeedViewController:UITableViewController,UITableViewDataSourc
         super.viewIsAppearing(animated)
         onViewDidAppear?(self)
     }
-
+    
     public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tableModel.count
     }
@@ -76,10 +94,10 @@ public final class FeedViewController:UITableViewController,UITableViewDataSourc
     public func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
         indexPaths.forEach(removeCellControllers)
     }
-         
-      func cancelTask(forRowAt indexPath:IndexPath) {
-          removeCellControllers(forRowAt: indexPath)
-        }
+    
+    func cancelTask(forRowAt indexPath:IndexPath) {
+        removeCellControllers(forRowAt: indexPath)
+    }
     
     private func removeCellControllers(forRowAt indexPath:IndexPath){
         tableModel[indexPath.row].cancel()

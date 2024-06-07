@@ -17,34 +17,21 @@ public final class FeedViewController:UITableViewController,UITableViewDataSourc
     private var onViewDidAppear:((FeedViewController) -> Void)?
     var tableModel = [FeedImageCellController](){
         didSet {
-            if Thread.isMainThread {
-                tableView.reloadData()
-            } else {
-                DispatchQueue.main.async { [weak self ] in
-                    self?.tableView.reloadData()
-                }
-            }
+            
+            tableView.reloadData()
+            
         }
     }
     
     func display(_ viewModel: FeedLoadingViewModel) {
         
-        if Thread.isMainThread {
-            if viewModel.isLoading {
-                refreshControl?.beginRefreshing()
-            }else{
-               refreshControl?.endRefreshing()
-            }
+        if viewModel.isLoading {
+            self.refreshControl?.beginRefreshing()
         }else{
-            
-            DispatchQueue.main.async { [weak self ] in
-                if viewModel.isLoading {
-                    self?.refreshControl?.beginRefreshing()
-                }else{
-                    self?.refreshControl?.endRefreshing()
-                }
-            }
+            self.refreshControl?.endRefreshing()
         }
+        
+        
         
     }
     

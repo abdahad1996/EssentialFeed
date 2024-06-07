@@ -34,7 +34,6 @@ public final class FeedViewController:UITableViewController,UITableViewDataSourc
         super.viewDidLoad()
         
         tableView.prefetchDataSource = self
-        title = FeedPresenter.title
         
         onViewDidAppear = { vc in
             vc.onViewDidAppear = nil

@@ -57,17 +57,25 @@ class FeedImagePresenter<View:FeedImageView,Image> where View.Image == Image {
             shouldRetry: image == nil))
     }
     
+    func didFinishLoadingImageData(with error: Error, for model: FeedImage) {
+        
+        view.display(FeedImageViewModel(
+           location: model.location, description: model.description,
+            image: nil,
+            isLoading: false,
+            shouldRetry: true))
+    }
 }
 
 class FeedImagePresenterTests: XCTestCase {
     
     func test_init_doesNotSendMessageToView(){
-        let (_,view) = makeSUT(imageTransformer: Fail)
+        let (sut, view) = makeSUT()
         XCTAssertTrue(view.messages.isEmpty)
     }
     
     func test_didStartLoadingImageData_displaysLoadingImage(){
-        let (sut,view) = makeSUT(imageTransformer: Fail)
+        let (sut, view) = makeSUT()
         let image = uniqueImage()
         
         sut.didStartLoadingImageData(for: image)
@@ -123,7 +131,21 @@ class FeedImagePresenterTests: XCTestCase {
         
     }
     
-    private func makeSUT(imageTransformer:@escaping (Data) -> AnyImage?,
+    func test_didFinishLoadingImageDataWithError_displaysRetry() {
+            let image = uniqueImage()
+            let (sut, view) = makeSUT()
+
+        sut.didFinishLoadingImageData(with: anyError(), for: image)
+
+            let message = view.messages.first
+            XCTAssertEqual(view.messages.count, 1)
+            XCTAssertEqual(message?.description, image.description)
+            XCTAssertEqual(message?.location, image.location)
+            XCTAssertEqual(message?.isLoading, false)
+            XCTAssertEqual(message?.shouldRetry, true)
+            XCTAssertNil(message?.image)
+        }
+    private func makeSUT(imageTransformer: @escaping (Data) -> AnyImage? = { _ in nil },
         file: StaticString = #file, line: UInt = #line) -> (sut: FeedImagePresenter<ViewSpy,AnyImage>, view: ViewSpy) {
             let view = ViewSpy()
         let sut = FeedImagePresenter(view: view, imageTransformer: imageTransformer)

@@ -28,11 +28,15 @@ protocol FeedImageView {
 
 }
 class FeedImagePresenter {
-    let view:FeedImageView
+    private let view:FeedImageView
+    private let transformer:(Data) -> Any?
+
     
-    init(view: FeedImageView) {
+    init(view: FeedImageView, transformer: @escaping (Data) -> Any?) {
         self.view = view
+        self.transformer = transformer
     }
+     
     
     func didStartLoadingImageData(for model: FeedImage) {
          view.display(FeedImageViewModel(
@@ -41,6 +45,15 @@ class FeedImagePresenter {
              isLoading: true,
              shouldRetry: false))
      }
+
+    func didFinishLoadingImageData(with data: Data, for model: FeedImage) {
+        
+        view.display(FeedImageViewModel(
+           location: model.location, description: model.description,
+            image: transformer(data),
+            isLoading: false,
+            shouldRetry: true))
+    }
     
 }
 
@@ -68,10 +81,27 @@ class FeedImagePresenterTests: XCTestCase {
 
     }
     
+    func test_didFinishLoadingImageData_displaysRetryOnFailedImageTransformation(){
+        let (sut,view) = makeSUT()
+        let image = uniqueImage()
+        let data = Data()
+        
+        sut.didFinishLoadingImageData(with: data, for: image)
+        
+        let message = view.messages.first
+                XCTAssertEqual(view.messages.count, 1)
+                XCTAssertEqual(message?.description, image.description)
+                XCTAssertEqual(message?.location, image.location)
+                XCTAssertEqual(message?.isLoading, false)
+                XCTAssertEqual(message?.shouldRetry, true)
+                XCTAssertNil(message?.image)
+        
+
+    }
     
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: FeedImagePresenter, view: ViewSpy) {
             let view = ViewSpy()
-            let sut = FeedImagePresenter(view: view)
+        let sut = FeedImagePresenter(view: view, transformer: {_ in nil })
             trackForMemoryLeaks(view, file: file, line: line)
             trackForMemoryLeaks(sut, file: file, line: line)
             return (sut, view)

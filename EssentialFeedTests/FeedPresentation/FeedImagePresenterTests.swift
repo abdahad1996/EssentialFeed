@@ -101,13 +101,15 @@ class FeedImagePresenterTests: XCTestCase {
     
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: FeedImagePresenter, view: ViewSpy) {
             let view = ViewSpy()
-        let sut = FeedImagePresenter(view: view, transformer: {_ in nil })
+        let sut = FeedImagePresenter(view: view, transformer: Fail)
             trackForMemoryLeaks(view, file: file, line: line)
             trackForMemoryLeaks(sut, file: file, line: line)
             return (sut, view)
         }
     
-    
+    private var Fail:(Data) -> Any? {
+        return {_ in nil}
+    }
     private class ViewSpy:FeedImageView {
         
         var messages = [FeedImageViewModel]()

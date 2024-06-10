@@ -11,7 +11,6 @@ import EssentialFeed
 protocol FeedErrorView {
     func display(_ viewModel: FeedErrorViewModel)
 }
-
 protocol FeedLoadingView{
     func display(_ viewModel:FeedLoadingViewModel)
 }

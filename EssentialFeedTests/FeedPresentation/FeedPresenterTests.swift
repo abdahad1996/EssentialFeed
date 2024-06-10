@@ -35,8 +35,8 @@ class FeedPresenter {
     }
     
     func didStartLoadingFeed(){
-        feedLoadingView.display(FeedLoadingViewModel(isLoading: true))
         errorView.display(.init(message: .none))
+        feedLoadingView.display(FeedLoadingViewModel(isLoading: true))
 
     }
 }
@@ -81,20 +81,20 @@ class FeedPresenterTests: XCTestCase {
     
     private class ViewSpy:FeedLoadingView,FeedErrorView {
         
-        enum Message:Equatable {
+        enum Message:Hashable {
             case feedLoading(isLoading: Bool)
             case displayError(message:String?)
 
             
         }
-        var messages = [Message]()
+        var messages = Set<Message>()
         
         func display(_ viewModel: FeedLoadingViewModel) {
-            messages.append(.feedLoading(isLoading: viewModel.isLoading))
+            messages.insert(.feedLoading(isLoading: viewModel.isLoading))
         }
         
         func display(_ viewModel:FeedErrorViewModel) {
-            messages.append(.displayError(message: viewModel.message))
+            messages.insert(.displayError(message: viewModel.message))
         }
         
         

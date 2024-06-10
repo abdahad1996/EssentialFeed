@@ -23,9 +23,7 @@ final class FeedImagePresenter<View:FeedImageView,Image> where View.Image == Ima
          self.transformer = transformer
      }
     
-    
     func didStartLoadingImageData(for model: FeedImage) {
-
          view.display(FeedImageViewModel(
             location: model.location, description: model.description,
              image: nil,
@@ -47,13 +45,11 @@ final class FeedImagePresenter<View:FeedImageView,Image> where View.Image == Ima
              shouldRetry: false))
      }
      
-         func didFinishLoadingImageData(with error: Error, for model: FeedImage) {
+     func didFinishLoadingImageData(with error: Error, for model: FeedImage) {
                  view.display(FeedImageViewModel(
                     location: model.location, description: model.description,
                      image: nil,
                      isLoading: false,
                      shouldRetry: true))
              }
-     
-    
 }

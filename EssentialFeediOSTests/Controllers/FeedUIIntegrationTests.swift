@@ -400,7 +400,7 @@ final class FeedUIIntegrationTests:XCTestCase{
     
     func test_loadImageDataCompletion_dispatchesFromBackgroundToMainThread() {
         let image0 = makeImage(url: URL(string: "http://url-1.com")!)
-            let (sut, loader) = makeSUT()
+        let (sut, loader) = makeSUT()
 
         sut.loadViewIfNeeded()
         sut.replaceRefreshControlWithFakeForiOS17Support()
@@ -417,6 +417,36 @@ final class FeedUIIntegrationTests:XCTestCase{
             wait(for: [exp], timeout: 1.0)
         }
     
+    func test_loadFeedCompletion_rendersErrorMessageOnErrorUntilNextReload() {
+        let image0 = makeImage(url: URL(string: "http://url-1.com")!)
+        let (sut, loader) = makeSUT()
+
+        sut.loadViewIfNeeded()
+        sut.replaceRefreshControlWithFakeForiOS17Support()
+        sut.simulateAppearance()
+        
+        XCTAssertEqual(sut.errorMessage, nil)
+
+        loader.completionLoadingWithError(at: 0)
+        XCTAssertEqual(sut.errorMessage, localized("FEED_VIEW_CONNECTION_ERROR"))
+
+        sut.simulateUserInitiatedFeedReload()
+        XCTAssertEqual(sut.errorMessage, nil)
+    }
+
+    func test_errorView_dismissesErrorMessageOnTap() {
+        let (sut, loader) = makeSUT()
+
+        sut.simulateAppearance()
+        XCTAssertEqual(sut.errorMessage, nil)
+
+        loader.completionLoadingWithError(at: 0)
+        XCTAssertEqual(sut.errorMessage, localized("FEED_VIEW_CONNECTION_ERROR"))
+
+        sut.simulateTapOnErrorMessage()
+        XCTAssertEqual(sut.errorMessage, nil)
+    }
+
     private func makeSUT(file:StaticString = #file,line:UInt = #line) -> (FeedViewController,loaderSpy) {
         let loader = loaderSpy()
         let sut =  FeedUIComposer.feedComposedWith(loader: loader, imageLoader: loader)

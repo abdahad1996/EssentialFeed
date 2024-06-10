@@ -32,6 +32,8 @@
 		6538F7002B6094CD00421684 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54F8D4572B2EA9BD00C62D91 /* EssentialFeed.framework */; };
 		6538F7062B6095E000421684 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545037182B407B4A00D914C3 /* XCTestCase+MemoryLeakTracking.swift */; };
 		656593252C0E529A00BAD514 /* FeedViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656593242C0E529A00BAD514 /* FeedViewPresenter.swift */; };
+		657706512C1715C20045FA7A /* FeedErrorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657706502C1715C20045FA7A /* FeedErrorViewModel.swift */; };
+		657706532C1716B00045FA7A /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657706522C1716B00045FA7A /* ErrorView.swift */; };
 		659548D52C1318B700EBE723 /* Feed.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 659548D42C1318B700EBE723 /* Feed.xcstrings */; };
 		659548D82C1318E200EBE723 /* Feed_Legacy.strings in Resources */ = {isa = PBXBuildFile; fileRef = 659548D62C1318E200EBE723 /* Feed_Legacy.strings */; };
 		659548DA2C131E6600EBE723 /* FeedUIIntegrationTests +Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659548D92C131E6600EBE723 /* FeedUIIntegrationTests +Localization.swift */; };
@@ -186,6 +188,8 @@
 		6538F6FE2B6094CD00421684 /* EssentialFeedAPIEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EssentialFeedAPIEndToEndTests.swift; sourceTree = "<group>"; };
 		6538F7072B609A5F00421684 /* CI_iOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI_iOS.xctestplan; sourceTree = "<group>"; };
 		656593242C0E529A00BAD514 /* FeedViewPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedViewPresenter.swift; sourceTree = "<group>"; };
+		657706502C1715C20045FA7A /* FeedErrorViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedErrorViewModel.swift; sourceTree = "<group>"; };
+		657706522C1716B00045FA7A /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		659548D42C1318B700EBE723 /* Feed.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Feed.xcstrings; sourceTree = "<group>"; };
 		659548D72C1318E200EBE723 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Feed_Legacy.strings; sourceTree = "<group>"; };
 		659548D92C131E6600EBE723 /* FeedUIIntegrationTests +Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FeedUIIntegrationTests +Localization.swift"; sourceTree = "<group>"; };
@@ -412,6 +416,7 @@
 			isa = PBXGroup;
 			children = (
 				65CFCB342C10F16400D3B833 /* FeedViewModel.swift */,
+				657706502C1715C20045FA7A /* FeedErrorViewModel.swift */,
 				65DCD05C2C0F282C00EF8AF8 /* FeedImagePresenter.swift */,
 				65CFCB362C10F19F00D3B833 /* FeedLoadingViewModel.swift */,
 				656593242C0E529A00BAD514 /* FeedViewPresenter.swift */,
@@ -486,6 +491,7 @@
 				65CFCB382C10F20700D3B833 /* Feed.storyboard */,
 				65B43EDC2C03FE0000983405 /* FeedImageCell.swift */,
 				65B43ECF2C03768000983405 /* UIView+Shimmering.swift */,
+				657706522C1716B00045FA7A /* ErrorView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -920,7 +926,9 @@
 				65CFCB3F2C10F22300D3B833 /* UITableView+Dequeueing.swift in Sources */,
 				659548E52C13A31B00EBE723 /* FeedImageDataLoaderPresentationAdapter.swift in Sources */,
 				656593252C0E529A00BAD514 /* FeedViewPresenter.swift in Sources */,
+				657706532C1716B00045FA7A /* ErrorView.swift in Sources */,
 				659548E12C13A27D00EBE723 /* MainDispatchDecorator.swift in Sources */,
+				657706512C1715C20045FA7A /* FeedErrorViewModel.swift in Sources */,
 				659548E92C13A38900EBE723 /* FeedViewAdapter.swift in Sources */,
 				65B43EFC2C049B7700983405 /* FeedUIComposer.swift in Sources */,
 			);

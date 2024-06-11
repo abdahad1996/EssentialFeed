@@ -20,11 +20,19 @@ class RemoteFeedImageDataLoader {
             case connectivity
         }
     
-    func loadImageData(from url: URL,completion:@escaping(FeedImageDataLoader.Result) -> Void) {
-        client.get(from: url) { [weak self] result in
+    private struct HTTPTaskWrapper: FeedImageDataLoaderTask {
+
+        let wrapped:HTTPClientTask
+            func cancel() {
+                wrapped.cancel()
+            }
+        }
+        
+    func loadImageData(from url: URL,completion:@escaping(FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
+        return HTTPTaskWrapper(wrapped:client.get(from: url) { [weak self] result in
             guard let self else{return}
             switch result{
-            case let .success(data,response):
+            case let .success((data,response)):
                 if response.statusCode != 200 || data.isEmpty {
                     completion(.failure(Error.invalidData))
                 }else{
@@ -36,7 +44,7 @@ class RemoteFeedImageDataLoader {
                 completion(.failure(Error.connectivity))
             }
             
-        }
+        })
     }
 }
 
@@ -135,11 +143,9 @@ class RemoteFeedImageDataLoaderTests: XCTestCase {
         XCTAssertTrue(capturedResults.isEmpty)
 
         
-        
-        
-        
-        
     }
+    
+    
     private func failure(_ error: RemoteFeedImageDataLoader.Error) -> FeedImageDataLoader.Result {
             return .failure(error)
         }
@@ -185,13 +191,17 @@ private func makeSUT(url: URL = anyUrl(), file: StaticString = #file, line: UInt
 
 private class HTTPClientSpy:HTTPClient {
     
+    private struct Task:HTTPClientTask{
+        func cancel(){}
+    }
     var completions = [(url:URL,completion:(HTTPClient.Result) -> Void)]()
     
     var urls:[URL] {
         completions.map {$0.url}
     }
-    func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
+    func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPClientTask {
         completions.append((url:url,completion:completion))
+        return Task()
     }
     
     func complete(with error:Error,at index:Int = 0) {

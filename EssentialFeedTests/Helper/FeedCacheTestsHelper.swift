@@ -9,10 +9,6 @@ import Foundation
 import XCTest
 import EssentialFeed
 
-func uniqueImage() -> FeedImage{
-    return FeedImage(id: UUID(), description: "any", location: "any", imageURL: anyUrl())
-}
-
 func uniqueImages() -> (
     models:[FeedImage],
     local:[LocalFeedImage]
@@ -23,13 +19,6 @@ func uniqueImages() -> (
     return (models,local)
 }
 
-func anyUrl() -> URL {
-    return URL(string: "http://any-url.com")!
-}
-
-func anyError() -> NSError {
-    return NSError(domain: "any error", code: 0, userInfo: nil)
-}
 
 extension Date{
     

@@ -11,7 +11,7 @@ import EssentialFeediOS
 
 
 //MARK: SPY
-class loaderSpy:FeedLoader,FeedImageLoader{
+class loaderSpy:FeedLoader,FeedImageDataLoader{
     
     
     // MARK: - FeedLoader
@@ -36,7 +36,7 @@ class loaderSpy:FeedLoader,FeedImageLoader{
     
     // MARK: - FeedImageDataLoader
     
-    private var imageRequests = [(url:URL,completion:(FeedImageLoader.Result) -> Void )]()
+    private var imageRequests = [(url:URL,completion:(FeedImageDataLoader.Result) -> Void )]()
     
     var loadedImageURLs:[URL]{
         return imageRequests.map{$0.url}
@@ -52,7 +52,7 @@ class loaderSpy:FeedLoader,FeedImageLoader{
         
     }
     
-    func loadImageData(from url: URL, completion: @escaping (FeedImageLoader.Result) -> Void) -> FeedImageDataLoaderTask {
+    func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
         
         
         imageRequests.append((url,completion))

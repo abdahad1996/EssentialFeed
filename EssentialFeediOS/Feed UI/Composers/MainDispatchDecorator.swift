@@ -25,8 +25,8 @@ import EssentialFeed
         }
     
 }
-extension MainDispatchQueueDecorator:FeedImageLoader where T == FeedImageLoader {
-    func loadImageData(from url: URL, completion: @escaping (FeedImageLoader.Result) -> Void) -> any FeedImageDataLoaderTask {
+extension MainDispatchQueueDecorator:FeedImageDataLoader where T == FeedImageDataLoader {
+    func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> any FeedImageDataLoaderTask {
         decoratee.loadImageData(from: url) { [weak self] result in
             self?.dispatch {
                 completion(result)

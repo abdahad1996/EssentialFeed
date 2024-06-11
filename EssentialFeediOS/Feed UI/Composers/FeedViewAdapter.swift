@@ -13,9 +13,9 @@ import UIKit
 class FeedViewAdapter:FeedView{
     
     weak var feedViewController: FeedViewController?
-    let imageLoader:  FeedImageLoader
+    let imageLoader:  FeedImageDataLoader
     
-    init(feedViewController:FeedViewController,imageLoader: FeedImageLoader) {
+    init(feedViewController:FeedViewController,imageLoader: FeedImageDataLoader) {
         self.imageLoader = imageLoader
         self.feedViewController = feedViewController
     }

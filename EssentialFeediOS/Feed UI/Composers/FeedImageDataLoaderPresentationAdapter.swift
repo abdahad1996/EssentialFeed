@@ -11,11 +11,11 @@ import UIKit
 
 class FeedImageDataLoaderPresentationAdapter<View:FeedImageView,Image>:FeedImageCellControllerDelegate where View.Image == Image {
     private var task:FeedImageDataLoaderTask?
-    let imageLoader:FeedImageLoader
+    let imageLoader:FeedImageDataLoader
     let model:FeedImage
     var presenter:FeedImagePresenter<View,Image>?
     
-    init(model:FeedImage,imageLoader: FeedImageLoader) {
+    init(model:FeedImage,imageLoader: FeedImageDataLoader) {
         self.model = model
         self.imageLoader = imageLoader
     }

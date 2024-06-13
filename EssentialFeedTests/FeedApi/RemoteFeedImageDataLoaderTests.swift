@@ -71,7 +71,7 @@ class RemoteFeedImageDataLoaderTests: XCTestCase {
     func test_init_doesNotPerformAnyURLRequest() {
         let (_,client) = makeSUT()
         
-        XCTAssertTrue(client.urls.isEmpty)
+        XCTAssertTrue(client.requestedUrls.isEmpty)
     }
     
     func test_loadImageDataFromURL_requestsDataFromURL(){
@@ -80,7 +80,7 @@ class RemoteFeedImageDataLoaderTests: XCTestCase {
         
         sut.loadImageData(from: url, completion: {_ in})
         
-        XCTAssertEqual(client.urls,[url])
+        XCTAssertEqual(client.requestedUrls,[url])
         
     }
     func test_loadImageDataFromURLTwice_requestsDataFromURLTwice() {
@@ -90,7 +90,7 @@ class RemoteFeedImageDataLoaderTests: XCTestCase {
         sut.loadImageData(from: url, completion: {_ in})
         sut.loadImageData(from: url, completion: {_ in})
         
-        XCTAssertEqual(client.urls,[url,url])
+        XCTAssertEqual(client.requestedUrls,[url,url])
         
     }
     
@@ -234,44 +234,6 @@ class RemoteFeedImageDataLoaderTests: XCTestCase {
         trackForMemoryLeaks(client, file: file, line: line)
         return (sut, client)
     }
-    
-    private class HTTPClientSpy:HTTPClient {
-        
-        private struct Task:HTTPClientTask{
-            let callBack:() -> Void
-            func cancel(){
-                callBack()
-            }
-        }
-        var completions = [(url:URL,completion:(HTTPClient.Result) -> Void)]()
-        
-        var urls:[URL] {
-            completions.map {$0.url}
-        }
-        
-        var cancelledURLs = [URL]()
-        
-        @discardableResult
-        func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPClientTask {
-            completions.append((url:url,completion:completion))
-            return Task(callBack: { [weak self] in
-                self?.cancelledURLs.append(url)
-            })
-        }
-        
-        func complete(with error:Error,at index:Int = 0) {
-            completions[index].completion(.failure(error))
-        }
-        
-        func complete(with data:Data,statusCode:Int,at index:Int = 0) {
-            let response = HTTPURLResponse(url: urls[index], statusCode: statusCode, httpVersion: nil, headerFields: nil)!
-            completions[index].completion(.success((data, response)))
-        }
-        
-    }
-    
-    
-    
     
     
     

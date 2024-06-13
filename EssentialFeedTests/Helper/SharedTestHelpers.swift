@@ -19,3 +19,7 @@ func anyError() -> NSError {
 func uniqueImage() -> FeedImage{
     return FeedImage(id: UUID(), description: "any", location: "any", imageURL: anyUrl())
 }
+
+func anyData() -> Data{
+    Data("any data".utf8)
+}

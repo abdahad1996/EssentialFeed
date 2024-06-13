@@ -198,9 +198,7 @@ class RemoteFeedImageDataLoaderTests: XCTestCase {
         return .failure(error)
     }
     
-    private func anyData() -> Data{
-        Data("any data".utf8)
-    }
+   
     
     private func expect(_ sut: RemoteFeedImageDataLoader,toCompleteWith expectedResult: FeedImageDataLoader.Result,action:() -> Void,file: StaticString = #file, line: UInt = #line){
         let url = URL(string: "https://a-given-url.com")!

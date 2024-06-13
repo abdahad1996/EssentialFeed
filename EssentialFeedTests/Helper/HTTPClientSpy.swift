@@ -37,7 +37,7 @@ class HTTPClientSpy:HTTPClient {
     }
     
     func complete(with data:Data,statusCode:Int,at index:Int = 0) {
-        let response = HTTPURLResponse(url: urls[index], statusCode: statusCode, httpVersion: nil, headerFields: nil)!
+        let response = HTTPURLResponse(url: requestedUrls[index], statusCode: statusCode, httpVersion: nil, headerFields: nil)!
         completions[index].completion(.success((data, response)))
     }
     

@@ -41,9 +41,9 @@ public class RemoteFeedImageDataLoader:FeedImageDataLoader {
     }
     
     public func loadImageData(from url: URL,completion:@escaping(FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
-        var task = HTTPTaskWrapper(completions: completion)
+        let task = HTTPTaskWrapper(completions: completion)
         task.wrapped = client.get(from: url) { [weak self] result in
-            guard let self else{return}
+            guard self != nil else{return}
             switch result{
             case let .success((data,response)):
                 if response.statusCode != 200 || data.isEmpty {

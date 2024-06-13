@@ -40,9 +40,8 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
         //        let testServerURL = URL(string: "https://static1.squarespace.com/static/5891c5b8d1758ec68ef5dbc2/t/5c52cdd0b8a045df091d2fff/1548930512083/feed-case-study-test-api-feed.json")!
         
         //URLSession handles the 3xx redirect response behind the scenes so you don’t get 3xx responses. After the redirect it gets a 200 from the final URL and URLSession only reports the final 200 code.
-        let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
         let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
-        let loader = RemoteFeedLoader(url: testServerURL, client: client)
+        let loader = RemoteFeedLoader(url: feedTestServerURL, client: client)
         trackForMemoryLeaks(client, file: file, line: line)
         trackForMemoryLeaks(loader, file: file, line: line)
         
@@ -74,7 +73,7 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
         
     }
     private func getFeedImageDataResult(file: StaticString = #file, line: UInt = #line) -> FeedImageDataLoader.Result? {
-        let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed/73A7F70C-75DA-4C2E-B5A3-EED40DC53AA6/image")!
+        let url = feedTestServerURL.appendingPathComponent("73A7F70C-75DA-4C2E-B5A3-EED40DC53AA6/image")
         let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
         let loader = RemoteFeedImageDataLoader(client: client)
         trackForMemoryLeaks(client, file: file, line: line)
@@ -83,7 +82,7 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
         let exp = expectation(description: "Wait for load completion")
         
         var receivedResult: FeedImageDataLoader.Result?
-        _ = loader.loadImageData(from: testServerURL) { result in
+        _ = loader.loadImageData(from: url) { result in
             receivedResult = result
             exp.fulfill()
         }
@@ -91,6 +90,10 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
         
         return receivedResult
     }
+    
+    private var feedTestServerURL: URL {
+            return URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
+        }
     
     private func expectedItem(at index: Int) -> FeedImage {
         return FeedImage(

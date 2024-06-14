@@ -41,7 +41,9 @@ class LocalFeedImageDataLoader {
     
     func loadImageData(from url: URL,completion:@escaping(FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
         let task = Task(completion: completion)
-        store.retrieve(dataForURL: url) { result in
+        store.retrieve(dataForURL: url) {[weak self] result in
+            guard let self else{return}
+
             switch result {
             case .success(let data):
                 if let data = data {
@@ -121,6 +123,25 @@ class LocalFeedImageDataLoaderTests:XCTestCase{
         
     }
     
+    func test_loadImageDataFromURL_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
+        
+        let store = StoreSpy()
+        var sut:LocalFeedImageDataLoader? = LocalFeedImageDataLoader(store: store)
+        let foundData = anyData()
+
+
+        var received = [FeedImageDataLoader.Result]()
+        let task = sut?.loadImageData(from: anyUrl()) { received.append($0) }
+        
+        
+        sut = nil
+        store.complete(with: foundData)
+        XCTAssertTrue(received.isEmpty, "Expected no received results after nil task")
+
+
+        
+    }
+    
     // MARK: - Helpers
     private func makeSUT(currentDate: @escaping () -> Date = Date.init, file: StaticString = #file, line: UInt = #line) -> (sut: LocalFeedImageDataLoader, store: StoreSpy) {
             let store = StoreSpy()
@@ -165,6 +186,7 @@ class LocalFeedImageDataLoaderTests:XCTestCase{
             action()
             wait(for: [exp], timeout: 1.0)
         }
+    
     
     private class StoreSpy:FeedImageDataStore {
         

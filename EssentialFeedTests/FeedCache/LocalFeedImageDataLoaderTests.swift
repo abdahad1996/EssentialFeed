@@ -89,11 +89,22 @@ class LocalFeedImageDataLoaderTests:XCTestCase{
         sut = nil
         store.complete(with: foundData)
         XCTAssertTrue(received.isEmpty, "Expected no received results after nil task")
-
-
-        
     }
     
+    func test_saveImageDataForURL_requestsImageDataInsertionForURL(){
+        let (sut, store) = makeSUT()
+        let data = anyData()
+        let url = anyUrl()
+        
+        sut.save(data, for: url, completion: {_ in})
+//        expect(sut, toCompleteWith:.success(data) , when: {
+//            store.complete(with: data)
+//        })
+        
+        XCTAssertEqual(store.messages,[.saver(url: url, data: data)])
+        
+        
+    }
     // MARK: - Helpers
     private func makeSUT(currentDate: @escaping () -> Date = Date.init, file: StaticString = #file, line: UInt = #line) -> (sut: LocalFeedImageDataLoader, store: StoreSpy) {
             let store = StoreSpy()
@@ -142,28 +153,41 @@ class LocalFeedImageDataLoaderTests:XCTestCase{
     
     private class StoreSpy:FeedImageDataStore {
         
+        
         var messages = [Message]()
-        var completions = [(FeedImageDataStore.Result) -> Void]()
+        var retrievalCompletions = [(FeedImageDataStore.Result) -> Void]()
+        var saveCompletions = [(FeedImageDataStore.InsertionResult) -> Void]()
         
         enum Message:Equatable {
             case retreival(url:URL)
+            case saver(url:URL,data:Data)
         }
         
         init() {}
+        
+        //MARK: RETRIEVAL
         func retrieve(dataForURL url: URL, completion: @escaping (FeedImageDataStore.Result) -> Void) {
             messages.append(.retreival(url: url))
-            completions.append(completion)
+            retrievalCompletions.append(completion)
         }
         
         func complete(with error:Error,at index:Int = 0){
-            completions[index](.failure(error))
+            retrievalCompletions[index](.failure(error))
         }
         
         func complete(with data:Data?,at index:Int = 0){
-            completions[index](.success(data))
+            retrievalCompletions[index](.success(data))
 
         }
         
+        //MARK: SAVE
+        func insert(_ data: Data, for url: URL, completion: @escaping (FeedImageDataStore.InsertionResult) -> Void) {
+            saveCompletions.append(completion)
+            messages.append(.saver(url: url, data: data))
+        }
+        
     }
+    
+     
     
 }

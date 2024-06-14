@@ -62,7 +62,8 @@ public class LocalFeedImageDataLoader {
                 switch result {
                 case .failure:
                     completion(.failure(SaveError.failed))
-                default: break
+                case .success:
+                    completion(.success(Void()))
                 }
                 
             }

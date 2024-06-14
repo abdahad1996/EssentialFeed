@@ -17,7 +17,6 @@ class CacheFeedImageDataUseCaseTests:XCTestCase{
         XCTAssertTrue(store.receivedMessages.isEmpty)
     }
 
-    
     func test_saveImageDataForURL_requestsImageDataInsertionForURL(){
         let (sut, store) = makeSUT()
         let data = anyData()
@@ -34,6 +33,15 @@ class CacheFeedImageDataUseCaseTests:XCTestCase{
                 expect(sut, toCompleteWith: failed(), when: {
                     let insertionError = anyError()
                     store.completeInsertion(with: insertionError)
+                })
+        
+    }
+    
+    func test_saveImageDataFromURL_succeedsOnSuccessfulStoreInsertion() {
+        let (sut, store) = makeSUT()
+        expect(sut, toCompleteWith: .success(Void()), when: {
+                    let insertionError = anyError()
+                    store.completeInsertionSuccessfully()
                 })
         
     }

@@ -155,7 +155,7 @@ class LocalFeedImageDataLoaderTests:XCTestCase{
         
         
         var messages = [Message]()
-        var retrievalCompletions = [(FeedImageDataStore.Result) -> Void]()
+        var retrievalCompletions = [(FeedImageDataStore.RetrievalResult) -> Void]()
         var saveCompletions = [(FeedImageDataStore.InsertionResult) -> Void]()
         
         enum Message:Equatable {
@@ -166,7 +166,7 @@ class LocalFeedImageDataLoaderTests:XCTestCase{
         init() {}
         
         //MARK: RETRIEVAL
-        func retrieve(dataForURL url: URL, completion: @escaping (FeedImageDataStore.Result) -> Void) {
+        func retrieve(dataForURL url: URL, completion: @escaping (FeedImageDataStore.RetrievalResult) -> Void) {
             messages.append(.retreival(url: url))
             retrievalCompletions.append(completion)
         }

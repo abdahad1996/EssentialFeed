@@ -14,7 +14,7 @@ class LoadFeedImageDataFromCacheUseCaseTests:XCTestCase{
     
     func test_init_doesNotMessageStoreUponCreation(){
         let (_,store) = makeSUT()
-        XCTAssertTrue(store.messages.isEmpty)
+        XCTAssertTrue(store.receivedMessages.isEmpty)
     }
     
     func test_loadImageDataFromURL_requestsStoredDataForURL(){
@@ -22,7 +22,7 @@ class LoadFeedImageDataFromCacheUseCaseTests:XCTestCase{
         let url = anyUrl()
         
         _ = sut.loadImageData(from: url) {_ in}
-        XCTAssertEqual(store.messages,[.retreival(url: url)])
+        XCTAssertEqual(store.receivedMessages,[.retrieve(dataFor: url)])
     }
     
     func test_loadImageDataFromURL_failsOnStoreError() {
@@ -32,7 +32,7 @@ class LoadFeedImageDataFromCacheUseCaseTests:XCTestCase{
         
         expect(sut, toCompleteWith: failed(), when: {
             let retrievalError = anyError
-            store.complete(with: retrievalError)
+            store.completeRetrieval(with: retrievalError)
           })
 
     }
@@ -41,7 +41,7 @@ class LoadFeedImageDataFromCacheUseCaseTests:XCTestCase{
         let (sut, store) = makeSUT()
         
         expect(sut, toCompleteWith: notFound(), when: {
-            store.complete(with: .none)
+            store.completeRetrieval(with: .none)
         })
     }
     
@@ -51,7 +51,7 @@ class LoadFeedImageDataFromCacheUseCaseTests:XCTestCase{
         let data = anyData()
         
         expect(sut, toCompleteWith:.success(data) , when: {
-            store.complete(with: data)
+            store.completeRetrieval(with: data)
         })
     }
     
@@ -65,9 +65,9 @@ class LoadFeedImageDataFromCacheUseCaseTests:XCTestCase{
         let task = sut.loadImageData(from: anyUrl()) { received.append($0) }
         
         task.cancel()
-        store.complete(with: foundData)
-        store.complete(with: .none)
-        store.complete(with: anyError())
+        store.completeRetrieval(with: foundData)
+        store.completeRetrieval(with: .none)
+        store.completeRetrieval(with: anyError())
         
         XCTAssertTrue(received.isEmpty, "Expected no received results after cancelling task")
         
@@ -75,7 +75,7 @@ class LoadFeedImageDataFromCacheUseCaseTests:XCTestCase{
     
     func test_loadImageDataFromURL_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
         
-        let store = StoreSpy()
+        let store = FeedImageDataStoreSpy()
         var sut:LocalFeedImageDataLoader? = LocalFeedImageDataLoader(store: store)
         let foundData = anyData()
 
@@ -85,27 +85,14 @@ class LoadFeedImageDataFromCacheUseCaseTests:XCTestCase{
         
         
         sut = nil
-        store.complete(with: foundData)
+        store.completeRetrieval(with: foundData, at: 0)
         XCTAssertTrue(received.isEmpty, "Expected no received results after nil task")
     }
     
-    func test_saveImageDataForURL_requestsImageDataInsertionForURL(){
-        let (sut, store) = makeSUT()
-        let data = anyData()
-        let url = anyUrl()
-        
-        sut.save(data, for: url, completion: {_ in})
-//        expect(sut, toCompleteWith:.success(data) , when: {
-//            store.complete(with: data)
-//        })
-        
-        XCTAssertEqual(store.messages,[.saver(url: url, data: data)])
-        
-        
-    }
+   
     // MARK: - Helpers
-    private func makeSUT(currentDate: @escaping () -> Date = Date.init, file: StaticString = #file, line: UInt = #line) -> (sut: LocalFeedImageDataLoader, store: StoreSpy) {
-            let store = StoreSpy()
+    private func makeSUT(currentDate: @escaping () -> Date = Date.init, file: StaticString = #file, line: UInt = #line) -> (sut: LocalFeedImageDataLoader, store: FeedImageDataStoreSpy) {
+            let store = FeedImageDataStoreSpy()
             let sut = LocalFeedImageDataLoader(store: store)
             trackForMemoryLeaks(store, file: file, line: line)
             trackForMemoryLeaks(sut, file: file, line: line)
@@ -147,44 +134,6 @@ class LoadFeedImageDataFromCacheUseCaseTests:XCTestCase{
             action()
             wait(for: [exp], timeout: 1.0)
         }
-    
-    
-    private class StoreSpy:FeedImageDataStore {
-        
-        
-        var messages = [Message]()
-        var retrievalCompletions = [(FeedImageDataStore.RetrievalResult) -> Void]()
-        var saveCompletions = [(FeedImageDataStore.InsertionResult) -> Void]()
-        
-        enum Message:Equatable {
-            case retreival(url:URL)
-            case saver(url:URL,data:Data)
-        }
-        
-        init() {}
-        
-        //MARK: RETRIEVAL
-        func retrieve(dataForURL url: URL, completion: @escaping (FeedImageDataStore.RetrievalResult) -> Void) {
-            messages.append(.retreival(url: url))
-            retrievalCompletions.append(completion)
-        }
-        
-        func complete(with error:Error,at index:Int = 0){
-            retrievalCompletions[index](.failure(error))
-        }
-        
-        func complete(with data:Data?,at index:Int = 0){
-            retrievalCompletions[index](.success(data))
-
-        }
-        
-        //MARK: SAVE
-        func insert(_ data: Data, for url: URL, completion: @escaping (FeedImageDataStore.InsertionResult) -> Void) {
-            saveCompletions.append(completion)
-            messages.append(.saver(url: url, data: data))
-        }
-        
-    }
     
      
     

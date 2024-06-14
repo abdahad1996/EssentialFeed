@@ -9,56 +9,8 @@ import Foundation
 import XCTest
 import EssentialFeed
 
-protocol FeedImageDataStore {
-    typealias Result = Swift.Result<Data?,Error>
-    func retrieve(dataForURL url: URL,completion:@escaping (Result) -> Void )
-}
+ 
 
-class LocalFeedImageDataLoader {
-    
-    let store:FeedImageDataStore
-    init(store:FeedImageDataStore){
-        self.store = store
-    }
-    enum Error:Swift.Error{
-        case failed
-        case notFound
-    }
-    
-    private final class Task:FeedImageDataLoaderTask{
-    var completion:((FeedImageDataLoader.Result) -> Void)?
-        
-        init(completion:@escaping (FeedImageDataLoader.Result) -> Void ) {
-            self.completion = completion
-        }
-        func cancel() {
-            self.completion = nil
-        }
-        func complete(with completion:FeedImageDataLoader.Result){
-            self.completion?(completion)
-        }
-    }
-    
-    func loadImageData(from url: URL,completion:@escaping(FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
-        let task = Task(completion: completion)
-        store.retrieve(dataForURL: url) {[weak self] result in
-            guard let self else{return}
-
-            switch result {
-            case .success(let data):
-                if let data = data {
-                    task.complete(with:.success(data))
-                 }else{
-                     task.complete(with:.failure(Error.notFound))
-                }
-            case .failure:
-                task.complete(with:.failure(Error.failed))
-                
-                }
-            }
-        return task
-    }
-}
 
 class LocalFeedImageDataLoaderTests:XCTestCase{
     

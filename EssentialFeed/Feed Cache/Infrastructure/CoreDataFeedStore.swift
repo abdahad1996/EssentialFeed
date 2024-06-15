@@ -22,10 +22,10 @@ extension CoreDataFeedStore:FeedImageDataStore{
         perform { context in
             completion(Result{
                 
-                guard let image = try? ManagedFeedImage.first(with: url, in: context) else { return }
+            try ManagedFeedImage.first(with: url, in: context)
+                    .map{$0.data = data}
+                    .map(context.save)
                 
-                image.data = data
-                try? context.save()
             })
                 }
     }

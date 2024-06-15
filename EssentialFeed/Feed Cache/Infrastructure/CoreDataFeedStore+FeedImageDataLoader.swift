@@ -8,55 +8,25 @@
 import Foundation
 import CoreData
  
-public class CoreDataFeedStore:FeedStore{
-    
-    private let container:NSPersistentContainer
-    private let context: NSManagedObjectContext
-    
-    
-    public init(storeURL:URL,bundle:Bundle = .main) throws{
-        container = try NSPersistentContainer.load(modelName: "FeedStore", url: storeURL, in: bundle)
-        context = container.newBackgroundContext()
-        
-    }
-    
-     func perform(action:@escaping (NSManagedObjectContext) -> Void) {
-        let context = self.context
-        context.perform{action(context)}
-         
-    }
-    
-    public func deleteCachedFeed(completion: @escaping DeletionCompletion) {
+extension CoreDataFeedStore:FeedImageDataStore{
+    public func retrieve(dataForURL url: URL, completion: @escaping (FeedImageDataStore.RetrievalResult) -> Void) {
         perform { context in
-                    
-            completion(Result{
-                try ManagedCache.find(context: context).map{context.delete($0)}.map(context.save)
-            })
-            
-        }
+                    completion(Result {
+                         try ManagedFeedImage.first(with: url, in: context)?.data
+                    })
+                }
     }
     
-    public func insert(_ items: [LocalFeedImage], timestamp timeStamp: Date, completion: @escaping InsertionCompletion)  {
+    public func insert(_ data: Data, for url: URL, completion: @escaping (FeedImageDataStore.InsertionResult) -> Void) {
+        
         perform { context in
             completion(Result{
-                let cache = try ManagedCache.findNewInstance(context: context)
-                cache.timestamp = timeStamp
-                cache.feed = ManagedFeedImage.images(items: items, context: context)
                 
-                try context.save()
+            try ManagedFeedImage.first(with: url, in: context)
+                    .map{$0.data = data}
+                    .map(context.save)
                 
             })
-        }
-        
+                }
     }
-    
-    public func retrieve(completion: @escaping RetrievalCompletion) {
-        perform { context in
-            completion( Result {
-                try ManagedCache.find(context: context).map{
-                        return CachedFeed(feed: $0.localFeed, timestamp: $0.timestamp)
-                    }
-                })
-            }
-        }
 }

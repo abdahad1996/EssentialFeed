@@ -34,6 +34,7 @@
 		6546C4442C1CDCC400D08AFA /* CoreDataFeedImageDataStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6546C4432C1CDCC400D08AFA /* CoreDataFeedImageDataStoreTests.swift */; };
 		6546C4462C1D29D000D08AFA /* CoreDataFeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6546C4452C1D29D000D08AFA /* CoreDataFeedStore.swift */; };
 		6546C4482C1DD9F000D08AFA /* CoreDataFeedStore+FeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6546C4472C1DD9F000D08AFA /* CoreDataFeedStore+FeedStore.swift */; };
+		6546C4492C1DDD0600D08AFA /* SharedTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657706712C17D1980045FA7A /* SharedTestHelpers.swift */; };
 		657706532C1716B00045FA7A /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657706522C1716B00045FA7A /* ErrorView.swift */; };
 		6577065D2C1737000045FA7A /* FeedPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6577065C2C1737000045FA7A /* FeedPresenter.swift */; };
 		6577065E2C1738910045FA7A /* Feed.strings in Resources */ = {isa = PBXBuildFile; fileRef = 657706562C1735E40045FA7A /* Feed.strings */; };
@@ -961,6 +962,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6546C4492C1DDD0600D08AFA /* SharedTestHelpers.swift in Sources */,
 				65EC5D052BE4FAAF00B71FCA /* EssentialFeedCacheIntegrationTests.swift in Sources */,
 				65EC5D0E2BE4FC0800B71FCA /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 				65EC5D0F2BE5278100B71FCA /* FeedCacheTestsHelper.swift in Sources */,

@@ -22,9 +22,8 @@
   },
   "testTargets" : [
     {
-      "parallelizable" : true,
       "target" : {
-        "containerPath" : "container:EssentialFeed.xcodeproj",
+        "containerPath" : "container:..\/EssentialFeed\/EssentialFeed.xcodeproj",
         "identifier" : "6538F6FB2B6094CD00421684",
         "name" : "EssentialFeedAPIEndToEndTests"
       }

@@ -22,9 +22,8 @@
   },
   "testTargets" : [
     {
-      "parallelizable" : true,
       "target" : {
-        "containerPath" : "container:EssentialFeed.xcodeproj",
+        "containerPath" : "container:..\/EssentialFeed\/EssentialFeed.xcodeproj",
         "identifier" : "65EC5D012BE4FAAF00B71FCA",
         "name" : "EssentialFeedCacheIntegrationTests"
       }

@@ -107,15 +107,6 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
         }
 
          
-    private func anyURL() -> URL {
-            return URL(string: "http://a-url.com")!
-        }
-    private func anyNSError() -> NSError {
-            return NSError(domain: "any error", code: 0)
-        }
-    func anyData() -> Data {
-            return Data("any data".utf8)
-        }
     
     private func expect(_ sut: FeedImageDataLoader, toCompleteWith expectedResult: FeedImageDataLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
             let exp = expectation(description: "Wait for load completion")

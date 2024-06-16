@@ -32,7 +32,7 @@ class FeedImageDataLoaderWithFallbackComposite: FeedImageDataLoader {
             guard self != nil else{return}
             switch result {
             case .success(_):
-                break
+                completion(result)
             case .failure:
                 task.wrapped = self?.fallback.loadImageData(from: url, completion: {_ in})
             }
@@ -99,6 +99,15 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
             XCTAssertEqual(fallbackLoader.cancelledURLs, [url], "Expected to cancel URL loading from fallback loader")
         }
     
+    func test_loadImageData_deliversPrimaryDataOnPrimaryLoaderSuccess() {
+            let primaryData = anyData()
+            let (sut, primaryLoader, _) = makeSUT()
+
+            expect(sut, toCompleteWith: .success(primaryData), when: {
+                primaryLoader.complete(with: primaryData)
+            })
+        }
+    
     // MARK: - Helpers
     
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: FeedImageDataLoader, primary: LoaderSpy, fallback: LoaderSpy) {
@@ -122,6 +131,33 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
     private func anyNSError() -> NSError {
             return NSError(domain: "any error", code: 0)
         }
+    func anyData() -> Data {
+            return Data("any data".utf8)
+        }
+    
+    private func expect(_ sut: FeedImageDataLoader, toCompleteWith expectedResult: FeedImageDataLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+            let exp = expectation(description: "Wait for load completion")
+
+            _ = sut.loadImageData(from: anyURL()) { receivedResult in
+                switch (receivedResult, expectedResult) {
+                case let (.success(receivedFeed), .success(expectedFeed)):
+                    XCTAssertEqual(receivedFeed, expectedFeed, file: file, line: line)
+
+                case (.failure, .failure):
+                    break
+
+                default:
+                    XCTFail("Expected \(expectedResult), got \(receivedResult) instead", file: file, line: line)
+                }
+
+                exp.fulfill()
+            }
+
+            action()
+
+            wait(for: [exp], timeout: 1.0)
+        }
+
     
     private class LoaderSpy: FeedImageDataLoader {
         

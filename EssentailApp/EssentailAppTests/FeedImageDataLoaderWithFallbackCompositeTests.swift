@@ -26,10 +26,9 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
 
         _ = sut.loadImageData(from: url) { _ in }
 
-                XCTAssertEqual(primaryLoader.loadedURLs, [url], "Expected to load URL from primary loader")
-                XCTAssertTrue(fallbackLoader.loadedURLs.isEmpty, "Expected no loaded URLs in the fallback loader")
+        XCTAssertEqual(primaryLoader.loadedURLs, [url], "Expected to load URL from primary loader")
+        XCTAssertTrue(fallbackLoader.loadedURLs.isEmpty, "Expected no loaded URLs in the fallback loader")
 
-        
     }
 
     func test_loadImageData_loadsFromFallbackOnPrimaryLoaderFailure() {
@@ -107,7 +106,6 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
         }
 
          
-    
     private func expect(_ sut: FeedImageDataLoader, toCompleteWith expectedResult: FeedImageDataLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
             let exp = expectation(description: "Wait for load completion")
 
@@ -131,7 +129,6 @@ class FeedImageDataLoaderWithFallbackCompositeTests: XCTestCase {
             wait(for: [exp], timeout: 1.0)
         }
 
-    
     private class LoaderSpy: FeedImageDataLoader {
         
         private var messages = [(url: URL, completion: (FeedImageDataLoader.Result) -> Void)]()

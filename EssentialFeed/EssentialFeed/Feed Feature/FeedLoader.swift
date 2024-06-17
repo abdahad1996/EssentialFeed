@@ -7,7 +7,6 @@
 
 import Foundation
 
-
  
 public protocol FeedLoader {
     typealias Result = Swift.Result<[FeedImage], Error>

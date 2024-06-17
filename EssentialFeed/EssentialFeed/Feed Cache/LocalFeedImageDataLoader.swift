@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class LocalFeedImageDataLoader {
+public class LocalFeedImageDataLoader:FeedImageDataLoader {
     let store:FeedImageDataStore
     public init(store:FeedImageDataStore){
         self.store = store
@@ -52,11 +52,16 @@ public class LocalFeedImageDataLoader {
         return task
     }
     
+    
+}
+
+extension LocalFeedImageDataLoader:FeedImageDataCache{
+    public typealias SaveResult = FeedImageDataCache.Result
+
     public enum SaveError:Swift.Error{
         case failed
     }
-    public typealias SaveResult = Result<Void, Swift.Error>
-
+ 
         public func save(_ data: Data, for url: URL, completion: @escaping (SaveResult) -> Void) {
             store.insert(data, for: url) { [weak self] result in
                 guard self != nil else{return }

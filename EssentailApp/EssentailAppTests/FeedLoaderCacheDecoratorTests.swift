@@ -8,27 +8,8 @@
 import Foundation
 import XCTest
 import EssentialFeed
+import EssentailApp
 
-
-class FeedLoaderCacheDecorator:FeedLoader{
-    
-    let loader:FeedLoader
-    let cache:FeedCache
-    
-    init(loader: FeedLoader, cache: FeedCache) {
-        self.loader = loader
-        self.cache = cache
-    }
-    
-    func load(completion: @escaping (Result<[EssentialFeed.FeedImage], any Error>) -> Void) {
-        loader.load { [weak self] result in
-            completion(result.map{feed in
-                self?.cache.save(feed, completion: {_ in})
-                return feed
-            })
-        }
-    }
-}
 class FeedLoaderCacheDecoratorTests:XCTestCase,FeedLoaderTestCase{
     
     func test_load_deliversFeedOnLoadSuccess(){

@@ -24,6 +24,8 @@
 		65829C432C206C7400B8B8D2 /* XCTestCase+FeedImageDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65829C422C206C7400B8B8D2 /* XCTestCase+FeedImageDataLoader.swift */; };
 		65829C472C206FDC00B8B8D2 /* FeedImageDataLoaderCacheDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65829C462C206FDC00B8B8D2 /* FeedImageDataLoaderCacheDecorator.swift */; };
 		65ADA6912C23A447000E8B7C /* EssentailAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ADA6902C23A447000E8B7C /* EssentailAppUITests.swift */; };
+		65ADA6A12C23A581000E8B7C /* EssentialFeediOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65ADA6A02C23A581000E8B7C /* EssentialFeediOS.framework */; };
+		65ADA6A22C23A581000E8B7C /* EssentialFeediOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 65ADA6A02C23A581000E8B7C /* EssentialFeediOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		65C233052C1EB77900E09195 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C233042C1EB77900E09195 /* AppDelegate.swift */; };
 		65C233072C1EB77900E09195 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C233062C1EB77900E09195 /* SceneDelegate.swift */; };
 		65C233092C1EB77900E09195 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C233082C1EB77900E09195 /* ViewController.swift */; };
@@ -57,6 +59,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				652B69862C1EBFE1004EB4DD /* EssentialFeed.framework in Embed Frameworks */,
+				65ADA6A22C23A581000E8B7C /* EssentialFeediOS.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -82,6 +85,9 @@
 		65829C462C206FDC00B8B8D2 /* FeedImageDataLoaderCacheDecorator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedImageDataLoaderCacheDecorator.swift; sourceTree = "<group>"; };
 		65ADA68E2C23A447000E8B7C /* EssentailAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentailAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		65ADA6902C23A447000E8B7C /* EssentailAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EssentailAppUITests.swift; sourceTree = "<group>"; };
+		65ADA6992C23A56B000E8B7C /* EssentialFeed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EssentialFeed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		65ADA69A2C23A56B000E8B7C /* EssentialFeediOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EssentialFeediOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		65ADA6A02C23A581000E8B7C /* EssentialFeediOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EssentialFeediOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		65C233012C1EB77900E09195 /* EssentailApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EssentailApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65C233042C1EB77900E09195 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		65C233062C1EB77900E09195 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -112,6 +118,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				652B69852C1EBFE1004EB4DD /* EssentialFeed.framework in Frameworks */,
+				65ADA6A12C23A581000E8B7C /* EssentialFeediOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,6 +140,9 @@
 		652B69832C1EBFE1004EB4DD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				65ADA6A02C23A581000E8B7C /* EssentialFeediOS.framework */,
+				65ADA6992C23A56B000E8B7C /* EssentialFeed.framework */,
+				65ADA69A2C23A56B000E8B7C /* EssentialFeediOS.framework */,
 				652B69842C1EBFE1004EB4DD /* EssentialFeed.framework */,
 			);
 			name = Frameworks;

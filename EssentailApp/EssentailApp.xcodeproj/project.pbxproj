@@ -23,6 +23,7 @@
 		65829C412C206B9300B8B8D2 /* FeedImageDataLoaderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65829C402C206B9300B8B8D2 /* FeedImageDataLoaderSpy.swift */; };
 		65829C432C206C7400B8B8D2 /* XCTestCase+FeedImageDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65829C422C206C7400B8B8D2 /* XCTestCase+FeedImageDataLoader.swift */; };
 		65829C472C206FDC00B8B8D2 /* FeedImageDataLoaderCacheDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65829C462C206FDC00B8B8D2 /* FeedImageDataLoaderCacheDecorator.swift */; };
+		65ADA6912C23A447000E8B7C /* EssentailAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ADA6902C23A447000E8B7C /* EssentailAppUITests.swift */; };
 		65C233052C1EB77900E09195 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C233042C1EB77900E09195 /* AppDelegate.swift */; };
 		65C233072C1EB77900E09195 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C233062C1EB77900E09195 /* SceneDelegate.swift */; };
 		65C233092C1EB77900E09195 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C233082C1EB77900E09195 /* ViewController.swift */; };
@@ -33,6 +34,13 @@
 
 /* Begin PBXContainerItemProxy section */
 		652B697E2C1EBD7D004EB4DD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 65C232F92C1EB77800E09195 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 65C233002C1EB77900E09195;
+			remoteInfo = EssentailApp;
+		};
+		65ADA6942C23A447000E8B7C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 65C232F92C1EB77800E09195 /* Project object */;
 			proxyType = 1;
@@ -72,6 +80,8 @@
 		65829C402C206B9300B8B8D2 /* FeedImageDataLoaderSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataLoaderSpy.swift; sourceTree = "<group>"; };
 		65829C422C206C7400B8B8D2 /* XCTestCase+FeedImageDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+FeedImageDataLoader.swift"; sourceTree = "<group>"; };
 		65829C462C206FDC00B8B8D2 /* FeedImageDataLoaderCacheDecorator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedImageDataLoaderCacheDecorator.swift; sourceTree = "<group>"; };
+		65ADA68E2C23A447000E8B7C /* EssentailAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentailAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		65ADA6902C23A447000E8B7C /* EssentailAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EssentailAppUITests.swift; sourceTree = "<group>"; };
 		65C233012C1EB77900E09195 /* EssentailApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EssentailApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65C233042C1EB77900E09195 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		65C233062C1EB77900E09195 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -84,6 +94,13 @@
 
 /* Begin PBXFrameworksBuildPhase section */
 		652B69772C1EBD7D004EB4DD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		65ADA68B2C23A447000E8B7C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -134,11 +151,20 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		65ADA68F2C23A447000E8B7C /* EssentailAppUITests */ = {
+			isa = PBXGroup;
+			children = (
+				65ADA6902C23A447000E8B7C /* EssentailAppUITests.swift */,
+			);
+			path = EssentailAppUITests;
+			sourceTree = "<group>";
+		};
 		65C232F82C1EB77800E09195 = {
 			isa = PBXGroup;
 			children = (
 				65C233032C1EB77900E09195 /* EssentailApp */,
 				652B697B2C1EBD7D004EB4DD /* EssentailAppTests */,
+				65ADA68F2C23A447000E8B7C /* EssentailAppUITests */,
 				65C233022C1EB77900E09195 /* Products */,
 				652B69832C1EBFE1004EB4DD /* Frameworks */,
 			);
@@ -149,6 +175,7 @@
 			children = (
 				65C233012C1EB77900E09195 /* EssentailApp.app */,
 				652B697A2C1EBD7D004EB4DD /* EssentailAppTests.xctest */,
+				65ADA68E2C23A447000E8B7C /* EssentailAppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -192,6 +219,24 @@
 			productReference = 652B697A2C1EBD7D004EB4DD /* EssentailAppTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		65ADA68D2C23A447000E8B7C /* EssentailAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 65ADA6982C23A447000E8B7C /* Build configuration list for PBXNativeTarget "EssentailAppUITests" */;
+			buildPhases = (
+				65ADA68A2C23A447000E8B7C /* Sources */,
+				65ADA68B2C23A447000E8B7C /* Frameworks */,
+				65ADA68C2C23A447000E8B7C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				65ADA6952C23A447000E8B7C /* PBXTargetDependency */,
+			);
+			name = EssentailAppUITests;
+			productName = EssentailAppUITests;
+			productReference = 65ADA68E2C23A447000E8B7C /* EssentailAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		65C233002C1EB77900E09195 /* EssentailApp */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 65C233152C1EB77D00E09195 /* Build configuration list for PBXNativeTarget "EssentailApp" */;
@@ -224,6 +269,10 @@
 						CreatedOnToolsVersion = 15.4;
 						TestTargetID = 65C233002C1EB77900E09195;
 					};
+					65ADA68D2C23A447000E8B7C = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = 65C233002C1EB77900E09195;
+					};
 					65C233002C1EB77900E09195 = {
 						CreatedOnToolsVersion = 15.4;
 					};
@@ -244,12 +293,20 @@
 			targets = (
 				65C233002C1EB77900E09195 /* EssentailApp */,
 				652B69792C1EBD7D004EB4DD /* EssentailAppTests */,
+				65ADA68D2C23A447000E8B7C /* EssentailAppUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		652B69782C1EBD7D004EB4DD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		65ADA68C2C23A447000E8B7C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -286,6 +343,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		65ADA68A2C23A447000E8B7C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				65ADA6912C23A447000E8B7C /* EssentailAppUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		65C232FD2C1EB77900E09195 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -307,6 +372,11 @@
 			isa = PBXTargetDependency;
 			target = 65C233002C1EB77900E09195 /* EssentailApp */;
 			targetProxy = 652B697E2C1EBD7D004EB4DD /* PBXContainerItemProxy */;
+		};
+		65ADA6952C23A447000E8B7C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 65C233002C1EB77900E09195 /* EssentailApp */;
+			targetProxy = 65ADA6942C23A447000E8B7C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -363,6 +433,40 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EssentailApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/EssentailApp";
+			};
+			name = Release;
+		};
+		65ADA6962C23A447000E8B7C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ADTR2923N7;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = abdul.EssentailAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = EssentailApp;
+			};
+			name = Debug;
+		};
+		65ADA6972C23A447000E8B7C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ADTR2923N7;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = abdul.EssentailAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = EssentailApp;
 			};
 			name = Release;
 		};
@@ -549,6 +653,15 @@
 			buildConfigurations = (
 				652B69802C1EBD7D004EB4DD /* Debug */,
 				652B69812C1EBD7D004EB4DD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		65ADA6982C23A447000E8B7C /* Build configuration list for PBXNativeTarget "EssentailAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				65ADA6962C23A447000E8B7C /* Debug */,
+				65ADA6972C23A447000E8B7C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

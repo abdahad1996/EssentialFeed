@@ -18,8 +18,8 @@ final class FeedUIIntegrationTests:XCTestCase{
     func test_feedView_hasTitle() {
         let (sut,loader) =  makeSUT()
         
-        sut.loadViewIfNeeded()
-        
+        sut.simulateAppearance()
+
         
         XCTAssertEqual(sut.title, localized("FEED_VIEW_TITLE"))
     }
@@ -28,9 +28,6 @@ final class FeedUIIntegrationTests:XCTestCase{
     func test_loadFeedActions_requestFeedFromLoader(){
         let (sut,loader) =  makeSUT()
         XCTAssertEqual(loader.loadFeedCallCount, 0, "Expected no loading requests before view is loaded")
-        sut.loadViewIfNeeded()
-        sut.replaceRefreshControlWithFakeForiOS17Support()
-        
         sut.simulateAppearance()
         XCTAssertEqual(loader.loadFeedCallCount, 1, "Expected a loading request once view is loaded")
         
@@ -46,8 +43,6 @@ final class FeedUIIntegrationTests:XCTestCase{
     func test_loadingFeedIndicator_isVisibleWhileLoadingFeed() {
         let (sut,loader) =  makeSUT()
         
-        sut.loadViewIfNeeded()
-        sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
         XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once view is loaded")
         
@@ -75,8 +70,6 @@ final class FeedUIIntegrationTests:XCTestCase{
         let image2 = makeImage(description: "another description", location: nil)
         let image3 = makeImage(description: nil, location: nil)
         
-        sut.loadViewIfNeeded()
-        sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
         
         loader.completeFeedLoading(with:[image0])
@@ -100,8 +93,6 @@ final class FeedUIIntegrationTests:XCTestCase{
         let (sut,loader) =  makeSUT()
         let image0 = makeImage(description: "a description", location: "a location")
         
-        sut.loadViewIfNeeded()
-        sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
         
         XCTAssertTrue(sut.isShowingLoadingIndicator, "Expected loading indicator once view is loaded")
@@ -125,8 +116,6 @@ final class FeedUIIntegrationTests:XCTestCase{
         let image0 = makeImage(description: "a description", location: "a location")
         let image1 = makeImage(description: "a description", location: "a location")
         
-        sut.loadViewIfNeeded()
-        sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
         
         loader.completeFeedLoading(with:[image0,image1])
@@ -147,8 +136,6 @@ final class FeedUIIntegrationTests:XCTestCase{
         let image0 = makeImage(description: "a description", location: "a location")
         let image1 = makeImage(description: "a description", location: "a location")
         
-        sut.loadViewIfNeeded()
-        sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
         
         loader.completeFeedLoading(with:[image0,image1])
@@ -169,8 +156,7 @@ final class FeedUIIntegrationTests:XCTestCase{
         let image0 = makeImage(description: "a description", location: "a location")
         let image1 = makeImage(description: "a description", location: "a location")
         
-        sut.loadViewIfNeeded()
-        sut.replaceRefreshControlWithFakeForiOS17Support()
+       
         sut.simulateAppearance()
         
         loader.completeFeedLoading(with:[image0,image1])
@@ -198,10 +184,8 @@ final class FeedUIIntegrationTests:XCTestCase{
         let image0 = makeImage(description: "a description", location: "a location")
         let image1 = makeImage(description: "a description", location: "a location")
         
-        sut.loadViewIfNeeded()
-        sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
-        
+
         loader.completeFeedLoading(with:[image0,image1])
         XCTAssertEqual(sut.numberOfRenderedFeedImageViews(), 2)
         
@@ -226,9 +210,8 @@ final class FeedUIIntegrationTests:XCTestCase{
         let image0 = makeImage(description: "a description", location: "a location")
         let image1 = makeImage(description: "a description", location: "a location")
         
-        sut.loadViewIfNeeded()
-        sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
+
         
         loader.completeFeedLoading(with:[image0,image1])
         
@@ -256,11 +239,8 @@ final class FeedUIIntegrationTests:XCTestCase{
         let image1 = makeImage(url: URL(string: "http://url-1.com")!)
         let (sut, loader) = makeSUT()
         
-        sut.loadViewIfNeeded()
-        
-        sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
-        
+
         loader.completeFeedLoading(with: [image0, image1])
         
         let view0 = sut.simulateFeedImageViewVisible(at: 0)
@@ -285,10 +265,8 @@ final class FeedUIIntegrationTests:XCTestCase{
         let image1 = makeImage(url: URL(string: "http://url-1.com")!)
         let (sut, loader) = makeSUT()
         
-        sut.loadViewIfNeeded()
-        
-        sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
+
         
         loader.completeFeedLoading(with: [image0, image1])
         XCTAssertEqual(loader.loadedImageURLs, [], "Expected no image URL requests until image is near visible")
@@ -306,9 +284,8 @@ final class FeedUIIntegrationTests:XCTestCase{
             let image1 = makeImage(url: URL(string: "http://url-1.com")!)
             let (sut, loader) = makeSUT()
 
-            sut.loadViewIfNeeded()
-        sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
+
         
             loader.completeFeedLoading(with: [image0, image1])
             XCTAssertEqual(loader.cancelledImageURLs, [], "Expected no cancelled image URL requests until image is not near visible")
@@ -325,9 +302,8 @@ final class FeedUIIntegrationTests:XCTestCase{
         let image0 = makeImage(url: URL(string: "http://url-1.com")!)
         let (sut, loader) = makeSUT()
 
-        sut.loadViewIfNeeded()
-        sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
+
     
         loader.completeFeedLoading(with: [image0])
         
@@ -344,9 +320,8 @@ final class FeedUIIntegrationTests:XCTestCase{
 
         let (sut, loader) = makeSUT()
 
-        sut.loadViewIfNeeded()
-        sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
+
         
             loader.completeFeedLoading(with: [image0, image1])
 
@@ -365,9 +340,8 @@ final class FeedUIIntegrationTests:XCTestCase{
 
         let (sut, loader) = makeSUT()
 
-        sut.loadViewIfNeeded()
-        sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
+
         
             loader.completeFeedLoading(with: [image0, image1])
 
@@ -384,9 +358,8 @@ final class FeedUIIntegrationTests:XCTestCase{
     func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {
         let (sut, loader) = makeSUT()
 
-        sut.loadViewIfNeeded()
-        sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
+
         
         let exp = expectation(description: "Wait for background queue")
         DispatchQueue.global().async {
@@ -403,10 +376,8 @@ final class FeedUIIntegrationTests:XCTestCase{
         let image0 = makeImage(url: URL(string: "http://url-1.com")!)
         let (sut, loader) = makeSUT()
 
-        sut.loadViewIfNeeded()
-        sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
-        
+
             loader.completeFeedLoading(with: [image0])
             _ = sut.simulateFeedImageViewVisible(at: 0)
 
@@ -422,9 +393,8 @@ final class FeedUIIntegrationTests:XCTestCase{
         let image0 = makeImage(url: URL(string: "http://url-1.com")!)
         let (sut, loader) = makeSUT()
 
-        sut.loadViewIfNeeded()
-        sut.replaceRefreshControlWithFakeForiOS17Support()
         sut.simulateAppearance()
+
         
         XCTAssertEqual(sut.errorMessage, nil)
 

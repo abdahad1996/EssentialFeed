@@ -72,7 +72,7 @@ import CoreData
                 )
             )
          ))
-         
+         window?.makeKeyAndVisible()
      }
     
      func makeRemoteClient() -> HTTPClient {

@@ -15,7 +15,7 @@ class CoreDataFeedImageDataStoreTests:XCTestCase{
     func test_retrieveImageData_deliversNotFoundWhenEmpty() {
             let sut = makeSUT()
 
-            expect(sut, toCompleteRetrievalWith: notFound(), for: anyUrl())
+            expect(sut, toCompleteRetrievalWith: notFound(), for: anyURL())
         }
     
     func test_retrieveImageData_deliversNotFoundWhenStoredDataURLDoesNotMatch() {
@@ -55,7 +55,7 @@ class CoreDataFeedImageDataStoreTests:XCTestCase{
     }
     func test_sideEffects_runSerially() {
             let sut = makeSUT()
-            let url = anyUrl()
+            let url = anyURL()
 
             let op1 = expectation(description: "Operation 1")
             sut.insert([localImage(url: url)], timestamp: Date()) { _ in

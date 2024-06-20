@@ -27,7 +27,7 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
     
     func test_load_failsOnRetrievalError(){
         let (store,sut) = makeSut()
-        let retrievalError = anyError()
+        let retrievalError = anyNSError()
 
         expect(sut: sut, completeWith:.failure(retrievalError)) {
             store.completeRetrieval(with: retrievalError)

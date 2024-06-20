@@ -17,7 +17,7 @@ class ValidateFeedCacheUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT()
         
         sut.validateCache{_ in}
-        store.completeRetrieval(with: anyError())
+        store.completeRetrieval(with: anyNSError())
         
         XCTAssertEqual(store.receivedMessages, [.retrieve, .deleteCachedFeed])
     }
@@ -74,17 +74,17 @@ class ValidateFeedCacheUseCaseTests: XCTestCase {
         sut?.validateCache{_ in}
 
         sut = nil
-        store.completeRetrieval(with: anyError())
+        store.completeRetrieval(with: anyNSError())
         
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
     
     func test_validateCache_failsOnDeletionErrorOfFailedRetrieval() {
             let (sut, store) = makeSUT()
-            let deletionError = anyError()
+            let deletionError = anyNSError()
 
             expect(sut, toCompleteWith: .failure(deletionError), when: {
-                store.completeRetrieval(with: anyError())
+                store.completeRetrieval(with: anyNSError())
                 store.completeDeletion(with: deletionError)
             })
         }
@@ -93,7 +93,7 @@ class ValidateFeedCacheUseCaseTests: XCTestCase {
             let (sut, store) = makeSUT()
             
             expect(sut, toCompleteWith: .success(()), when: {
-                store.completeRetrieval(with: anyError())
+                store.completeRetrieval(with: anyNSError())
                 store.completeDeletionSuccessfully()
             })
         }
@@ -122,7 +122,7 @@ class ValidateFeedCacheUseCaseTests: XCTestCase {
             let fixedCurrentDate = Date()
             let expiredTimestamp = fixedCurrentDate.minusFeedCacheMaxAge().adding(seconds: -1)
             let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
-            let deletionError = anyError()
+            let deletionError = anyNSError()
 
             expect(sut, toCompleteWith: .failure(deletionError), when: {
                 store.completeRetrieval(with: feed.local, timestamp: expiredTimestamp)

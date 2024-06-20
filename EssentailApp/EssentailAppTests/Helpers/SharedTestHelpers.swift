@@ -8,8 +8,9 @@
 import Foundation
 import EssentialFeed
 
-
-
+ func uniqueImage() -> FeedImage {
+    return FeedImage(id: UUID(), description: "any", location: "any", imageURL: URL(string: "http://any-url.com")!)
+}
   func anyURL() -> URL {
         return URL(string: "http://a-url.com")!
     }

@@ -21,7 +21,6 @@ public final class ErrorView: UIView {
 
     public override func awakeFromNib() {
         super.awakeFromNib()
-
         button.setTitle(nil, for: .normal)
         alpha = 0
     }

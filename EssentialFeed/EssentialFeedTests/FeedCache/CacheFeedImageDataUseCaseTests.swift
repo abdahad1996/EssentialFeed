@@ -20,7 +20,7 @@ class CacheFeedImageDataUseCaseTests:XCTestCase{
     func test_saveImageDataForURL_requestsImageDataInsertionForURL(){
         let (sut, store) = makeSUT()
         let data = anyData()
-        let url = anyUrl()
+        let url = anyURL()
         
         sut.save(data, for: url, completion: {_ in})
         XCTAssertEqual(store.receivedMessages,[.insert(data: data, for: url)])
@@ -31,7 +31,7 @@ class CacheFeedImageDataUseCaseTests:XCTestCase{
     {
         let (sut, store) = makeSUT()
                 expect(sut, toCompleteWith: failed(), when: {
-                    let insertionError = anyError()
+                    let insertionError = anyNSError()
                     store.completeInsertion(with: insertionError)
                 })
         
@@ -40,7 +40,7 @@ class CacheFeedImageDataUseCaseTests:XCTestCase{
     func test_saveImageDataFromURL_succeedsOnSuccessfulStoreInsertion() {
         let (sut, store) = makeSUT()
         expect(sut, toCompleteWith: .success(Void()), when: {
-                    let insertionError = anyError()
+                    let insertionError = anyNSError()
                     store.completeInsertionSuccessfully()
                 })
         
@@ -50,12 +50,12 @@ class CacheFeedImageDataUseCaseTests:XCTestCase{
         var sut:LocalFeedImageDataLoader? = LocalFeedImageDataLoader(store: store)
         
         var received = [LocalFeedImageDataLoader.SaveResult]()
-        sut?.save(anyData(), for: anyUrl(), completion: {received.append($0)})
+        sut?.save(anyData(), for: anyURL(), completion: {received.append($0)})
         
         sut = nil
         
         
-        store.completeInsertion(with: anyError())
+        store.completeInsertion(with: anyNSError())
         store.completeInsertionSuccessfully()
         
         XCTAssertTrue(received.isEmpty, "Expected no received results after instance has been deallocated")
@@ -77,7 +77,7 @@ class CacheFeedImageDataUseCaseTests:XCTestCase{
         private func expect(_ sut: LocalFeedImageDataLoader, toCompleteWith expectedResult: LocalFeedImageDataLoader.SaveResult, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
             let exp = expectation(description: "Wait for load completion")
 
-            sut.save(anyData(), for: anyUrl()) { receivedResult in
+            sut.save(anyData(), for: anyURL()) { receivedResult in
                 switch (receivedResult, expectedResult) {
                 case (.success, .success):
                     break

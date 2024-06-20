@@ -19,7 +19,7 @@ class LoadFeedImageDataFromCacheUseCaseTests:XCTestCase{
     
     func test_loadImageDataFromURL_requestsStoredDataForURL(){
         let (sut,store) = makeSUT()
-        let url = anyUrl()
+        let url = anyURL()
         
         _ = sut.loadImageData(from: url) {_ in}
         XCTAssertEqual(store.receivedMessages,[.retrieve(dataFor: url)])
@@ -28,10 +28,10 @@ class LoadFeedImageDataFromCacheUseCaseTests:XCTestCase{
     func test_loadImageDataFromURL_failsOnStoreError() {
         
         let (sut,store) = makeSUT()
-        let anyError = anyError()
+        let anyNSError = anyNSError()
         
         expect(sut, toCompleteWith: failed(), when: {
-            let retrievalError = anyError
+            let retrievalError = anyNSError
             store.completeRetrieval(with: retrievalError)
           })
 
@@ -62,12 +62,12 @@ class LoadFeedImageDataFromCacheUseCaseTests:XCTestCase{
         let foundData = anyData()
         
         var received = [FeedImageDataLoader.Result]()
-        let task = sut.loadImageData(from: anyUrl()) { received.append($0) }
+        let task = sut.loadImageData(from: anyURL()) { received.append($0) }
         
         task.cancel()
         store.completeRetrieval(with: foundData)
         store.completeRetrieval(with: .none)
-        store.completeRetrieval(with: anyError())
+        store.completeRetrieval(with: anyNSError())
         
         XCTAssertTrue(received.isEmpty, "Expected no received results after cancelling task")
         
@@ -81,7 +81,7 @@ class LoadFeedImageDataFromCacheUseCaseTests:XCTestCase{
 
 
         var received = [FeedImageDataLoader.Result]()
-        let task = sut?.loadImageData(from: anyUrl()) { received.append($0) }
+        let task = sut?.loadImageData(from: anyURL()) { received.append($0) }
         
         
         sut = nil
@@ -115,7 +115,7 @@ class LoadFeedImageDataFromCacheUseCaseTests:XCTestCase{
     private func expect(_ sut: LocalFeedImageDataLoader, toCompleteWith expectedResult: FeedImageDataLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
             let exp = expectation(description: "Wait for load completion")
 
-            _ = sut.loadImageData(from: anyUrl()) { receivedResult in
+            _ = sut.loadImageData(from: anyURL()) { receivedResult in
                 switch (receivedResult, expectedResult) {
                 case let (.success(receivedData), .success(expectedData)):
                     XCTAssertEqual(receivedData, expectedData, file: file, line: line)

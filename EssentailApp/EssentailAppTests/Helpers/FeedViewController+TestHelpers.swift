@@ -104,6 +104,9 @@ extension FeedViewController{
     }
     
     func feedImageView(at index:Int) -> FeedImageCell? {
+        guard numberOfRenderedFeedImageViews() > index else {
+                    return nil
+                }
         let ds = tableView.dataSource
         let indexpath = IndexPath(row: index, section: numberOfSections)
         return ds?.tableView(tableView, cellForRowAt: indexpath) as? FeedImageCell

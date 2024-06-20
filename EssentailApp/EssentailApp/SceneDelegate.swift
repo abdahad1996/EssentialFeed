@@ -29,6 +29,8 @@ import CoreData
              try! CoreDataFeedStore(storeURL: localStoreURL)
          }()
     
+     private lazy var localFeedLoader = {LocalFeedLoader(store: store, currentDate: Date.init)}()
+
      convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
              self.init()
              self.httpClient = httpClient
@@ -50,7 +52,6 @@ import CoreData
          let remoteFeedLoader = RemoteFeedLoader(url: remoteURL, client: remoteClient)
          let remoteImageLoader = RemoteFeedImageDataLoader(client: remoteClient)
          
-         let localFeedLoader = LocalFeedLoader(store: store, currentDate: Date.init)
          let localImageLoader = LocalFeedImageDataLoader(store: store)
          
          
@@ -77,6 +78,10 @@ import CoreData
      func makeRemoteClient() -> HTTPClient {
         return httpClient
     }
+     
+    func sceneWillResignActive(_ scene: UIScene) {
+             localFeedLoader.validateCache { _ in }
+        }
     
 }
 

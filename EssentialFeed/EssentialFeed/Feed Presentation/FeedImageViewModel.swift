@@ -18,4 +18,11 @@ public struct FeedImageViewModel<Image>{
         return location != nil
     }
     
+    public init(location: String?, description: String?, image: Image?, isLoading: Bool, shouldRetry: Bool) {
+        self.location = location
+        self.description = description
+        self.image = image
+        self.isLoading = isLoading
+        self.shouldRetry = shouldRetry
+    }
 }

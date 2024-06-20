@@ -395,7 +395,6 @@ final class FeedUIIntegrationTests:XCTestCase{
 
         sut.simulateAppearance()
 
-        
         XCTAssertEqual(sut.errorMessage, nil)
 
         loader.completionLoadingWithError(at: 0)
@@ -426,6 +425,20 @@ final class FeedUIIntegrationTests:XCTestCase{
         
         return (sut,loader)
     }
+    
+    func test_loadFeedCompletion_rendersSuccessfullyLoadedEmptyFeedAfterNonEmptyFeed() {
+            let image0 = makeImage()
+            let image1 = makeImage()
+            let (sut, loader) = makeSUT()
+
+            sut.simulateAppearance()
+            loader.completeFeedLoading(with: [image0, image1], at: 0)
+            assertThat(sut, isRendering: [image0, image1])
+
+            sut.simulateUserInitiatedFeedReload()
+            loader.completeFeedLoading(with: [], at: 1)
+            assertThat(sut, isRendering: [])
+        }
     
     private func makeImage(description: String? = nil, location: String? = nil, url: URL = URL(string: "http://any-url.com")!) -> FeedImage {
         return FeedImage(id: UUID(), description: description, location: location, imageURL: url)

@@ -10,7 +10,7 @@ import EssentialFeed
 import EssentialFeediOS
 import CoreData
 
-class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
     
@@ -19,27 +19,31 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     let localStoreURL = NSPersistentContainer
         .defaultDirectoryURL()
         .appendingPathComponent("feed-store.sqlite")
+     
+     lazy var navigationController = UINavigationController()
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         guard let _ = (scene as? UIWindowScene) else { return }
         
-        
-        let remoteClient = makeRemoteClient()
-        let remoteFeedLoader = RemoteFeedLoader(url: remoteURL, client: remoteClient)
-        let remoteImageLoader = RemoteFeedImageDataLoader(client: remoteClient)
+        configureWindow()
         
         
-        
-        
-        
-        let localStore = try! CoreDataFeedStore(storeURL: localStoreURL)
-        let localFeedLoader = LocalFeedLoader(store: localStore, currentDate: Date.init)
-        let localImageLoader = LocalFeedImageDataLoader(store: localStore)
-        
-        
-        
-        window?.rootViewController = FeedUIComposer.feedComposedWith(
+    }
+     
+     func configureWindow(){
+         
+         let remoteClient = makeRemoteClient()
+         let remoteFeedLoader = RemoteFeedLoader(url: remoteURL, client: remoteClient)
+         let remoteImageLoader = RemoteFeedImageDataLoader(client: remoteClient)
+         
+         let localStore = try! CoreDataFeedStore(storeURL: localStoreURL)
+         let localFeedLoader = LocalFeedLoader(store: localStore, currentDate: Date.init)
+         let localImageLoader = LocalFeedImageDataLoader(store: localStore)
+         
+         
+         
+         window?.rootViewController = UINavigationController(rootViewController: FeedUIComposer.feedComposedWith(
             loader: FeedLoaderWithFallbackComposite(
                 primary: FeedLoaderCacheDecorator(
                     loader: remoteFeedLoader,
@@ -54,11 +58,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     cache: localImageLoader
                 )
             )
-        )
-        
-        
-        
-    }
+         ))
+         
+     }
     
      func makeRemoteClient() -> HTTPClient {
         return URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))

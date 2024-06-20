@@ -21,7 +21,21 @@ import CoreData
         .appendingPathComponent("feed-store.sqlite")
      
      lazy var navigationController = UINavigationController()
+     
+     private lazy var httpClient: HTTPClient = {
+         return  URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
+     }()
+     
+     private lazy var store: FeedStore & FeedImageDataStore = {
+             try! CoreDataFeedStore(storeURL: localStoreURL)
+         }()
     
+     convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
+             self.init()
+             self.httpClient = httpClient
+             self.store = store
+         }
+     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         guard let _ = (scene as? UIWindowScene) else { return }
@@ -37,9 +51,8 @@ import CoreData
          let remoteFeedLoader = RemoteFeedLoader(url: remoteURL, client: remoteClient)
          let remoteImageLoader = RemoteFeedImageDataLoader(client: remoteClient)
          
-         let localStore = try! CoreDataFeedStore(storeURL: localStoreURL)
-         let localFeedLoader = LocalFeedLoader(store: localStore, currentDate: Date.init)
-         let localImageLoader = LocalFeedImageDataLoader(store: localStore)
+         let localFeedLoader = LocalFeedLoader(store: store, currentDate: Date.init)
+         let localImageLoader = LocalFeedImageDataLoader(store: store)
          
          
          
@@ -63,7 +76,7 @@ import CoreData
      }
     
      func makeRemoteClient() -> HTTPClient {
-        return URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
+        return httpClient
     }
     
 }

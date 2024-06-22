@@ -7,7 +7,9 @@
 
 import Foundation
 import EssentialFeed
+import Combine
 
+ 
 public class FeedLoaderCacheDecorator:FeedLoader{
     
     let loader:FeedLoader
@@ -34,3 +36,5 @@ private extension FeedCache {
         save(feed) { _ in }
     }
 }
+
+

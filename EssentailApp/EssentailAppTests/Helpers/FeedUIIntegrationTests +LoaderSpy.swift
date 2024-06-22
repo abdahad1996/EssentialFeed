@@ -29,7 +29,7 @@ class loaderSpy:FeedLoader,FeedImageDataLoader{
         feedRequests[index](.success(feed))
     }
     
-    func completionLoadingWithError(at index:Int = 0){
+    func completeFeedLoadingWithError(at index:Int = 0){
         let error = NSError(domain: "an error", code: 2)
         feedRequests[index](.failure(error))
     }

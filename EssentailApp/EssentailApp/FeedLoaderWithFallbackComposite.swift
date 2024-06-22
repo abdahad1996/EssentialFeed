@@ -7,6 +7,7 @@
 
 import Foundation
 import EssentialFeed
+import Combine
 
 final public class FeedLoaderWithFallbackComposite:FeedLoader {
     

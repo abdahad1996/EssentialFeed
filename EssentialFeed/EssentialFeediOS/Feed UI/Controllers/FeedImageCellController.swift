@@ -33,7 +33,7 @@ public final class FeedImageCellController:FeedImageView {
     
     public func display(_ viewModel: FeedImageViewModel<UIImage>){
         
-            cell?.locationContainer.isHidden = !viewModel.hasLocation
+        cell?.locationContainer.isHidden = !viewModel.hasLocation
         cell?.locationLabel.text = viewModel.location
         cell?.descriptionLabel.text = viewModel.description
         cell?.feedImageView.setImageAnimated(viewModel.image)

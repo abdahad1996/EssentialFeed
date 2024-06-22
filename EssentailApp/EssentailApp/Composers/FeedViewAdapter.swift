@@ -14,11 +14,11 @@ import UIKit
 class FeedViewAdapter:FeedView{
     
     weak var feedViewController: FeedViewController?
-    let imageLoader:  FeedImageDataLoader
-    
-    init(feedViewController:FeedViewController,imageLoader: FeedImageDataLoader) {
-        self.imageLoader = imageLoader
+    let imageLoader: (URL) -> FeedImageDataLoader.Publisher
+
+    init(feedViewController: FeedViewController, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher) {
         self.feedViewController = feedViewController
+        self.imageLoader = imageLoader
     }
     
     func display(_ viewModel: FeedViewModel) {

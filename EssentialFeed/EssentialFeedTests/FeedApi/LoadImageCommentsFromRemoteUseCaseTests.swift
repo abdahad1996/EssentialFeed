@@ -1,14 +1,7 @@
-//
-//  RemoteFeedLoaderTests.swift
-//  EssentialFeedTests
-//
-//  Created by Abdul Ahad on 18.12.23.
-//
-
 import XCTest
 import EssentialFeed
 
-class RemoteFeedLoaderTests:XCTestCase{
+class LoadImageCommentsFromRemoteUseCaseTests:XCTestCase{
     func test_init_doesNotRequestDataFromUrl(){
         let (_,client) = makeSut()
         
@@ -43,7 +36,7 @@ class RemoteFeedLoaderTests:XCTestCase{
     func test_load_deliversErrorOnClientError(){
         let (sut,client) = makeSut()
         
-        expect(sut, toCompletewith: failure(RemoteFeedLoader.Error.connectivity),when : {
+        expect(sut, toCompletewith: failure(RemoteImageCommentsLoader.Error.connectivity),when : {
             let clientError = NSError(domain: "", code: 1)
             client.complete(with: clientError)
         })
@@ -56,7 +49,7 @@ class RemoteFeedLoaderTests:XCTestCase{
         
         let samples = [199,201,300,400,500]
         samples.enumerated().forEach { index,code in
-            expect(sut, toCompletewith: failure(RemoteFeedLoader.Error.invalidData) ,when : {
+            expect(sut, toCompletewith: failure(RemoteImageCommentsLoader.Error.invalidData) ,when : {
                 let emptyJson = makeItemsJSON([])
                 client.complete(with: emptyJson, statusCode: code,at:index)
                 
@@ -71,7 +64,7 @@ class RemoteFeedLoaderTests:XCTestCase{
         
         let (sut,client) = makeSut()
         
-        expect(sut, toCompletewith: failure(RemoteFeedLoader.Error.invalidData),when:  {
+        expect(sut, toCompletewith: failure(RemoteImageCommentsLoader.Error.invalidData),when:  {
             let InvalidJson = Data("Invalid Json".utf8)
             client.complete(with: InvalidJson, statusCode: 200)
 
@@ -119,8 +112,8 @@ class RemoteFeedLoaderTests:XCTestCase{
     func test_load_doesNotCompleteAfterSutHasBeenDeallocated(){
         let url = URL(string: "http://a-url.com")!
         let client = HTTPClientSpy()
-        var sut:RemoteFeedLoader? = RemoteFeedLoader(url:url, client: client)
-        var captureResult = [RemoteFeedLoader.Result]()
+        var sut:RemoteImageCommentsLoader? = RemoteImageCommentsLoader(url:url, client: client)
+        var captureResult = [RemoteImageCommentsLoader.Result]()
         sut?.load{captureResult.append($0)}
         
         sut = nil
@@ -135,16 +128,16 @@ class RemoteFeedLoaderTests:XCTestCase{
     
     // MARK: - Helpers
     
-    private func makeSut(url:URL = URL(string: "https//google.com")!,file: StaticString = #file, line: UInt = #line) -> (RemoteFeedLoader,HTTPClientSpy){
+    private func makeSut(url:URL = URL(string: "https//google.com")!,file: StaticString = #file, line: UInt = #line) -> (RemoteImageCommentsLoader,HTTPClientSpy){
         let client = HTTPClientSpy()
-        let sut = RemoteFeedLoader(url:url, client: client)
+        let sut = RemoteImageCommentsLoader(url:url, client: client)
         trackForMemoryLeaks(sut,file: file,line: line)
         trackForMemoryLeaks(client,file: file,line: line)
 
         return (sut,client)
         
     }
-    private func failure(_ error:RemoteFeedLoader.Error)->RemoteFeedLoader.Result{
+    private func failure(_ error:RemoteImageCommentsLoader.Error)->RemoteImageCommentsLoader.Result{
         return .failure(error)
     }
     
@@ -169,7 +162,7 @@ class RemoteFeedLoaderTests:XCTestCase{
         return try! JSONSerialization.data(withJSONObject: json)
     }
     
-    private func expect(_ sut:RemoteFeedLoader,toCompletewith expectedResult:RemoteFeedLoader.Result,
+    private func expect(_ sut:RemoteImageCommentsLoader,toCompletewith expectedResult:RemoteImageCommentsLoader.Result,
         when action:()->Void,
         file: StaticString = #file,
         line:UInt = #line
@@ -179,7 +172,7 @@ class RemoteFeedLoaderTests:XCTestCase{
             switch (recievedResult,expectedResult){
             case let (.success(recievedItems),.success(expectedItems)):
                 XCTAssertEqual(recievedItems,expectedItems,file:file,line:line)
-            case let (.failure(recievedError as RemoteFeedLoader.Error),.failure(expectedError as RemoteFeedLoader.Error)):
+            case let (.failure(recievedError as RemoteImageCommentsLoader.Error),.failure(expectedError as RemoteImageCommentsLoader.Error)):
                 XCTAssertEqual(recievedError,expectedError,file:file,line:line)
 
             default:

@@ -7,18 +7,16 @@
 
 import Foundation
 
-public struct ImageComment:Hashable {
-    
+public struct ImageComment: Equatable {
     public let id: UUID
-    public let description: String?
-    public let location: String?
-    public let url: URL
-    
-    public init(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) {
+    public let message: String
+    public let createdAt: Date
+    public let username: String
+
+    public init(id: UUID, message: String, createdAt: Date, username: String) {
         self.id = id
-        self.description = description
-        self.location = location
-        self.url = imageURL
+        self.message = message
+        self.createdAt = createdAt
+        self.username = username
     }
 }
-

@@ -11,6 +11,7 @@ public class RemoteImageCommentsLoader:FeedLoader{
     
     private let url:URL
     private let client:HTTPClient
+    
     public enum Error:Swift.Error{
         case connectivity
         case invalidData
@@ -41,7 +42,7 @@ public class RemoteImageCommentsLoader:FeedLoader{
     
     static func map(_ data: Data, _ response: HTTPURLResponse) -> Result {
         do {
-            let items =  try FeedItemsMapper.map(data, response)
+            let items =  try ImageCommentsMapper.map(data, response)
             return .success(items.toModels())
         }
         catch (_) {

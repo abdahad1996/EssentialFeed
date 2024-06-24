@@ -8,11 +8,10 @@
 import XCTest
 import EssentialFeed
 
+
 class LoadFeedFromRemoteUseCaseTests:XCTestCase{
     func test_init_doesNotRequestDataFromUrl(){
         let (_,client) = makeSut()
-        
-        
         XCTAssertTrue(client.requestedUrls.isEmpty)
         
     }
@@ -92,8 +91,6 @@ class LoadFeedFromRemoteUseCaseTests:XCTestCase{
         
     }
     
-
-    
     func test_load_deliversItemsOn200HTTPResponseWithJSONItems(){
         let (sut,client) = makeSut()
 
@@ -129,9 +126,6 @@ class LoadFeedFromRemoteUseCaseTests:XCTestCase{
         XCTAssertTrue(captureResult.isEmpty)
 
     }
-    
-    
-    
     
     // MARK: - Helpers
     
@@ -193,6 +187,5 @@ class LoadFeedFromRemoteUseCaseTests:XCTestCase{
         wait(for: [exp], timeout: 1.0)
         
      }
-    
     
 }

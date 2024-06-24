@@ -41,7 +41,7 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
         
         //URLSession handles the 3xx redirect response behind the scenes so you don’t get 3xx responses. After the redirect it gets a 200 from the final URL and URLSession only reports the final 200 code.
        
-        let loader = RemoteFeedLoader(url: feedTestServerURL, client: ephemeralClient())
+        let loader = RemoteLoader(url: feedTestServerURL, client: ephemeralClient(),mapper: FeedItemsMapper.map)
         trackForMemoryLeaks(loader, file: file, line: line)
         
         let exp = expectation(description: "Wait for load completion")

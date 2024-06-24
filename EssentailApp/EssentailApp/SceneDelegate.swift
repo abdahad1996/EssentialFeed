@@ -59,10 +59,16 @@ import Combine
     
      
      private func makeRemoteFeedLoaderWithLocalFallback() -> FeedLoader.Publisher {
-             return remoteFeedLoader
-                 .loadPublisher()
+         return  httpClient
+                 .getPublisher(remoteURL)
+                 .tryMap(FeedItemsMapper.map)
                  .caching(to: localFeedLoader)
                  .fallback(to: localFeedLoader.loadPublisher)
+         
+//             return remoteFeedLoader
+//                 .loadPublisher()
+//                 .caching(to: localFeedLoader)
+//                 .fallback(to: localFeedLoader.loadPublisher)
          }
      
      private func makeLocalImageLoaderWitRemoteFallback(url:URL) -> FeedImageDataLoader.Publisher {

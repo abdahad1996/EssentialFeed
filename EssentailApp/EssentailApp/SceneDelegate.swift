@@ -33,7 +33,7 @@ import Combine
      private lazy var localFeedLoader = {LocalFeedLoader(store: store, currentDate: Date.init)}()
 
 
-     private lazy var remoteFeedLoader = RemoteLoader(url: remoteURL, client: httpClient,mapper: FeedItemsMapper.map)
+//     private lazy var remoteFeedLoader = RemoteLoader(url: remoteURL, client: httpClient,mapper: FeedItemsMapper.map)
 
      convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
              self.init()
@@ -58,7 +58,7 @@ import Combine
      }
     
      
-     private func makeRemoteFeedLoaderWithLocalFallback() -> FeedLoader.Publisher {
+     private func makeRemoteFeedLoaderWithLocalFallback() -> AnyPublisher<[FeedImage], Error> {
          return  httpClient
                  .getPublisher(remoteURL)
                  .tryMap(FeedItemsMapper.map)
@@ -90,4 +90,4 @@ import Combine
     
 }
 
-extension RemoteLoader: FeedLoader where Resource == [FeedImage] {}
+//extension RemoteLoader: FeedLoader where Resource == [FeedImage] {}

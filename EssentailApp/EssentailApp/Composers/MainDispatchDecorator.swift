@@ -1,49 +1,49 @@
+////
+////  MainDispatchDecorator.swift
+////  EssentialFeediOS
+////
+////  Created by macbook abdul on 07/06/2024.
+////
 //
-//  MainDispatchDecorator.swift
-//  EssentialFeediOS
+//import Foundation
+//import EssentialFeed
 //
-//  Created by macbook abdul on 07/06/2024.
+// class MainDispatchQueueDecorator<T> {
+//    
+//    let decoratee:T
+//    
+//    init(decoratee: T) {
+//        self.decoratee = decoratee
+//    }
+//    
+//    func dispatch(completion: @escaping () -> Void) {
+//            guard Thread.isMainThread else {
+//                return DispatchQueue.main.async(execute: completion)
+//            }
 //
-
-import Foundation
-import EssentialFeed
-
- class MainDispatchQueueDecorator<T> {
-    
-    let decoratee:T
-    
-    init(decoratee: T) {
-        self.decoratee = decoratee
-    }
-    
-    func dispatch(completion: @escaping () -> Void) {
-            guard Thread.isMainThread else {
-                return DispatchQueue.main.async(execute: completion)
-            }
-
-            completion()
-        }
-    
-}
-extension MainDispatchQueueDecorator:FeedImageDataLoader where T == FeedImageDataLoader {
-    func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> any FeedImageDataLoaderTask {
-        decoratee.loadImageData(from: url) { [weak self] result in
-            self?.dispatch {
-                completion(result)
-            }
-        }
-    }
-    
-    
-    
-}
-
-extension MainDispatchQueueDecorator:FeedLoader where T == FeedLoader {
-    func load(completion: @escaping (Result<[FeedImage],Error>) -> Void) {
-        decoratee.load { [weak self] result in
-            self?.dispatch {
-                completion(result)
-            }
-        }
-    }
-}
+//            completion()
+//        }
+//    
+//}
+//extension MainDispatchQueueDecorator:FeedImageDataLoader where T == FeedImageDataLoader {
+//    func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> any FeedImageDataLoaderTask {
+//        decoratee.loadImageData(from: url) { [weak self] result in
+//            self?.dispatch {
+//                completion(result)
+//            }
+//        }
+//    }
+//    
+//    
+//    
+//}
+//
+//extension MainDispatchQueueDecorator:FeedLoader where T == FeedLoader {
+//    func load(completion: @escaping (Result<[FeedImage],Error>) -> Void) {
+//        decoratee.load { [weak self] result in
+//            self?.dispatch {
+//                completion(result)
+//            }
+//        }
+//    }
+//}

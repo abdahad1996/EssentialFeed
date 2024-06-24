@@ -14,10 +14,10 @@ import Combine
 class FeedLoaderPresentationAdapter:FeedViewControllerDelegate {
     
     var presenter:FeedPresenter?
-    let feedLoader:() -> FeedLoader.Publisher
+    let feedLoader:() -> AnyPublisher<[FeedImage], Error>
     var cancellable:Cancellable?
     
-    init( feedLoader: @escaping () -> FeedLoader.Publisher) {
+    init( feedLoader: @escaping () -> AnyPublisher<[FeedImage], Error>) {
         self.feedLoader = feedLoader
     }
     

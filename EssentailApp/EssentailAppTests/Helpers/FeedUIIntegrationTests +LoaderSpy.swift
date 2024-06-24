@@ -8,30 +8,39 @@
 import UIKit
 import EssentialFeed
 import EssentialFeediOS
-
+import Combine
 
 //MARK: SPY
-class loaderSpy:FeedLoader,FeedImageDataLoader{
+class loaderSpy:FeedImageDataLoader{
     
     
     // MARK: - FeedLoader
-    private var feedRequests = [(FeedLoader.Result) -> Void]()
-    
+//    private var feedRequests = [(FeedLoader.Result) -> Void]()
+    private var feedRequests = [ PassthroughSubject<[FeedImage],Error>]()
     var loadFeedCallCount :Int {
         return feedRequests.count
     }
     
-    func load(completion: @escaping (FeedLoader.Result) -> Void) {
-        feedRequests.append(completion)
+//    func load(completion: @escaping (FeedLoader.Result) -> Void) {
+//        feedRequests.append(completion)
+//    }
+    
+    func loadPublisher() -> AnyPublisher<[FeedImage],Error>{
+        let passthroughSubject = PassthroughSubject<[FeedImage],Error>()
+        feedRequests.append(passthroughSubject)
+        return passthroughSubject.eraseToAnyPublisher()
     }
     
     func completeFeedLoading(with feed:[FeedImage] = [],at index:Int = 0){
-        feedRequests[index](.success(feed))
+//        feedRequests[index](.success(feed))
+        feedRequests[index].send(feed)
     }
     
     func completeFeedLoadingWithError(at index:Int = 0){
         let error = NSError(domain: "an error", code: 2)
-        feedRequests[index](.failure(error))
+        feedRequests[index].send(completion: .failure(error))
+
+//        feedRequests[index](.failure(error))
     }
     
     // MARK: - FeedImageDataLoader

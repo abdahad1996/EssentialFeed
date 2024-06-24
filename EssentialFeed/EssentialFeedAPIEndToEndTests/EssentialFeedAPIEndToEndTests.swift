@@ -34,24 +34,46 @@ class EssentialFeedAPIEndToEndTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func getFeedResult(file: StaticString = #file, line: UInt = #line) -> FeedLoader.Result? {
+    private func getFeedResult(file: StaticString = #file, line: UInt = #line) -> Swift.Result<[FeedImage], Error>? {
+        let client = ephemeralClient()
         
         //no redirects hence when no internet uses cache and tests works successfully
         //        let testServerURL = URL(string: "https://static1.squarespace.com/static/5891c5b8d1758ec68ef5dbc2/t/5c52cdd0b8a045df091d2fff/1548930512083/feed-case-study-test-api-feed.json")!
         
         //URLSession handles the 3xx redirect response behind the scenes so you don’t get 3xx responses. After the redirect it gets a 200 from the final URL and URLSession only reports the final 200 code.
        
-        let loader = RemoteLoader(url: feedTestServerURL, client: ephemeralClient(),mapper: FeedItemsMapper.map)
-        trackForMemoryLeaks(loader, file: file, line: line)
+//        let loader = RemoteLoader(url: feedTestServerURL, client: ephemeralClient(),mapper: FeedItemsMapper.map)
+//        trackForMemoryLeaks(loader, file: file, line: line)
+        
         
         let exp = expectation(description: "Wait for load completion")
         
-        var receivedResult: FeedLoader.Result?
-        loader.load { result in
-            receivedResult = result
+        var receivedResult: Swift.Result<[FeedImage], Error>?
+        
+        client.get(from: feedTestServerURL) { result in
+            receivedResult = result.flatMap({ (data, response) in
+                do {
+                    return try .success(FeedItemsMapper.map(data, response))
+                    
+                }catch{
+                    return .failure(error)
+                }
+                
+            })
             exp.fulfill()
+
         }
         wait(for: [exp], timeout: 5.0)
+        
+//        let exp = expectation(description: "Wait for load completion")
+//        
+//        var receivedResult: FeedLoader.Result?
+//        loader.load { result in
+//            receivedResult = result
+//            exp.fulfill()
+//
+//        }
+//        wait(for: [exp], timeout: 5.0)
         
         return receivedResult
     }

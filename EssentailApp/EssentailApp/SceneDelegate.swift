@@ -84,3 +84,4 @@ import Combine
     
 }
 
+extension RemoteLoader: FeedLoader where Resource == [FeedImage] {}

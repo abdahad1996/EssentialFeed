@@ -72,16 +72,25 @@ import Combine
          }
      
      private func makeLocalImageLoaderWitRemoteFallback(url:URL) -> FeedImageDataLoader.Publisher {
-         let remoteImageLoader = RemoteFeedImageDataLoader(client: httpClient)
+//         let remoteImageLoader = RemoteFeedImageDataLoader(client: httpClient)
          let localImageLoader = LocalFeedImageDataLoader(store: store)
          
          return localImageLoader
              .loadImageDataPublisher(url)
-             .fallback {
-                 remoteImageLoader
-                     .loadImageDataPublisher(url)
+             .fallback { [httpClient] in
+                 httpClient
+                     .getPublisher(url)
+                     .tryMap(FeedImageDataMapper.map)
                      .caching(to: localImageLoader, using: url)
              }
+//         return localImageLoader
+//             .loadImageDataPublisher(url)
+//             .fallback {
+//                 remoteImageLoader
+//                     .loadImageDataPublisher(url)
+//                     .caching(to: localImageLoader, using: url)
+                 
+//             }
      }
 
     func sceneWillResignActive(_ scene: UIScene) {

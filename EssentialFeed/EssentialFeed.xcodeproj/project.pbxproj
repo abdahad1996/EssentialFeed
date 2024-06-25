@@ -343,6 +343,7 @@
 				657706AE2C1B33600045FA7A /* Helpers */,
 				5409C4652B30ED6C00B7AFB6 /* RemoteFeedLoader.swift */,
 				6576049D2C27B40500E8A930 /* RemoteImageCommentsLoader.swift */,
+				657604B82C2A5BE300E8A930 /* FeedImageDataMapper.swift */,
 				54DB2B0A2B37797A008ADABC /* FeedItemsMapper.swift */,
 				65E09E882BC374270051D5C8 /* RemoteFeedItem.swift */,
 			);
@@ -522,7 +523,6 @@
 			isa = PBXGroup;
 			children = (
 				6576049F2C27B44C00E8A930 /* ImageCommentsMapper.swift */,
-				657604B82C2A5BE300E8A930 /* FeedImageDataMapper.swift */,
 				657706AC2C1B2EE40045FA7A /* RemoteFeedImageDataLoader.swift */,
 			);
 			path = "Image Comments";

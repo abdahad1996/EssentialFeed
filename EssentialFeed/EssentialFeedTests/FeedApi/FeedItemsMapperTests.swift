@@ -14,14 +14,13 @@ class FeedItemsMapperTests:XCTest{
     
     func test_map_throwsErrorOnNon200HttpResponses() throws {
         
-       let json = makeItemsJSON([])
        let samples = [199,201,300,400,500]
         
        try samples.enumerated().forEach { index,code in
 
             XCTAssertThrowsError(
                
-                try FeedItemsMapper.map(json, HTTPURLResponse(statusCode: code))
+                try FeedImageDataMapper.map(anyData(), HTTPURLResponse(statusCode: code))
             
             )
             
@@ -29,61 +28,26 @@ class FeedItemsMapperTests:XCTest{
        
     }
     
-    func test_map_throwsErronOn200HttpUrlResponseWithInvalidJson(){
-        let invalidJSON = Data("invalid json".utf8)
+    func test_map_deliversInvalidDataErrorOn200HTTPResponseWithEmptyData(){
+        let emptyData = Data()
 
              XCTAssertThrowsError(
                 
-                 try FeedItemsMapper.map(invalidJSON, HTTPURLResponse(statusCode: 200))
+                 try FeedImageDataMapper.map(emptyData, HTTPURLResponse(statusCode: 200))
              
              )
     }
     
-    func test_map_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() throws{
-        let json = makeItemsJSON([])
-        let items = try FeedItemsMapper.map(json, HTTPURLResponse(statusCode: 200))
-        
-        XCTAssertEqual(items, [])
-
-       
-        
-    }
     
-    func test_load_deliversItemsOn200HTTPResponseWithJSONItems() throws {
+    func test_map_deliversReceivedNonEmptyDataOn200HTTPResponse() throws {
 
-        let item1 = makeItem(
-            id: UUID(),
-            imageURL: URL(string: "http://a-url.com")!)
-        
-        
-        let item2 = makeItem(
-            id: UUID(),
-            description: "a description",
-            location: "a location",
-            imageURL: URL(string: "http://another-url.com")!)
-        
-        let json = makeItemsJSON([item1.json,item2.json])
-
-        let items = try FeedItemsMapper.map(json, HTTPURLResponse(statusCode: 200))
-        
-        XCTAssertEqual(items, [])
-        
-    }
-    // MARK: - Helpers
-    
-    fileprivate func makeItem(id:UUID,description: String? = nil,location:String? = nil,imageURL:URL) -> (model:FeedImage,json:[String:Any]) {
-        
-        let item = FeedImage(id: id, description: description, location: location, imageURL: imageURL)
-        
-        let json = [
-            "id": id.uuidString,
-            "description": description,
-            "location": location,
-            "image": imageURL.absoluteString
-        ].compactMapValues { $0 }
+        let nonEmptyData = Data("non-empty data".utf8)
+        let result = try FeedImageDataMapper.map(nonEmptyData, HTTPURLResponse(statusCode: 200))
         
 
-        return (item,json)
+        XCTAssertEqual(result, nonEmptyData)
+
+        
         
     }
     

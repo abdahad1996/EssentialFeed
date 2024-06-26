@@ -22,7 +22,7 @@ class LoadResourcePresenterTests: XCTestCase {
         
         let (sut, view) = makeSUT()
 
-        sut.didStartLoadingFeed()
+        sut.didStartLoading()
         
         XCTAssertEqual(
             view.messages,

@@ -30,7 +30,7 @@ class LoadResourcePresenterTests: XCTestCase {
             [.feedLoading(
                 isLoading: true
             ),
-             .displayError(message:.none)
+             .display(errorMessage:.none)
             ]
         )
         
@@ -44,7 +44,7 @@ class LoadResourcePresenterTests: XCTestCase {
 
         sut.didFinishLoading(with: "resource")
         
-        XCTAssertEqual(view.messages,[.displayError(message: "resource view model"),.feedLoading(isLoading: false)])
+        XCTAssertEqual(view.messages,[.display(resource: "resource view model"),.feedLoading(isLoading: false)])
         
     }
     
@@ -53,15 +53,15 @@ class LoadResourcePresenterTests: XCTestCase {
 
         sut.didFinishLoadingFeed(with: anyNSError())
         
-        XCTAssertEqual(view.messages,[.feedLoading(isLoading: false),.displayError(message: localized("FEED_VIEW_CONNECTION_ERROR"))])
+        XCTAssertEqual(view.messages,[.feedLoading(isLoading: false),.display(errorMessage: localized("FEED_VIEW_CONNECTION_ERROR"))])
 
     }
     
     // MARK: - Helpers
-    
-    private func makeSUT(mapper:@escaping LoadResourcePresenter.Mapper = {_ in "Any"},file: StaticString = #file, line: UInt = #line) -> (sut: LoadResourcePresenter, view: ViewSpy) {
+    private typealias SUT = LoadResourcePresenter<String,ViewSpy>
+    private func makeSUT(mapper:@escaping SUT.Mapper = {_ in "Any"},file: StaticString = #file, line: UInt = #line) -> (sut: SUT, view: ViewSpy) {
         let view = ViewSpy()
-        let sut = LoadResourcePresenter(loadingView: view, errorView: view, resourceView: view,mapper:mapper)
+        let sut = SUT(loadingView: view, errorView: view, resourceView: view,mapper:mapper)
         trackForMemoryLeaks(view, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, view)
@@ -69,7 +69,7 @@ class LoadResourcePresenterTests: XCTestCase {
     
    private func localized(_ key: String, file: StaticString = #file, line: UInt = #line) -> String {
         let table = "Feed"
-        let bundle = Bundle(for: LoadResourcePresenter.self)
+        let bundle = Bundle(for: SUT.self)
         let value = bundle.localizedString(forKey: key, value: nil, table: table)
         if value == key {
             XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)
@@ -78,11 +78,11 @@ class LoadResourcePresenterTests: XCTestCase {
     }
     
     private class ViewSpy:ResourceView,FeedErrorView,FeedLoadingView{
-        
+        typealias ResourceViewModel = String
         enum Message:Hashable {
             case feedLoading(isLoading: Bool)
-            case displayError(message:String?)
-            case displayFeed(resource:String)
+            case display(errorMessage:String?)
+            case display(resource:ResourceViewModel)
             
         }
         var messages = Set<Message>()
@@ -91,11 +91,11 @@ class LoadResourcePresenterTests: XCTestCase {
             messages.insert(.feedLoading(isLoading: viewModel.isLoading))
         }
         func display(_ viewModel: String) {
-            messages.insert(.displayFeed(resource: viewModel))
+            messages.insert(.display(resource: viewModel))
         }
         
         func display(_ viewModel:FeedErrorViewModel) {
-            messages.insert(.displayError(message: viewModel.message))
+            messages.insert(.display(errorMessage: viewModel.message))
         }
         
     }

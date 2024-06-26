@@ -7,22 +7,19 @@
 
 import Foundation
 
-
-
-
 public protocol ResourceView {
-    func display(_ viewModel: String)
+    associatedtype ResourceViewModel
+    func display(_ viewModel: ResourceViewModel)
 }
-
-final public class LoadResourcePresenter {
-    public typealias Mapper = (String) -> String
+final public class LoadResourcePresenter<Resource,View:ResourceView> {
+    public typealias Mapper = (Resource) -> View.ResourceViewModel
     
     private let loadingView:FeedLoadingView
     private let errorView: FeedErrorView
-    private let resourceView:ResourceView
+    private let resourceView:View
     private let mapper:Mapper
     
-     static var feedLoadError = NSLocalizedString(
+    var feedLoadError = NSLocalizedString(
         "FEED_VIEW_CONNECTION_ERROR",
         tableName: "Feed",
         bundle: Bundle(
@@ -31,19 +28,20 @@ final public class LoadResourcePresenter {
         comment: "Error message displayed when image feed fail to load from the server"
     )
     
-    public init(loadingView: FeedLoadingView, errorView: FeedErrorView, resourceView: ResourceView,mapper:@escaping Mapper) {
+    public init(loadingView: FeedLoadingView, errorView: FeedErrorView, resourceView: View,mapper:@escaping Mapper) {
         self.loadingView = loadingView
         self.errorView = errorView
         self.resourceView = resourceView
         self.mapper = mapper
     }
+
     
     public func didStartLoading(){
         errorView.display(.noError)
         loadingView.display(FeedLoadingViewModel(isLoading: true))
     }
     
-    public func didFinishLoading(with resource :String){
+    public func didFinishLoading(with resource :Resource){
         resourceView.display(mapper(resource))
         loadingView.display(FeedLoadingViewModel(isLoading: false))
     }

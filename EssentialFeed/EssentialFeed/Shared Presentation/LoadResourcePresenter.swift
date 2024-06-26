@@ -16,7 +16,7 @@ final public class LoadResourcePresenter<Resource,View:ResourceView> {
     public typealias Mapper = (Resource) -> View.ResourceViewModel
     
     private let loadingView:ResourceLoadingView
-    private let errorView: FeedErrorView
+    private let errorView: ResourceErrorView
     private let resourceView:View
     private let mapper:Mapper
     
@@ -27,7 +27,7 @@ final public class LoadResourcePresenter<Resource,View:ResourceView> {
                           comment: "Error message displayed when we can't load the resource from the server")
     }
     
-    public init(loadingView: ResourceLoadingView, errorView: FeedErrorView, resourceView: View,mapper:@escaping Mapper) {
+    public init(loadingView: ResourceLoadingView, errorView: ResourceErrorView, resourceView: View,mapper:@escaping Mapper) {
         self.loadingView = loadingView
         self.errorView = errorView
         self.resourceView = resourceView

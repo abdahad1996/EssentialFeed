@@ -107,7 +107,7 @@ public final class FeedViewController:UITableViewController,UITableViewDataSourc
     }
     
     private func removeCellControllers(forRowAt indexPath:IndexPath){
-        loadingControllers[indexPath]?.cancel()
+        loadingControllers[indexPath]?.cancelLoad()
         loadingControllers[indexPath] = nil
     }
     

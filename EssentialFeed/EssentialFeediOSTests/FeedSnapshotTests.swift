@@ -105,7 +105,7 @@ class FeedSnapshotTests: XCTestCase {
 private extension FeedViewController {
     func display(_ stubs: [ImageStub]) {
         let cells: [FeedImageCellController] = stubs.map { stub in
-            let cellController = FeedImageCellController(delegate: stub)
+            let cellController = FeedImageCellController(viewModel: stub.viewModel, delegate: stub)
             stub.controller = cellController
             return cellController
         }
@@ -113,7 +113,6 @@ private extension FeedViewController {
         display(cells)
     }
 }
-
 private class ImageStub: FeedImageCellControllerDelegate {
     let viewModel: FeedImageViewModel<UIImage>
     weak var controller: FeedImageCellController?
@@ -125,14 +124,12 @@ private class ImageStub: FeedImageCellControllerDelegate {
             isLoading: false,
             shouldRetry: image == nil)
     }
-
+    
     func didRequestImage() {
         controller?.display(viewModel)
     }
-
+    
     func didCancelImageRequest() {}
-    
-    
 }
 
 

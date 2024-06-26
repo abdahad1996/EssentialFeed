@@ -9,10 +9,10 @@ import Foundation
 import XCTest
 import EssentialFeed
 
-class ImageCommentPresenterTests: XCTestCase {
+class ImageCommentsPresenterTests: XCTestCase {
     
     func test_title_isLocalized() {
-            XCTAssertEqual(ImageCommentPresenter.title, localized("IMAGE_COMMENTS_VIEW_TITLE"))
+            XCTAssertEqual(ImageCommentsPresenter.title, localized("IMAGE_COMMENTS_VIEW_TITLE"))
         }
     
 //    func test_map_createsViewModel() {
@@ -31,7 +31,7 @@ class ImageCommentPresenterTests: XCTestCase {
     
     private func localized(_ key: String, file: StaticString = #file, line: UInt = #line) -> String {
         let table:String =  "ImageComments"
-        let bundle = Bundle(for: ImageCommentPresenter.self)
+        let bundle = Bundle(for: ImageCommentsPresenter.self)
         let value = bundle.localizedString(forKey: key, value: nil, table: table)
         if value == key {
             XCTFail("Missing localized string for key: \(key) in table: \(table)", file: file, line: line)

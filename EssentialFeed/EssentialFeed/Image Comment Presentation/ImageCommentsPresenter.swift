@@ -9,7 +9,7 @@ import Foundation
 public struct ImageCommentViewModel {
     public let feed: [ImageComment]
 }
-final public class ImageCommentPresenter {
+final public class ImageCommentsPresenter {
     
     
     public static var title: String {

@@ -37,7 +37,7 @@ final public class FeedPresenter {
     }
      static var feedLoadError = NSLocalizedString(
         "GENERIC_CONNECTION_ERROR",
-        tableName: "Feed",
+        tableName: "Shared",
         bundle: Bundle(
             for:FeedPresenter.self
         ) ,

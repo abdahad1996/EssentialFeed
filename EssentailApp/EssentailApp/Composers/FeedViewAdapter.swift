@@ -31,7 +31,7 @@ class FeedViewAdapter:ResourceView{
             
 //            let adapter = FeedImageDataLoaderPresentationAdapter<WeakRefVirtualProxy<FeedImageCellController>, UIImage>(model: model, imageLoader: imageLoader)
             
-            let view = FeedImageCellController(delegate: adapter, viewModel: FeedImagePresenter<FeedImageCellController,UIImage>.map(model))
+            let view = FeedImageCellController(viewModel: FeedImagePresenter.map(model), delegate: adapter)
             
 //            let presenter = FeedImagePresenter(view: WeakRefVirtualProxy(view), imageTransformer: UIImage.init)
             let presenter = LoadResourcePresenter(loadingView: WeakRefVirtualProxy(view), errorView: WeakRefVirtualProxy(view), resourceView: WeakRefVirtualProxy(view)) { data in

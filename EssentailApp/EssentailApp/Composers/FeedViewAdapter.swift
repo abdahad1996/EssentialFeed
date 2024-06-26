@@ -35,19 +35,23 @@ class FeedViewAdapter:ResourceView{
             let view = FeedImageCellController(viewModel: FeedImagePresenter.map(model), delegate: adapter)
             
 //            let presenter = FeedImagePresenter(view: WeakRefVirtualProxy(view), imageTransformer: UIImage.init)
-            let presenter = LoadResourcePresenter(loadingView: WeakRefVirtualProxy(view), errorView: WeakRefVirtualProxy(view), resourceView: WeakRefVirtualProxy(view)) { data in
-                guard let image = UIImage(data: data) else {
-                    throw InvalidImageData()
-                }
-                return image
-            }
+            let presenter = LoadResourcePresenter(loadingView: WeakRefVirtualProxy(view), errorView: WeakRefVirtualProxy(view), resourceView: WeakRefVirtualProxy(view),mapper:UIImage.tryMake)
             adapter.presenter = presenter
             return view
         }))
         
     }
-    
+   
 }
+extension UIImage {
+    struct InvalidImageData: Error {}
 
+    static func tryMake(data: Data) throws -> UIImage {
+        guard let image = UIImage(data: data) else {
+            throw InvalidImageData()
+        }
+        return image
+    }
+}
 private struct InvalidImageData: Error {}
 

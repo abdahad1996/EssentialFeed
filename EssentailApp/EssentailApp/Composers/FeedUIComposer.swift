@@ -21,11 +21,11 @@ public final class FeedUIComposer {
         imageLoader:@escaping (URL) -> FeedImageDataLoader.Publisher
     ) -> FeedViewController{
       
-        let feedLoaderPresentationAdapter = FeedLoaderPresentationAdapter(feedLoader: feedLoader)
-        let feedController = makeFeedViewController(delegate: feedLoaderPresentationAdapter, title: FeedPresenter.title)
+        let loadResourcePresentationAdapter = LoadResourcePresentationAdapter<[FeedImage],FeedViewAdapter>(loader: feedLoader)
+        let feedController = makeFeedViewController(delegate: loadResourcePresentationAdapter, title: FeedPresenter.title)
         
       
-        feedLoaderPresentationAdapter.presenter = LoadResourcePresenter(
+        loadResourcePresentationAdapter.presenter = LoadResourcePresenter(
             loadingView: WeakRefVirtualProxy(
                 feedController
             ),

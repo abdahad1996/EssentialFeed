@@ -11,7 +11,7 @@ import EssentialFeediOS
 import UIKit
 
 
-class FeedViewAdapter:FeedView{
+class FeedViewAdapter:ResourceView{
     
     weak var feedViewController: FeedViewController?
     let imageLoader: (URL) -> FeedImageDataLoader.Publisher

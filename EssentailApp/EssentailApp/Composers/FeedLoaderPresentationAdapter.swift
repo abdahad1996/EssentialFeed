@@ -13,7 +13,7 @@ import Combine
 
 class FeedLoaderPresentationAdapter:FeedViewControllerDelegate {
     
-    var presenter:FeedPresenter?
+    var presenter:LoadResourcePresenter<[FeedImage],FeedViewAdapter>?
     let feedLoader:() -> AnyPublisher<[FeedImage], Error>
     var cancellable:Cancellable?
     
@@ -22,7 +22,7 @@ class FeedLoaderPresentationAdapter:FeedViewControllerDelegate {
     }
     
     func didRequestFeedRefresh() {
-            presenter?.didStartLoadingFeed()
+            presenter?.didStartLoading()
 
             cancellable = feedLoader()
             .dispatchOnMainQueue()
@@ -35,7 +35,7 @@ class FeedLoaderPresentationAdapter:FeedViewControllerDelegate {
                         self?.presenter?.didFinishLoadingFeed(with: error)
                     }
                 }, receiveValue: { [weak self] feed in
-                    self?.presenter?.didFinishLoadingFeed(with: feed)
+                    self?.presenter?.didFinishLoading(with: feed)
                 })
         }
 }

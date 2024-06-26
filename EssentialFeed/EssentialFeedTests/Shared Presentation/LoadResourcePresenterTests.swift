@@ -38,10 +38,9 @@ class LoadResourcePresenterTests: XCTestCase {
     
     func test_didFinishLoadingFeed_displaysResourceAndStopsLoading() {
         let (sut, view) = makeSUT { resource in
-            return resource + " view model"
+            return "resource view model"
         }
-        let feed = uniqueImages().models
-
+        
         sut.didFinishLoading(with: "resource")
         
         XCTAssertEqual(view.messages,[.display(resource: "resource view model"),.feedLoading(isLoading: false)])
@@ -53,9 +52,10 @@ class LoadResourcePresenterTests: XCTestCase {
 
         sut.didFinishLoadingFeed(with: anyNSError())
         
-        XCTAssertEqual(view.messages,[.feedLoading(isLoading: false),.display(errorMessage: localized("FEED_VIEW_CONNECTION_ERROR"))])
+        XCTAssertEqual(view.messages,[.feedLoading(isLoading: false),.display(errorMessage: localized("GENERIC_CONNECTION_ERROR"))])
 
     }
+
     
     // MARK: - Helpers
     private typealias SUT = LoadResourcePresenter<String,ViewSpy>

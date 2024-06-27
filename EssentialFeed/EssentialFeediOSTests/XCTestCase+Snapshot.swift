@@ -24,6 +24,7 @@ extension XCTestCase {
                 .appendingPathComponent(snapshotURL.lastPathComponent)
 
             try? snapshotData?.write(to: temporarySnapshotURL)
+            
 
             XCTFail("New snapshot does not match stored snapshot. New snapshot URL: \(temporarySnapshotURL), Stored snapshot URL: \(snapshotURL)", file: file, line: line)
         }
@@ -40,6 +41,7 @@ extension XCTestCase {
             )
 
             try snapshotData?.write(to: snapshotURL)
+            XCTFail("Record succeeded - use `assert` to compare the snapshot from now on.", file: file, line: line)
         } catch {
             XCTFail("Failed to record snapshot with error: \(error)", file: file, line: line)
         }

@@ -606,6 +606,14 @@
 			path = "Image Comment Presentation";
 			sourceTree = "<group>";
 		};
+		657604F52C2CF05A00E8A930 /* Feed UI */ = {
+			isa = PBXGroup;
+			children = (
+				65ADA6E42C246B68000E8B7C /* FeedSnapshotTests.swift */,
+			);
+			path = "Feed UI";
+			sourceTree = "<group>";
+		};
 		6577065B2C1736C70045FA7A /* Feed Presentation */ = {
 			isa = PBXGroup;
 			children = (
@@ -750,8 +758,8 @@
 		65EC5D2F2BEA564000B71FCA /* EssentialFeediOSTests */ = {
 			isa = PBXGroup;
 			children = (
+				657604F52C2CF05A00E8A930 /* Feed UI */,
 				65ADA6E62C246B74000E8B7C /* UIImage+TestHelpers.swift */,
-				65ADA6E42C246B68000E8B7C /* FeedSnapshotTests.swift */,
 				65ADA7052C247AD7000E8B7C /* UIViewController+Snapshot.swift */,
 				65ADA7072C247B68000E8B7C /* XCTestCase+Snapshot.swift */,
 			);

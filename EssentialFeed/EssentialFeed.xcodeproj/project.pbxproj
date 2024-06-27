@@ -120,7 +120,7 @@
 		65EC5D1E2BE9CFD600B71FCA /* LocalFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EC5D1D2BE9CFD600B71FCA /* LocalFeedLoader.swift */; };
 		65EC5D2C2BEA564000B71FCA /* EssentialFeediOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65EC5D242BEA563F00B71FCA /* EssentialFeediOS.framework */; };
 		65EC5D412BEAF15200B71FCA /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545037182B407B4A00D914C3 /* XCTestCase+MemoryLeakTracking.swift */; };
-		65EC5D432BED7BB900B71FCA /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EC5D422BED7BB900B71FCA /* FeedViewController.swift */; };
+		65EC5D432BED7BB900B71FCA /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EC5D422BED7BB900B71FCA /* ListViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -308,7 +308,7 @@
 		65EC5D1D2BE9CFD600B71FCA /* LocalFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFeedLoader.swift; sourceTree = "<group>"; };
 		65EC5D242BEA563F00B71FCA /* EssentialFeediOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialFeediOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		65EC5D2B2BEA564000B71FCA /* EssentialFeediOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeediOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		65EC5D422BED7BB900B71FCA /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
+		65EC5D422BED7BB900B71FCA /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -666,7 +666,7 @@
 		65B43EDA2C03FDDF00983405 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				65EC5D422BED7BB900B71FCA /* FeedViewController.swift */,
+				65EC5D422BED7BB900B71FCA /* ListViewController.swift */,
 				65B43EF62C04920F00983405 /* FeedImageCellController.swift */,
 			);
 			path = Controllers;
@@ -1126,7 +1126,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65EC5D432BED7BB900B71FCA /* FeedViewController.swift in Sources */,
+				65EC5D432BED7BB900B71FCA /* ListViewController.swift in Sources */,
 				65B43EF72C04920F00983405 /* FeedImageCellController.swift in Sources */,
 				65ADA6D12C246316000E8B7C /* UITableView+HeaderSizing.swift in Sources */,
 				65CFCB3D2C10F21A00D3B833 /* UIImageView+Animations.swift in Sources */,

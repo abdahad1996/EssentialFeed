@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import EssentialFeediOS
 
-extension FeedViewController{
+extension ListViewController{
     
     //triggers image requests as cell is initalized
     //cellforrow
@@ -113,7 +113,7 @@ extension FeedViewController{
     }
 }
 
-extension FeedViewController {
+extension ListViewController {
     func simulateAppearance() {
         if !isViewLoaded {
             loadViewIfNeeded()

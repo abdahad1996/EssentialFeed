@@ -14,10 +14,10 @@ import UIKit
 class FeedViewAdapter:ResourceView{
     private typealias ImageDataPresentationAdapter = LoadResourcePresentationAdapter<Data, WeakRefVirtualProxy<FeedImageCellController>>
     
-    weak var feedViewController: FeedViewController?
+    weak var feedViewController: ListViewController?
     let imageLoader: (URL) -> FeedImageDataLoader.Publisher
 
-    init(feedViewController: FeedViewController, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher) {
+    init(feedViewController: ListViewController, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher) {
         self.feedViewController = feedViewController
         self.imageLoader = imageLoader
     }

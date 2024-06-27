@@ -61,6 +61,7 @@
 		657605032C2DA88F00E8A930 /* ImageCommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657605022C2DA88F00E8A930 /* ImageCommentCell.swift */; };
 		657605052C2DA8C100E8A930 /* ImageCommentCellController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657605042C2DA8C100E8A930 /* ImageCommentCellController.swift */; };
 		657605082C2DA98700E8A930 /* ImageComments.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 657605072C2DA98700E8A930 /* ImageComments.storyboard */; };
+		6576050A2C2DFFD200E8A930 /* Feed.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 657605092C2DFFD200E8A930 /* Feed.storyboard */; };
 		657706532C1716B00045FA7A /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657706522C1716B00045FA7A /* ErrorView.swift */; };
 		6577065D2C1737000045FA7A /* FeedPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6577065C2C1737000045FA7A /* FeedPresenter.swift */; };
 		6577065E2C1738910045FA7A /* Feed.strings in Resources */ = {isa = PBXBuildFile; fileRef = 657706562C1735E40045FA7A /* Feed.strings */; };
@@ -98,7 +99,6 @@
 		65B43EED2C0400AA00983405 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54F8D4572B2EA9BD00C62D91 /* EssentialFeed.framework */; };
 		65B43EEE2C0400AA00983405 /* EssentialFeed.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 54F8D4572B2EA9BD00C62D91 /* EssentialFeed.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		65B43EF72C04920F00983405 /* FeedImageCellController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B43EF62C04920F00983405 /* FeedImageCellController.swift */; };
-		65CFCB392C10F20700D3B833 /* Feed.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65CFCB382C10F20700D3B833 /* Feed.storyboard */; };
 		65CFCB3B2C10F20B00D3B833 /* Feed.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65CFCB3A2C10F20B00D3B833 /* Feed.xcassets */; };
 		65CFCB3D2C10F21A00D3B833 /* UIImageView+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CFCB3C2C10F21A00D3B833 /* UIImageView+Animations.swift */; };
 		65CFCB3F2C10F22300D3B833 /* UITableView+Dequeueing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CFCB3E2C10F22300D3B833 /* UITableView+Dequeueing.swift */; };
@@ -256,6 +256,7 @@
 		657605022C2DA88F00E8A930 /* ImageCommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentCell.swift; sourceTree = "<group>"; };
 		657605042C2DA8C100E8A930 /* ImageCommentCellController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentCellController.swift; sourceTree = "<group>"; };
 		657605072C2DA98700E8A930 /* ImageComments.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = ImageComments.storyboard; path = "../../../../../essential-feed-case-study/EssentialFeed/EssentialFeediOS/Image Comments UI/Views/ImageComments.storyboard"; sourceTree = "<group>"; };
+		657605092C2DFFD200E8A930 /* Feed.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Feed.storyboard; path = "../../../../../essential-feed-case-study/EssentialFeed/EssentialFeediOS/Feed UI/Views/Feed.storyboard"; sourceTree = "<group>"; };
 		657706522C1716B00045FA7A /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		657706572C1735E40045FA7A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Feed.strings; sourceTree = "<group>"; };
 		657706592C1735F20045FA7A /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Feed.strings; sourceTree = "<group>"; };
@@ -293,7 +294,6 @@
 		65B43EDC2C03FE0000983405 /* FeedImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedImageCell.swift; sourceTree = "<group>"; };
 		65B43EF42C0402F800983405 /* FeedImageDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataLoader.swift; sourceTree = "<group>"; };
 		65B43EF62C04920F00983405 /* FeedImageCellController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCellController.swift; sourceTree = "<group>"; };
-		65CFCB382C10F20700D3B833 /* Feed.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Feed.storyboard; sourceTree = "<group>"; };
 		65CFCB3A2C10F20B00D3B833 /* Feed.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Feed.xcassets; sourceTree = "<group>"; };
 		65CFCB3C2C10F21A00D3B833 /* UIImageView+Animations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+Animations.swift"; sourceTree = "<group>"; };
 		65CFCB3E2C10F22300D3B833 /* UITableView+Dequeueing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+Dequeueing.swift"; sourceTree = "<group>"; };
@@ -763,7 +763,7 @@
 			isa = PBXGroup;
 			children = (
 				65CFCB3A2C10F20B00D3B833 /* Feed.xcassets */,
-				65CFCB382C10F20700D3B833 /* Feed.storyboard */,
+				657605092C2DFFD200E8A930 /* Feed.storyboard */,
 				65B43EDC2C03FE0000983405 /* FeedImageCell.swift */,
 				65B43ECF2C03768000983405 /* UIView+Shimmering.swift */,
 			);
@@ -1085,7 +1085,7 @@
 			files = (
 				657605082C2DA98700E8A930 /* ImageComments.storyboard in Resources */,
 				659548D52C1318B700EBE723 /* Feed_new.xcstrings in Resources */,
-				65CFCB392C10F20700D3B833 /* Feed.storyboard in Resources */,
+				6576050A2C2DFFD200E8A930 /* Feed.storyboard in Resources */,
 				65CFCB3B2C10F20B00D3B833 /* Feed.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -46,7 +46,7 @@ public final class ListViewController:UITableViewController,UITableViewDataSourc
     
     public var onRefresh:(() -> Void)?
     private var onViewDidAppear:((ListViewController) -> Void)?
-    @IBOutlet private(set) public var errorView: ErrorView?
+    private(set) public var errorView = ErrorView()
     private var loadingControllers = [IndexPath: CellController]()
     private var tableModel = [CellController](){
         didSet {
@@ -54,6 +54,27 @@ public final class ListViewController:UITableViewController,UITableViewDataSourc
         }
     }
     
+    private func configureErrorView() {
+            let container = UIView()
+            container.backgroundColor = .clear
+            container.addSubview(errorView)
+
+            errorView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                errorView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+                container.trailingAnchor.constraint(equalTo: errorView.trailingAnchor),
+                errorView.topAnchor.constraint(equalTo: container.topAnchor),
+                container.bottomAnchor.constraint(equalTo: errorView.bottomAnchor),
+            ])
+
+            tableView.tableHeaderView = container
+
+            errorView.onHide = { [weak self] in
+                self?.tableView.beginUpdates()
+                self?.tableView.sizeTableHeaderToFit()
+                self?.tableView.endUpdates()
+            }
+        }
     public func display(_ cellControllers: [CellController]) {
             loadingControllers = [:]
             tableModel = cellControllers
@@ -69,17 +90,14 @@ public final class ListViewController:UITableViewController,UITableViewDataSourc
     }
     
     public func display(_ viewModel: ResourceErrorViewModel) {
-        if let message = viewModel.message {
-            errorView?.show(message: message)
-        } else {
-            errorView?.hideMessage()
-        }
+        errorView.message = viewModel.message
     }
     
     public override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.prefetchDataSource = self
+        configureErrorView()
         
         onViewDidAppear = { vc in
             vc.onViewDidAppear = nil

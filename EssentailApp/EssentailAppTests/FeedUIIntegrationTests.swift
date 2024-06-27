@@ -381,7 +381,7 @@ final class FeedUIIntegrationTests:XCTestCase{
         XCTAssertEqual(sut.errorMessage, nil)
     }
 
-    func test_errorView_dismissesErrorMessageOnTap() {
+    func test_tapOnErrorView_hidesErrorMessage() {
         let (sut, loader) = makeSUT()
 
         sut.simulateAppearance()
@@ -390,10 +390,11 @@ final class FeedUIIntegrationTests:XCTestCase{
         loader.completeFeedLoadingWithError(at: 0)
         XCTAssertEqual(sut.errorMessage, loadError)
 
-        sut.simulateTapOnErrorMessage()
+        sut.simulateErrorViewTap()
         XCTAssertEqual(sut.errorMessage, nil)
     }
 
+    
     private func makeSUT(file:StaticString = #file,line:UInt = #line) -> (ListViewController,loaderSpy) {
         let loader = loaderSpy()
         let sut =  FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher)

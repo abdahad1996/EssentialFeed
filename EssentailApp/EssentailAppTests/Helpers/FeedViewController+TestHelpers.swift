@@ -64,7 +64,7 @@ extension ListViewController{
         refreshControl?.simulatePullToRefresh()
     }
     
-    func simulateTapOnErrorMessage() {
+    func simulateErrorViewTap() {
         errorView?.button.simulateTap()
     }
     

@@ -13,7 +13,24 @@ import EssentialFeed
 //    func didRequestFeedRefresh()
 //}
 
-public typealias CellController = UITableViewDataSource & UITableViewDelegate & UITableViewDataSourcePrefetching
+public struct CellController {
+    let dataSource:UITableViewDataSource
+    let delegate:UITableViewDelegate?
+    let dataSourcePrefetching:UITableViewDataSourcePrefetching?
+    
+    public init(_ dataSource: UITableViewDataSource & UITableViewDelegate & UITableViewDataSourcePrefetching) {
+            self.dataSource = dataSource
+            self.delegate = dataSource
+            self.dataSourcePrefetching = dataSource
+        }
+
+        public init(_ dataSource: UITableViewDataSource) {
+            self.dataSource = dataSource
+            self.delegate = nil
+            self.dataSourcePrefetching = nil
+        }
+
+}
 //public protocol CellController {
 //    func view(in tableView: UITableView) -> UITableViewCell
 //    func preload()
@@ -24,6 +41,7 @@ public typealias CellController = UITableViewDataSource & UITableViewDelegate & 
 //    func preload() {}
 //    func cancelLoad() {}
 //}
+
 public final class ListViewController:UITableViewController,UITableViewDataSourcePrefetching,ResourceLoadingView,ResourceErrorView {
     
     public var onRefresh:(() -> Void)?
@@ -32,9 +50,7 @@ public final class ListViewController:UITableViewController,UITableViewDataSourc
     private var loadingControllers = [IndexPath: CellController]()
     private var tableModel = [CellController](){
         didSet {
-            
             tableView.reloadData()
-            
         }
     }
     
@@ -92,8 +108,8 @@ public final class ListViewController:UITableViewController,UITableViewDataSourc
     
     public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        let controller = cellController(forRowAt: indexPath)
-        return controller.tableView(tableView, cellForRowAt: indexPath)
+        let ds = cellController(forRowAt: indexPath).dataSource
+        return ds.tableView(tableView, cellForRowAt: indexPath)
 //        return cellController(forRowAt: indexPath).view(in: tableView)
         
     }
@@ -104,21 +120,21 @@ public final class ListViewController:UITableViewController,UITableViewDataSourc
 //        cellController.preload()
 //    }
     public override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let controller = removeLoadingController(forRowAt: indexPath)
-        controller?.tableView?(tableView, didEndDisplaying: cell, forRowAt: indexPath)
+        let delegate = removeLoadingController(forRowAt: indexPath)?.delegate
+        delegate?.tableView?(tableView, didEndDisplaying: cell, forRowAt: indexPath)
     }
     
     public func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         indexPaths.forEach { indexPath in
-            let controller = cellController(forRowAt: indexPath)
-            controller.tableView(tableView, prefetchRowsAt: [indexPath])
+            let dataSourcePrefetching = cellController(forRowAt: indexPath).dataSourcePrefetching
+            dataSourcePrefetching?.tableView(tableView, prefetchRowsAt: [indexPath])
 //           cellController(forRowAt: indexPath).preload()
         }
     }
     public func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
         indexPaths.forEach { indexPath in
-            let controller = removeLoadingController(forRowAt: indexPath)
-            controller?.tableView?(tableView, cancelPrefetchingForRowsAt: [indexPath])
+            let dataSourcePrefetching = removeLoadingController(forRowAt: indexPath)?.dataSourcePrefetching
+            dataSourcePrefetching?.tableView?(tableView, cancelPrefetchingForRowsAt: [indexPath])
         }
     }
     

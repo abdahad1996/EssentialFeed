@@ -26,7 +26,7 @@ public final class FeedImageCellController: NSObject {
         self.delegate = delegate
     }
 }
-extension FeedImageCellController:CellController {
+extension FeedImageCellController:UITableViewDataSource, UITableViewDelegate, UITableViewDataSourcePrefetching {
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         cell = tableView.dequeueReusableCell()

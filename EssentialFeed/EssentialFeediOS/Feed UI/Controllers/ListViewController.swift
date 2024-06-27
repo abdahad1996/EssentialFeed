@@ -9,9 +9,9 @@ import UIKit
 import EssentialFeed
 
 
-public protocol FeedViewControllerDelegate {
-    func didRequestFeedRefresh()
-}
+//public protocol FeedViewControllerDelegate {
+//    func didRequestFeedRefresh()
+//}
 
 public protocol CellController {
     func view(in tableView: UITableView) -> UITableViewCell
@@ -20,7 +20,7 @@ public protocol CellController {
 }
 public final class ListViewController:UITableViewController,UITableViewDataSourcePrefetching,ResourceLoadingView,ResourceErrorView {
     
-    public var delegate:FeedViewControllerDelegate?
+    public var onRefresh:(() -> Void)?
     private var onViewDidAppear:((ListViewController) -> Void)?
     @IBOutlet private(set) public var errorView: ErrorView?
     private var loadingControllers = [IndexPath: CellController]()
@@ -73,7 +73,7 @@ public final class ListViewController:UITableViewController,UITableViewDataSourc
         }
     
     @IBAction func refresh() {
-        delegate?.didRequestFeedRefresh()
+        onRefresh?()
     }
     public override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)

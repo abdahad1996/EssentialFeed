@@ -37,6 +37,9 @@ extension FeedImageCellController:UITableViewDataSource, UITableViewDelegate, UI
         cell?.onRetry = { [weak self] in
                     self?.delegate.didRequestImage()
                 }
+        cell?.onReuse = { [weak self] in
+                    self?.releaseCellForReuse()
+                }
         delegate.didRequestImage()
         return cell!
     }
@@ -54,12 +57,18 @@ extension FeedImageCellController:UITableViewDataSource, UITableViewDelegate, UI
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         1
     }
+    
+    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+            self.cell = cell as? FeedImageCell
+            delegate.didRequestImage()
+        }
     public func cancelLoad() {
         releaseCellForReuse()
         delegate.didCancelImageRequest()
     }
     
     private func releaseCellForReuse() {
+        cell?.onReuse = nil
         cell = nil
     }
     func setCell(_ cell: FeedImageCell) {

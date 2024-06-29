@@ -76,27 +76,28 @@ public final class ListViewController:UITableViewController,UITableViewDataSourc
                 return controller.dataSource.tableView(tableView, cellForRowAt: index)
             }
         }()
-    private func configureErrorView() {
-            let container = UIView()
-            container.backgroundColor = .clear
-            container.addSubview(errorView)
-
-            errorView.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                errorView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
-                container.trailingAnchor.constraint(equalTo: errorView.trailingAnchor),
-                errorView.topAnchor.constraint(equalTo: container.topAnchor),
-                container.bottomAnchor.constraint(equalTo: errorView.bottomAnchor),
-            ])
-
-            tableView.tableHeaderView = container
-
-            errorView.onHide = { [weak self] in
-                self?.tableView.beginUpdates()
-                self?.tableView.sizeTableHeaderToFit()
-                self?.tableView.endUpdates()
-            }
-        }
+    
+//    private func configureErrorView() {
+//            let container = UIView()
+//            container.backgroundColor = .clear
+//            container.addSubview(errorView)
+//
+//            errorView.translatesAutoresizingMaskIntoConstraints = false
+//            NSLayoutConstraint.activate([
+//                errorView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+//                container.trailingAnchor.constraint(equalTo: errorView.trailingAnchor),
+//                errorView.topAnchor.constraint(equalTo: container.topAnchor),
+//                container.bottomAnchor.constraint(equalTo: errorView.bottomAnchor),
+//            ])
+//
+//            tableView.tableHeaderView = container
+//
+//            errorView.onHide = { [weak self] in
+//                self?.tableView.beginUpdates()
+//                self?.tableView.sizeTableHeaderToFit()
+//                self?.tableView.endUpdates()
+//            }
+//        }
     
     public func display(_ cellControllers: [CellController]) {
 //            loadingControllers = [:]
@@ -125,12 +126,19 @@ public final class ListViewController:UITableViewController,UITableViewDataSourc
         errorView.message = viewModel.message
     }
     
+    private func configureTableView() {
+        dataSource.defaultRowAnimation = .fade
+         tableView.dataSource = dataSource
+        tableView.tableHeaderView = errorView.makeContainer()
+
+        
+    }
     public override func viewDidLoad() {
         super.viewDidLoad()
-        dataSource.defaultRowAnimation = .fade
+       
+        configureTableView()
         tableView.prefetchDataSource = self
-        tableView.dataSource = dataSource
-        configureErrorView()
+
         
         onViewDidAppear = { vc in
             vc.onViewDidAppear = nil
@@ -170,6 +178,11 @@ public final class ListViewController:UITableViewController,UITableViewDataSourc
 //        (cell as? FeedImageCell).map(cellController.setCell)
 //        cellController.preload()
 //    }
+    
+    public override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let dl = cellController(at: indexPath)?.delegate
+        dl?.tableView?(tableView, willDisplay: cell, forRowAt: indexPath)
+    }
     public override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let delegate = cellController(at:  indexPath)?.delegate
         delegate?.tableView?(tableView, didEndDisplaying: cell, forRowAt: indexPath)
@@ -188,6 +201,8 @@ public final class ListViewController:UITableViewController,UITableViewDataSourc
             dataSourcePrefetching?.tableView?(tableView, cancelPrefetchingForRowsAt: [indexPath])
         }
     }
+    
+    
     
 //    func cancelTask(forRowAt indexPath:IndexPath) {
 //        removeCellControllers(forRowAt: indexPath)

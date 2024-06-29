@@ -60,7 +60,7 @@ extension ListViewController{
 
         datasource?.tableView?(tableView, cancelPrefetchingForRowsAt: [indexPath])
     }
-    func simulateUserInitiatedFeedReload() {
+    func simulateUserInitiatedReload() {
         refreshControl?.simulatePullToRefresh()
     }
     

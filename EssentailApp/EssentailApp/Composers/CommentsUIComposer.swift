@@ -18,11 +18,10 @@ public final class CommentsUIComposer {
     private typealias FeedPresentationAdapter = LoadResourcePresentationAdapter<[FeedImage], FeedViewAdapter>
     
     public static func commentsComposedWith(
-        feedLoader:@escaping () -> AnyPublisher<[FeedImage], Error>,
-        imageLoader:@escaping (URL) -> FeedImageDataLoader.Publisher
+        commentsLoader:@escaping () -> AnyPublisher<[FeedImage], Error>
     ) -> ListViewController{
       
-        let loadResourcePresentationAdapter = FeedPresentationAdapter(loader: feedLoader)
+        let loadResourcePresentationAdapter = FeedPresentationAdapter(loader: commentsLoader)
         let feedController = makeFeedViewController(title: ImageCommentsPresenter.title)
         feedController.onRefresh = loadResourcePresentationAdapter.loadResource
         
@@ -36,7 +35,7 @@ public final class CommentsUIComposer {
             ),
             resourceView: FeedViewAdapter(
                 feedViewController: feedController,
-                imageLoader:imageLoader
+                imageLoader:{_ in Empty<Data,Error>().eraseToAnyPublisher()}
             ), mapper: FeedPresenter.map
         )
         

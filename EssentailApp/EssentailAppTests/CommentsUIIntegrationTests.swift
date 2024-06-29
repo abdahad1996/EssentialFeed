@@ -13,9 +13,9 @@ import UIKit
 import EssentailApp
 
 
- class FeedUIIntegrationTests:XCTestCase{
+class CommentsUIIntegrationTests:FeedUIIntegrationTests{
     
-    func test_feedView_hasTitle() {
+    override func test_feedView_hasTitle() {
         let (sut,loader) =  makeSUT()
         
         sut.simulateAppearance()
@@ -25,7 +25,7 @@ import EssentailApp
     }
     
     
-    func test_loadFeedActions_requestFeedFromLoader() {
+    override func test_loadFeedActions_requestFeedFromLoader() {
         let (sut, loader) = makeSUT()
         XCTAssertEqual(loader.loadFeedCallCount, 0, "Expected no loading requests before view is loaded")
         sut.simulateAppearance()
@@ -40,7 +40,7 @@ import EssentailApp
         XCTAssertEqual(loader.loadFeedCallCount, 3, "Expected yet another loading request once user initiates another reload")
     }
     
-    func test_loadingFeedIndicator_isVisibleWhileLoadingFeed() {
+    override func test_loadingFeedIndicator_isVisibleWhileLoadingFeed() {
         let (sut, loader) = makeSUT()
         
         sut.simulateAppearance()
@@ -56,7 +56,7 @@ import EssentailApp
         XCTAssertFalse(sut.isShowingLoadingIndicator, "Expected no loading indicator once user initiated loading completes with error")
     }
     
-    func test_loadFeedCompletion_rendersSuccessfullyLoadedFeed() {
+    override func test_loadFeedCompletion_rendersSuccessfullyLoadedFeed() {
         let image0 = makeImage(description: "a description", location: "a location")
         let image1 = makeImage(description: nil, location: "another location")
         let image2 = makeImage(description: "another description", location: nil)
@@ -75,7 +75,7 @@ import EssentailApp
         assertThat(sut, isRendering: [image0, image1])
     }
     
-    func test_loadFeedCompletion_doesNotAlterCurrentRenderingStateOnError() {
+    override func test_loadFeedCompletion_doesNotAlterCurrentRenderingStateOnError() {
         let image0 = makeImage()
         let (sut, loader) = makeSUT()
         
@@ -89,7 +89,7 @@ import EssentailApp
         
     }
     
-    func test_loadFeedCompletion_rendersErrorMessageOnErrorUntilNextReload() {
+    override func test_loadFeedCompletion_rendersErrorMessageOnErrorUntilNextReload() {
         let image0 = makeImage(url: URL(string: "http://url-1.com")!)
         let (sut, loader) = makeSUT()
 
@@ -104,7 +104,7 @@ import EssentailApp
         XCTAssertEqual(sut.errorMessage, nil)
     }
 
-    func test_tapOnErrorView_hidesErrorMessage() {
+    override func test_tapOnErrorView_hidesErrorMessage() {
         let (sut, loader) = makeSUT()
 
         sut.simulateAppearance()
@@ -118,7 +118,7 @@ import EssentailApp
     }
     
     // MARK: - Image View Tests
-    func test_feedImageView_loadsImageURLWhenVisible() {
+    override func test_feedImageView_loadsImageURLWhenVisible() {
         let (sut,loader) =  makeSUT()
         let image0 = makeImage(description: "a description", location: "a location")
         let image1 = makeImage(description: "a description", location: "a location")
@@ -138,7 +138,7 @@ import EssentailApp
         
         
     }
-    func test_feedImageView_cancelsImageLoadingWhenNotVisibleAnymore() {
+    override func test_feedImageView_cancelsImageLoadingWhenNotVisibleAnymore() {
         let (sut,loader) =  makeSUT()
         let image0 = makeImage(description: "a description", location: "a location")
         let image1 = makeImage(description: "a description", location: "a location")
@@ -158,7 +158,7 @@ import EssentailApp
         
     }
     
-    func test_feedImageViewLoadingIndicator_isVisibleWhileLoadingImage() {
+    override func test_feedImageViewLoadingIndicator_isVisibleWhileLoadingImage() {
         let (sut,loader) =  makeSUT()
         let image0 = makeImage(description: "a description", location: "a location")
         let image1 = makeImage(description: "a description", location: "a location")
@@ -186,7 +186,7 @@ import EssentailApp
         
     }
     
-    func test_feedImageView_rendersImageLoadedFromURL() {
+    override func test_feedImageView_rendersImageLoadedFromURL() {
         let (sut,loader) =  makeSUT()
         let image0 = makeImage(description: "a description", location: "a location")
         let image1 = makeImage(description: "a description", location: "a location")
@@ -212,7 +212,7 @@ import EssentailApp
         XCTAssertEqual(view1?.renderedImage, imageData1, "Expected image for second view once second image loading completes successfully")
     }
     
-    func test_feedImageViewRetryButton_isVisibleOnImageURLLoadError() {
+    override func test_feedImageViewRetryButton_isVisibleOnImageURLLoadError() {
         let (sut,loader) =  makeSUT()
         let image0 = makeImage(description: "a description", location: "a location")
         let image1 = makeImage(description: "a description", location: "a location")
@@ -240,7 +240,7 @@ import EssentailApp
         
     }
     
-    func test_feedImageViewRetryAction_retriesImageLoad() {
+    override func test_feedImageViewRetryAction_retriesImageLoad() {
         
         let image0 = makeImage(url: URL(string: "http://url-0.com")!)
         let image1 = makeImage(url: URL(string: "http://url-1.com")!)
@@ -266,7 +266,7 @@ import EssentailApp
         
     }
     
-    func test_feedImageView_preloadsImageURLWhenNearVisible() {
+    override func test_feedImageView_preloadsImageURLWhenNearVisible() {
         
         let image0 = makeImage(url: URL(string: "http://url-0.com")!)
         let image1 = makeImage(url: URL(string: "http://url-1.com")!)
@@ -286,7 +286,7 @@ import EssentailApp
         
     }
     
-    func test_feedImageView_cancelsImageURLPreloadingWhenNotNearVisibleAnymore() {
+    override func test_feedImageView_cancelsImageURLPreloadingWhenNotNearVisibleAnymore() {
             let image0 = makeImage(url: URL(string: "http://url-0.com")!)
             let image1 = makeImage(url: URL(string: "http://url-1.com")!)
             let (sut, loader) = makeSUT()
@@ -304,7 +304,7 @@ import EssentailApp
             XCTAssertEqual(loader.cancelledImageURLs, [image0.url, image1.url], "Expected second cancelled image URL request once second image is not near visible anymore")
         }
     
-    func test_feedImageView_doesNotRenderLoadedImageWhenNotVisibleAnymore() {
+    override func test_feedImageView_doesNotRenderLoadedImageWhenNotVisibleAnymore() {
         
         let image0 = makeImage(url: URL(string: "http://url-1.com")!)
         let (sut, loader) = makeSUT()
@@ -320,7 +320,7 @@ import EssentailApp
         XCTAssertNil(cell?.renderedImage, "Expected no rendered image when an image load finishes after the view is not visible anymore")
         
     }
-    func test_feedImageView_reloadsImageURLWhenBecomingVisibleAgain() {
+    override func test_feedImageView_reloadsImageURLWhenBecomingVisibleAgain() {
             let image0 = makeImage(url: URL(string: "http://url-0.com")!)
             let image1 = makeImage(url: URL(string: "http://url-1.com")!)
             let (sut, loader) = makeSUT()
@@ -337,7 +337,7 @@ import EssentailApp
             XCTAssertEqual(loader.loadedImageURLs, [image0.url, image0.url, image1.url, image1.url], "Expected two new image URL request after second view becomes visible again")
         }
 
-    func test_feedImageView_configuresViewCorrectlyWhenCellBecomingVisibleAgain() {
+    override func test_feedImageView_configuresViewCorrectlyWhenCellBecomingVisibleAgain() {
         let (sut, loader) = makeSUT()
         
         sut.simulateAppearance()
@@ -356,7 +356,7 @@ import EssentailApp
         XCTAssertEqual(view0?.isShowingRetryAction, false, "Expected no retry when image loads successfully after view becomes visible again")
         XCTAssertEqual(view0?.isShowingImageLoadingIndicator, false, "Expected no loading indicator when image loads successfully after view becomes visible again")
     }
-    func test_feedImageView_doesNotShowDataFromPreviousRequestWhenCellIsReused() throws {
+    override func test_feedImageView_doesNotShowDataFromPreviousRequestWhenCellIsReused() throws {
         let image0 = makeImage(url: URL(string: "http://url-1.com")!)
         let image1 = makeImage(url: URL(string: "http://url-1.com")!)
 
@@ -376,7 +376,7 @@ import EssentailApp
             XCTAssertEqual(view0.renderedImage, .none, "Expected no image state change for reused view once image loading completes successfully")
         }
     
-    func test_feedImageView_showsDataForNewViewRequestAfterPreviousViewIsReused() throws {
+    override func test_feedImageView_showsDataForNewViewRequestAfterPreviousViewIsReused() throws {
             let (sut, loader) = makeSUT()
 
             sut.simulateAppearance()
@@ -393,7 +393,7 @@ import EssentailApp
             XCTAssertEqual(newView.renderedImage, imageData)
         }
     
-    func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {
+    override func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {
         let (sut, loader) = makeSUT()
 
         sut.simulateAppearance()
@@ -431,7 +431,7 @@ import EssentailApp
 //        }
     
     
-    func test_loadImageDataCompletion_dispatchesFromBackgroundToMainThread() {
+    override func test_loadImageDataCompletion_dispatchesFromBackgroundToMainThread() {
         let image0 = makeImage(url: URL(string: "http://url-1.com")!)
         let (sut, loader) = makeSUT()
 
@@ -453,14 +453,14 @@ import EssentailApp
     
     private func makeSUT(file:StaticString = #file,line:UInt = #line) -> (ListViewController,loaderSpy) {
         let loader = loaderSpy()
-        let sut =  FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher)
+        let sut =  CommentsUIComposer.commentsComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher)
         trackForMemoryLeaks(loader, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         
         return (sut,loader)
     }
     
-    func test_loadFeedCompletion_rendersSuccessfullyLoadedEmptyFeedAfterNonEmptyFeed() {
+    override func test_loadFeedCompletion_rendersSuccessfullyLoadedEmptyFeedAfterNonEmptyFeed() {
             let image0 = makeImage()
             let image1 = makeImage()
             let (sut, loader) = makeSUT()

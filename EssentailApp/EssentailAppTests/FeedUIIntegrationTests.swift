@@ -89,6 +89,35 @@ final class FeedUIIntegrationTests:XCTestCase{
         
     }
     
+    func test_loadFeedCompletion_rendersErrorMessageOnErrorUntilNextReload() {
+        let image0 = makeImage(url: URL(string: "http://url-1.com")!)
+        let (sut, loader) = makeSUT()
+
+        sut.simulateAppearance()
+
+        XCTAssertEqual(sut.errorMessage, nil)
+
+        loader.completeFeedLoadingWithError(at: 0)
+        XCTAssertEqual(sut.errorMessage, loadError)
+
+        sut.simulateUserInitiatedFeedReload()
+        XCTAssertEqual(sut.errorMessage, nil)
+    }
+
+    func test_tapOnErrorView_hidesErrorMessage() {
+        let (sut, loader) = makeSUT()
+
+        sut.simulateAppearance()
+        XCTAssertEqual(sut.errorMessage, nil)
+
+        loader.completeFeedLoadingWithError(at: 0)
+        XCTAssertEqual(sut.errorMessage, loadError)
+
+        sut.simulateErrorViewTap()
+        XCTAssertEqual(sut.errorMessage, nil)
+    }
+    
+    // MARK: - Image View Tests
     func test_feedImageView_loadsImageURLWhenVisible() {
         let (sut,loader) =  makeSUT()
         let image0 = makeImage(description: "a description", location: "a location")
@@ -364,6 +393,22 @@ final class FeedUIIntegrationTests:XCTestCase{
             XCTAssertEqual(newView.renderedImage, imageData)
         }
     
+    func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {
+        let (sut, loader) = makeSUT()
+
+        sut.simulateAppearance()
+
+        let exp = expectation(description: "Wait for background queue")
+        DispatchQueue.global().async {
+            loader.completeFeedLoading(at: 0)
+            exp.fulfill()
+        }
+
+        wait(for: [exp],timeout: 1)
+        
+        
+    }
+    
 //    func test_feedImageView_recapturesCellOnWillDisplayCell() {
 //        let image0 = makeImage(url: URL(string: "http://url-1.com")!)
 //        let image1 = makeImage(url: URL(string: "http://url-1.com")!)
@@ -385,21 +430,6 @@ final class FeedUIIntegrationTests:XCTestCase{
 //            XCTAssertEqual(cell?.renderedImage, imageData0)
 //        }
     
-    func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {
-        let (sut, loader) = makeSUT()
-
-        sut.simulateAppearance()
-
-        let exp = expectation(description: "Wait for background queue")
-        DispatchQueue.global().async {
-            loader.completeFeedLoading(at: 0)
-            exp.fulfill()
-        }
-
-        wait(for: [exp],timeout: 1)
-        
-        
-    }
     
     func test_loadImageDataCompletion_dispatchesFromBackgroundToMainThread() {
         let image0 = makeImage(url: URL(string: "http://url-1.com")!)
@@ -418,33 +448,7 @@ final class FeedUIIntegrationTests:XCTestCase{
             wait(for: [exp], timeout: 1.0)
         }
     
-    func test_loadFeedCompletion_rendersErrorMessageOnErrorUntilNextReload() {
-        let image0 = makeImage(url: URL(string: "http://url-1.com")!)
-        let (sut, loader) = makeSUT()
-
-        sut.simulateAppearance()
-
-        XCTAssertEqual(sut.errorMessage, nil)
-
-        loader.completeFeedLoadingWithError(at: 0)
-        XCTAssertEqual(sut.errorMessage, loadError)
-
-        sut.simulateUserInitiatedFeedReload()
-        XCTAssertEqual(sut.errorMessage, nil)
-    }
-
-    func test_tapOnErrorView_hidesErrorMessage() {
-        let (sut, loader) = makeSUT()
-
-        sut.simulateAppearance()
-        XCTAssertEqual(sut.errorMessage, nil)
-
-        loader.completeFeedLoadingWithError(at: 0)
-        XCTAssertEqual(sut.errorMessage, loadError)
-
-        sut.simulateErrorViewTap()
-        XCTAssertEqual(sut.errorMessage, nil)
-    }
+  
 
     
     private func makeSUT(file:StaticString = #file,line:UInt = #line) -> (ListViewController,loaderSpy) {

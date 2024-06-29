@@ -96,6 +96,7 @@ extension ListViewController{
 //        endAppearanceTransition()
 //    }
     func numberOfRenderedFeedImageViews() -> Int {
+        self.tableView.numberOfSections == 0 ? 0 :
         self.tableView.numberOfRows(inSection: numberOfSections)
     }
     
@@ -113,6 +114,13 @@ extension ListViewController{
     }
 }
 
+extension ListViewController {
+    public override func loadViewIfNeeded() {
+        super.loadViewIfNeeded()
+        
+        tableView.frame = CGRect(x: 0, y: 0, width: 1, height: 1)
+    }
+}
 extension ListViewController {
     func simulateAppearance() {
         if !isViewLoaded {

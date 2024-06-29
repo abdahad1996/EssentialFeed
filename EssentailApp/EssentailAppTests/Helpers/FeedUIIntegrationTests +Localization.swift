@@ -32,5 +32,9 @@ extension FeedUIIntegrationTests {
         LoadResourcePresenter<Any,DummyView>.loadError
     }
     
+    var commentsTitle: String {
+            ImageCommentsPresenter.title
+        }
+    
 }
 

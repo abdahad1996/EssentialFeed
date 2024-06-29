@@ -15,13 +15,12 @@ import EssentailApp
 
 class CommentsUIIntegrationTests:FeedUIIntegrationTests{
     
-    override func test_feedView_hasTitle() {
+     func test_commentsView_hasTitle() {
         let (sut,loader) =  makeSUT()
         
         sut.simulateAppearance()
 
-        
-        XCTAssertEqual(sut.title, feedTitle)
+        XCTAssertEqual(sut.title, commentsTitle)
     }
     
     

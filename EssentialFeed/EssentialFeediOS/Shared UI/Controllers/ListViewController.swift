@@ -127,7 +127,7 @@ public final class ListViewController:UITableViewController,UITableViewDataSourc
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
+        dataSource.defaultRowAnimation = .fade
         tableView.prefetchDataSource = self
         tableView.dataSource = dataSource
         configureErrorView()

@@ -45,3 +45,18 @@ extension Date {
         return calendar.date(byAdding: .day, value: days, to: self)!
     }
 }
+
+private class DummyView:ResourceView{
+    func display(_ viewModel: String){}
+}
+var feedTitle:String{
+    FeedPresenter.title
+}
+
+var loadError:String{
+    LoadResourcePresenter<Any,DummyView>.loadError
+}
+
+var commentsTitle: String {
+        ImageCommentsPresenter.title
+    }

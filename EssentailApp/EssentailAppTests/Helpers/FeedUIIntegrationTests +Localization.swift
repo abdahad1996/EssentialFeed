@@ -21,20 +21,20 @@ extension FeedUIIntegrationTests {
 //        }
 //        return value
 //    }
-    private class DummyView:ResourceView{
-        func display(_ viewModel: String){}
-    }
-    var feedTitle:String{
-        FeedPresenter.title
-    }
-    
-    var loadError:String{
-        LoadResourcePresenter<Any,DummyView>.loadError
-    }
-    
-    var commentsTitle: String {
-            ImageCommentsPresenter.title
-        }
+//    private class DummyView:ResourceView{
+//        func display(_ viewModel: String){}
+//    }
+//    var feedTitle:String{
+//        FeedPresenter.title
+//    }
+//    
+//    var loadError:String{
+//        LoadResourcePresenter<Any,DummyView>.loadError
+//    }
+//    
+//    var commentsTitle: String {
+//            ImageCommentsPresenter.title
+//        }
     
 }
 

@@ -28,7 +28,7 @@ extension ListViewController{
         let cell = simulateFeedImageViewVisible(at: index)
         
         let delegate = tableView.delegate
-        let indexPath = IndexPath(row: index, section: numberOfSections)
+        let indexPath = IndexPath(row: index, section: feedImagesSection)
         delegate?.tableView?(tableView, didEndDisplaying: cell!, forRowAt: indexPath)
         return cell
     }
@@ -39,7 +39,7 @@ extension ListViewController{
         let view = simulateFeedImageViewNotVisible(at: row)
         
         let delegate = tableView.delegate
-        let index = IndexPath(row: row, section: numberOfSections)
+        let index = IndexPath(row: row, section: feedImagesSection)
         delegate?.tableView?(tableView, willDisplay: view!, forRowAt: index)
         
         return view
@@ -48,7 +48,7 @@ extension ListViewController{
     //prefetching
     func simulateFeedImageViewNearVisible(at index:Int){
         let datasource = tableView.prefetchDataSource
-        let indexPath = IndexPath(row: index, section: numberOfSections)
+        let indexPath = IndexPath(row: index, section: feedImagesSection)
         datasource?.tableView(tableView, prefetchRowsAt: [indexPath])
     }
     
@@ -56,7 +56,7 @@ extension ListViewController{
     func simulateFeedImageViewNotNearVisible(at index:Int){
         simulateFeedImageViewNearVisible(at: index)
         let datasource = tableView.prefetchDataSource
-        let indexPath = IndexPath(row: index, section: numberOfSections)
+        let indexPath = IndexPath(row: index, section: feedImagesSection)
 
         datasource?.tableView?(tableView, cancelPrefetchingForRowsAt: [indexPath])
     }
@@ -75,6 +75,11 @@ extension ListViewController{
         return errorView.message
     }
 
+    func simulateTapOnFeedImage(at row: Int) {
+            let delegate = tableView.delegate
+            let index = IndexPath(row: row, section: feedImagesSection)
+            delegate?.tableView?(tableView, didSelectRowAt: index)
+        }
     
     var isShowingLoadingIndicator: Bool {
         return refreshControl?.isRefreshing == true
@@ -97,21 +102,23 @@ extension ListViewController{
 //    }
     func numberOfRenderedFeedImageViews() -> Int {
         self.tableView.numberOfSections == 0 ? 0 :
-        self.tableView.numberOfRows(inSection: numberOfSections)
+        self.tableView.numberOfRows(inSection: feedImagesSection)
     }
     
-    private var numberOfSections:Int{
-        return 0
-    }
+//    private var numberOfSections:Int{
+//        return 0
+//    }
     
     func feedImageView(at index:Int) -> FeedImageCell? {
         guard numberOfRenderedFeedImageViews() > index else {
                     return nil
                 }
         let ds = tableView.dataSource
-        let indexpath = IndexPath(row: index, section: numberOfSections)
+        let indexpath = IndexPath(row: index, section: feedImagesSection)
         return ds?.tableView(tableView, cellForRowAt: indexpath) as? FeedImageCell
     }
+    private var feedImagesSection: Int { 0 }
+
 }
 
 extension ListViewController {

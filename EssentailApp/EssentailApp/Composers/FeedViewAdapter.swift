@@ -13,13 +13,15 @@ import UIKit
 
 class FeedViewAdapter:ResourceView{
     private typealias ImageDataPresentationAdapter = LoadResourcePresentationAdapter<Data, WeakRefVirtualProxy<FeedImageCellController>>
-    
+    private let selection: (FeedImage) -> Void
+
     weak var feedViewController: ListViewController?
     let imageLoader: (URL) -> FeedImageDataLoader.Publisher
 
-    init(feedViewController: ListViewController, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher) {
+    init(feedViewController: ListViewController, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher,selection: @escaping (FeedImage) -> Void) {
         self.feedViewController = feedViewController
         self.imageLoader = imageLoader
+        self.selection = selection
     }
     
     func display(_ viewModel: FeedViewModel) {
@@ -32,7 +34,9 @@ class FeedViewAdapter:ResourceView{
             
 //            let adapter = FeedImageDataLoaderPresentationAdapter<WeakRefVirtualProxy<FeedImageCellController>, UIImage>(model: model, imageLoader: imageLoader)
             
-            let view = FeedImageCellController(viewModel: FeedImagePresenter.map(model), delegate: adapter)
+            let view = FeedImageCellController(viewModel: FeedImagePresenter.map(model), delegate: adapter,selection: { [selection] in
+                selection(model)
+            })
             
 //            let presenter = FeedImagePresenter(view: WeakRefVirtualProxy(view), imageTransformer: UIImage.init)
             let presenter = LoadResourcePresenter(loadingView: WeakRefVirtualProxy(view), errorView: WeakRefVirtualProxy(view), resourceView: WeakRefVirtualProxy(view),mapper:UIImage.tryMake)

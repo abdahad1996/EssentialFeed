@@ -13,7 +13,7 @@ import UIKit
 import EssentailApp
 import Combine
 
-class CommentsUIIntegrationTests:FeedUIIntegrationTests{
+class CommentsUIIntegrationTests:XCTestCase{
     
      func test_commentsView_hasTitle() {
         let (sut,loader) =  makeSUT()
@@ -100,7 +100,7 @@ class CommentsUIIntegrationTests:FeedUIIntegrationTests{
         assertThat(sut, isRendering: [ImageComment]())
     }
     
-    override func test_loadFeedCompletion_rendersErrorMessageOnErrorUntilNextReload() {
+     func test_loadCommentsCompletion_rendersErrorMessageOnErrorUntilNextReload() {
         let image0 = makeImage(url: URL(string: "http://url-1.com")!)
         let (sut, loader) = makeSUT()
 
@@ -115,7 +115,7 @@ class CommentsUIIntegrationTests:FeedUIIntegrationTests{
         XCTAssertEqual(sut.errorMessage, nil)
     }
 
-    override func test_tapOnErrorView_hidesErrorMessage() {
+     func test_tapOnErrorView_hidesErrorMessage() {
         let (sut, loader) = makeSUT()
 
         sut.simulateAppearance()

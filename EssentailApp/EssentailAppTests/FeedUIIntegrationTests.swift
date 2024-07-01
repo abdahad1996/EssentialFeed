@@ -472,7 +472,7 @@ import EssentailApp
              var selectedImages = [FeedImage]()
              let (sut, loader) = makeSUT(selection: { selectedImages.append($0) })
 
-             sut.loadViewIfNeeded()
+             sut.simulateAppearance()
              loader.completeFeedLoading(with: [image0, image1], at: 0)
 
              sut.simulateTapOnFeedImage(at: 0)

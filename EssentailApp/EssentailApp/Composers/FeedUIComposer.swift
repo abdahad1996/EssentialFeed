@@ -37,7 +37,7 @@ public final class FeedUIComposer {
             ),
             resourceView: FeedViewAdapter(
                 feedViewController: feedController,
-                imageLoader:imageLoader
+                imageLoader:imageLoader, selection: selection
             ), mapper: FeedPresenter.map
         )
         

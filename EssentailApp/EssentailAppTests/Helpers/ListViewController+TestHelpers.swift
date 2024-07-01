@@ -17,9 +17,21 @@ extension ListViewController{
     func simulateFeedImageViewVisible(at index:Int) -> FeedImageCell? {
         return feedImageView(at: index)
         
+        
     }
     
-    
+    func numberOfRows(in section: Int) -> Int {
+            tableView.numberOfSections > section ? tableView.numberOfRows(inSection: section) : 0
+        }
+
+        func cell(row: Int, section: Int) -> UITableViewCell? {
+            guard numberOfRows(in: section) > row else {
+                return nil
+            }
+            let ds = tableView.dataSource
+            let index = IndexPath(row: row, section: section)
+            return ds?.tableView(tableView, cellForRowAt: index)
+        }
     //MARK: triggers delegate method
     
     //didEndDisplaying
@@ -101,8 +113,7 @@ extension ListViewController{
 //        endAppearanceTransition()
 //    }
     func numberOfRenderedFeedImageViews() -> Int {
-        self.tableView.numberOfSections == 0 ? 0 :
-        self.tableView.numberOfRows(inSection: feedImagesSection)
+        numberOfRows(in: feedImagesSection)
     }
     
 //    private var numberOfSections:Int{
@@ -110,12 +121,7 @@ extension ListViewController{
 //    }
     
     func feedImageView(at index:Int) -> FeedImageCell? {
-        guard numberOfRenderedFeedImageViews() > index else {
-                    return nil
-                }
-        let ds = tableView.dataSource
-        let indexpath = IndexPath(row: index, section: feedImagesSection)
-        return ds?.tableView(tableView, cellForRowAt: indexpath) as? FeedImageCell
+        cell(row: index, section: feedImagesSection) as? FeedImageCell
     }
     private var feedImagesSection: Int { 0 }
 
@@ -177,7 +183,7 @@ extension ListViewController {
 
 extension ListViewController {
     func numberOfRenderedComments() -> Int {
-        tableView.numberOfSections == 0 ? 0 :  tableView.numberOfRows(inSection: commentsSection)
+        numberOfRows(in: commentsSection)
     }
 
     func commentMessage(at row: Int) -> String? {
@@ -193,12 +199,7 @@ extension ListViewController {
     }
 
     private func commentView(at row: Int) -> ImageCommentCell? {
-        guard numberOfRenderedComments() > row else {
-            return nil
-        }
-        let ds = tableView.dataSource
-        let index = IndexPath(row: row, section: commentsSection)
-        return ds?.tableView(tableView, cellForRowAt: index) as? ImageCommentCell
+        cell(row: row, section: commentsSection) as? ImageCommentCell
     }
 
     private var commentsSection: Int {

@@ -13,6 +13,9 @@ import UIKit
 
 class FeedViewAdapter:ResourceView{
     private typealias ImageDataPresentationAdapter = LoadResourcePresentationAdapter<Data, WeakRefVirtualProxy<FeedImageCellController>>
+    
+    private typealias LoadMorePresentationAdapter = LoadResourcePresentationAdapter<Paginated<FeedImage>, FeedViewAdapter>
+    
     private let selection: (FeedImage) -> Void
 
     weak var feedViewController: ListViewController?
@@ -32,21 +35,29 @@ class FeedViewAdapter:ResourceView{
                 imageLoader(model.url)
             })
             
-//            let adapter = FeedImageDataLoaderPresentationAdapter<WeakRefVirtualProxy<FeedImageCellController>, UIImage>(model: model, imageLoader: imageLoader)
             
             let view = FeedImageCellController(viewModel: FeedImagePresenter.map(model), delegate: adapter,selection: { [selection] in
                 selection(model)
             })
             
-//            let presenter = FeedImagePresenter(view: WeakRefVirtualProxy(view), imageTransformer: UIImage.init)
             let presenter = LoadResourcePresenter(loadingView: WeakRefVirtualProxy(view), errorView: WeakRefVirtualProxy(view), resourceView: WeakRefVirtualProxy(view),mapper:UIImage.tryMake)
             adapter.presenter = presenter
             return CellController(id: model, view) 
         })
         
-        let loadMore = LoadMoreCellController {
-            viewModel.loadMore?({_ in})
+        guard let loadMorePublisher = viewModel.loadMorePublisher else {
+            feedViewController?.display(feed)
+            return
         }
+
+        let loadMoreAdapter = LoadMorePresentationAdapter(loader: loadMorePublisher)
+        let loadMore = LoadMoreCellController(callback: loadMoreAdapter.loadResource)
+        
+        loadMoreAdapter.presenter = LoadResourcePresenter(
+                    resourceView: self,
+                    loadingView: WeakRefVirtualProxy(loadMore),
+                    errorView: WeakRefVirtualProxy(loadMore))
+
         let loadMoreSection = [CellController(id: UUID(), loadMore)]
         feedViewController?.display(feed, loadMoreSection)
 

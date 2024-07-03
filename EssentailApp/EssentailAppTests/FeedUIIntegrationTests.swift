@@ -482,6 +482,18 @@ import EssentailApp
              XCTAssertEqual(selectedImages, [image0, image1])
          }
      
+     func test_loadMoreActions_requestMoreFromLoader() {
+             let (sut, loader) = makeSUT()
+             sut.simulateAppearance()
+             loader.completeFeedLoading()
+
+             XCTAssertEqual(loader.loadMoreCallCount, 0, "Expected no requests before until load more action")
+
+             sut.simulateLoadMoreFeedAction()
+             XCTAssertEqual(loader.loadMoreCallCount, 1, "Expected load more request")
+         }
+     
+     
      private func makeSUT(selection: @escaping (FeedImage) -> Void = { _ in },file:StaticString = #file,line:UInt = #line) -> (ListViewController,loaderSpy) {
          let loader = loaderSpy()
          let sut =  FeedUIComposer.feedComposedWith(feedLoader: loader.loadPublisher, imageLoader: loader.loadImageDataPublisher,selection: selection)

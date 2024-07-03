@@ -99,19 +99,34 @@ public final class ListViewController:UITableViewController,UITableViewDataSourc
 //            }
 //        }
     
-    public func display(_ cellControllers: [CellController]) {
-//            loadingControllers = [:]
-//            tableModel = cellControllers
-        
-        var snapshot = NSDiffableDataSourceSnapshot<Int,CellController>()
-        snapshot.appendSections([0])
-        snapshot.appendItems(cellControllers,toSection: 0)
-        if #available(iOS 15.0, *) {
-                    dataSource.applySnapshotUsingReloadData(snapshot)
-                } else {
-                    dataSource.apply(snapshot)
+    public func display(_ sections: [CellController]...) {
+        var snapshot = NSDiffableDataSourceSnapshot<Int, CellController>()
+        sections.enumerated().forEach { section, cellControllers in
+            snapshot.appendSections([section])
+            snapshot.appendItems(cellControllers, toSection: section)
                 }
-        }
+        if #available(iOS 15.0, *) {
+                           dataSource.applySnapshotUsingReloadData(snapshot)
+                       } else {
+                           dataSource.apply(snapshot)
+                       }
+               
+
+    }
+
+//    public func display(_ cellControllers: [CellController]) {
+////            loadingControllers = [:]
+////            tableModel = cellControllers
+//        
+//        var snapshot = NSDiffableDataSourceSnapshot<Int,CellController>()
+//        snapshot.appendSections([0])
+//        snapshot.appendItems(cellControllers,toSection: 0)
+//        if #available(iOS 15.0, *) {
+//                    dataSource.applySnapshotUsingReloadData(snapshot)
+//                } else {
+//                    dataSource.apply(snapshot)
+//                }
+//        }
     
     public func display(_ viewModel: ResourceLoadingViewModel) {
         

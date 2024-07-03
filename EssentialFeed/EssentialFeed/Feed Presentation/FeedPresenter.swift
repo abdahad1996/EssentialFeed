@@ -60,7 +60,7 @@ final public class FeedPresenter {
 //        loadingView.display(ResourceLoadingViewModel(isLoading: false))
 //    }
 //    
-    public static func map(_ feed:[FeedImage]) -> FeedViewModel{
-        FeedViewModel.init(feed: feed)
-    }
+//    public static func map(_ feed:[FeedImage]) -> FeedViewModel{
+//        FeedViewModel.init(feed: feed)
+//    }
 }

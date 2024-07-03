@@ -6,12 +6,12 @@
 //
 
 import Foundation
-public struct Paginated<Items> {
+public struct Paginated<Item> {
     public typealias loadMoreCompletion = (Result<Self,Error>) -> Void
-    public let items:[Items]
+    public let items:[Item]
     public let loadMore:((@escaping loadMoreCompletion) -> Void)?
     
-    public init(items: [Items], loadMore: ((loadMoreCompletion) -> Void)? = nil) {
+    public init(items: [Item], loadMore: ((@escaping loadMoreCompletion) -> Void)? = nil) {
         self.items = items
         self.loadMore = loadMore
     }

@@ -60,7 +60,7 @@ import Combine
      }
     
      
-     private func makeRemoteFeedLoaderWithLocalFallback() -> AnyPublisher<[FeedImage], Error> {
+     private func makeRemoteFeedLoaderWithLocalFallback() -> AnyPublisher<Paginated<FeedImage>, Error> {
          let url = FeedEndpoint.get.url(baseURL: baseURL)
 
          return  httpClient
@@ -68,6 +68,9 @@ import Combine
                  .tryMap(FeedItemsMapper.map)
                  .caching(to: localFeedLoader)
                  .fallback(to: localFeedLoader.loadPublisher)
+                 .map{
+                     Paginated(items: $0)
+                 }.eraseToAnyPublisher()
          
 //             return remoteFeedLoader
 //                 .loadPublisher()

@@ -25,7 +25,11 @@ import Combine
      }()
      
      private lazy var store: FeedStore & FeedImageDataStore = {
-             try! CoreDataFeedStore(storeURL: localStoreURL)
+         do {
+             return try CoreDataFeedStore(storeURL: localStoreURL)
+         } catch {
+             return NullStore()
+         }
          }()
     
      private lazy var localFeedLoader = {LocalFeedLoader(store: store, currentDate: Date.init)}()

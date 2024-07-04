@@ -28,6 +28,7 @@ import Combine
          do {
              return try CoreDataFeedStore(storeURL: localStoreURL)
          } catch {
+             assertionFailure("Failed to instantiate CoreData store with error: \(error.localizedDescription)")
              return NullStore()
          }
          }()

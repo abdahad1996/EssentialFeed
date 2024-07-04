@@ -12,7 +12,7 @@ extension CoreDataFeedStore{
         perform { context in
                     
             completion(Result{
-                try ManagedCache.find(context: context).map{context.delete($0)}.map(context.save)
+                try ManagedCache.deleteCache(in: context)
             })
             
         }

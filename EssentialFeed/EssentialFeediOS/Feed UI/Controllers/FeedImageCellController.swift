@@ -37,6 +37,8 @@ extension FeedImageCellController:UITableViewDataSource, UITableViewDelegate, UI
         cell?.locationLabel.text = viewModel.location
         cell?.descriptionLabel.text = viewModel.description
         cell?.feedImageView.image = nil
+        cell?.feedImageContainer.isShimmering = true
+        cell?.feedImageRetryButton.isHidden = true
         cell?.onRetry = { [weak self] in
                     self?.delegate.didRequestImage()
                 }
@@ -44,6 +46,7 @@ extension FeedImageCellController:UITableViewDataSource, UITableViewDelegate, UI
                     self?.releaseCellForReuse()
                 }
         delegate.didRequestImage()
+        
         return cell!
     }
     public func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {

@@ -13,7 +13,7 @@ public class LocalFeedImageDataLoader:FeedImageDataLoader {
         self.store = store
     }
     
-    public enum Error:Swift.Error{
+    public enum LoadError:Swift.Error{
         case failed
         case notFound
     }
@@ -34,23 +34,38 @@ public class LocalFeedImageDataLoader:FeedImageDataLoader {
     
     public func loadImageData(from url: URL,completion:@escaping(FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
         let task = Task(completion: completion)
-        store.retrieve(dataForURL: url) {[weak self] result in
-            guard self != nil else{return}
+        task.complete(
+            with: Swift.Result {
+                try store.retrieve(dataForURL: url)
+            }    .mapError { _ in LoadError.failed}
+                    .flatMap { data in
+                        data.map { .success($0) } ?? .failure(LoadError.notFound)
+                    })
 
-            switch result {
-            case .success(let data):
-                if let data = data {
-                    task.complete(with:.success(data))
-                 }else{
-                     task.complete(with:.failure(Error.notFound))
-                }
-            case .failure:
-                task.complete(with:.failure(Error.failed))
-                
-                }
+                return task
+
             }
-        return task
-    }
+
+
+        
+        
+//        store.retrieve(dataForURL: url) {[weak self] result in
+//            guard self != nil else{return}
+//
+//            switch result {
+//            case .success(let data):
+//                if let data = data {
+//                    task.complete(with:.success(data))
+//                 }else{
+//                     task.complete(with:.failure(Error.notFound))
+//                }
+//            case .failure:
+//                task.complete(with:.failure(Error.failed))
+//                
+//                }
+//            }
+//        return task
+//    }
     
     
 }

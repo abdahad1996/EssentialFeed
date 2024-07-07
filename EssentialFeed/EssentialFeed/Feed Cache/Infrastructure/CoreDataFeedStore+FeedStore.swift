@@ -7,70 +7,23 @@
 
 import Foundation
 
-extension CoreDataFeedStore{
-    public func deleteCachedFeed() throws {
-//        try performSync { context in
-//                    
-//            Result{
-                try ManagedCache.deleteCache(in: context)
-//            }
-            
-//        }
-    }
-//    public func deleteCachedFeed(completion: @escaping DeletionCompletion) {
-//        performAsync { context in
-//                    
-//            completion(Result{
-//                try ManagedCache.deleteCache(in: context)
-//            })
-//            
-//        }
-//    }
+extension CoreDataFeedStore: FeedStore {
     
-    public func insert(_ items: [LocalFeedImage], timestamp timeStamp: Date) throws {
-//        try performSync { context in
-//            Result{
-                let cache = try ManagedCache.findNewInstance(context: context)
-                cache.timestamp = timeStamp
-                cache.feed = ManagedFeedImage.images(items: items, context: context)
-
-                try context.save()
-
-//            }
-//        }
-    }
-//    public func insert(_ items: [LocalFeedImage], timestamp timeStamp: Date, completion: @escaping InsertionCompletion)  {
-//        performAsync { context in
-//            completion(Result{
-//                let cache = try ManagedCache.findNewInstance(context: context)
-//                cache.timestamp = timeStamp
-//                cache.feed = ManagedFeedImage.images(items: items, context: context)
-//                
-//                try context.save()
-//                
-//            })
-//        }
-//        
-//    }
-    
-    
-    public func retrieve() throws ->  CachedFeed?{
-//        try performSync { context in
-//          Result {
-                try ManagedCache.find(context: context).map{
-                        return CachedFeed(feed: $0.localFeed, timestamp: $0.timestamp)
-                    }
-//                }
-//            }
+    public func retrieve() throws -> CachedFeed? {
+        try ManagedCache.find(context: context).map {
+            CachedFeed(feed: $0.localFeed, timestamp: $0.timestamp)
         }
+    }
     
-//    public func retrieve(completion: @escaping RetrievalCompletion) {
-//        performAsync { context in
-//            completion( Result {
-//                try ManagedCache.find(context: context).map{
-//                        return CachedFeed(feed: $0.localFeed, timestamp: $0.timestamp)
-//                    }
-//                })
-//            }
-//        }
+    public func insert(_ feed: [LocalFeedImage], timestamp: Date) throws {
+        let managedCache = try ManagedCache.findNewInstance(context: context)
+        managedCache.timestamp = timestamp
+        managedCache.feed = ManagedFeedImage.images(items: feed, context: context)
+        try context.save()
+    }
+    
+    public func deleteCachedFeed() throws {
+        try ManagedCache.deleteCache(in: context)
+    }
+    
 }

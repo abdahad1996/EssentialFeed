@@ -8,7 +8,7 @@
 import Foundation
 import CoreData
  
-public final class CoreDataFeedStore:FeedStore{
+public final class CoreDataFeedStore{
     
     private static let modelName = "FeedStore"
     private static let model = NSManagedObjectModel.with(name: modelName, in: Bundle(for: CoreDataFeedStore.self))
@@ -24,17 +24,17 @@ public final class CoreDataFeedStore:FeedStore{
             case failedToLoadPersistentContainer(Error)
         }
     
-    public init(storeURL:URL,contextQueue: ContextQueue = .background) throws{
-        let bundle = Bundle(for: CoreDataFeedStore.self)
+    public init(storeURL: URL, contextQueue: ContextQueue = .background) throws {
         guard let model = CoreDataFeedStore.model else {
             throw StoreError.modelNotFound
         }
+        
         do {
-            container = try NSPersistentContainer.load(modelName: "FeedStore", url: storeURL, in: bundle)
+            container = try NSPersistentContainer.load(name: CoreDataFeedStore.modelName, model: model, url: storeURL)
             context = contextQueue == .main ? container.viewContext : container.newBackgroundContext()
-            } catch {
-                    throw StoreError.failedToLoadPersistentContainer(error)
-            }
+        } catch {
+            throw StoreError.failedToLoadPersistentContainer(error)
+        }
     }
     
 //    func performSync<R>(_ action: (NSManagedObjectContext) -> Result<R, Error>) throws -> R {

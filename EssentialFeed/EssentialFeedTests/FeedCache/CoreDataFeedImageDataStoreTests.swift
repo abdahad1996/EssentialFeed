@@ -12,46 +12,49 @@ import EssentialFeed
 
 class CoreDataFeedImageDataStoreTests:XCTestCase{
     
-    func test_retrieveImageData_deliversNotFoundWhenEmpty() {
-            let sut = makeSUT()
-
-            expect(sut, toCompleteRetrievalWith: notFound(), for: anyURL())
+    func test_retrieveImageData_deliversNotFoundWhenEmpty()throws {
+        try makeSUT { sut in
+            
+            self.expect(sut, toCompleteRetrievalWith: self.notFound(), for: anyURL())
         }
-    
-    func test_retrieveImageData_deliversNotFoundWhenStoredDataURLDoesNotMatch() {
-        let sut = makeSUT()
-        let url = URL(string: "http://a-url.com")!
-
-        
-        let nonMatchingURL = URL(string: "http://another-url.com")!
-        insert(anyData(), for: url, into: sut)
-        expect(sut, toCompleteRetrievalWith: notFound(), for: nonMatchingURL)
     }
     
-    func test_retrieveImageData_deliversFoundDataWhenThereIsAStoredImageDataMatchingURL(){
-        let sut = makeSUT()
-        let matchingURL = URL(string: "http://a-url.com")!
-        let storedData = anyData()
-
- 
-        insert(storedData, for: matchingURL, into: sut)
-
-        expect(sut, toCompleteRetrievalWith: found(storedData), for: matchingURL)
+    func test_retrieveImageData_deliversNotFoundWhenStoredDataURLDoesNotMatch() throws{
+        try makeSUT { sut in
+            let url = URL(string: "http://a-url.com")!
+            
+            
+            let nonMatchingURL = URL(string: "http://another-url.com")!
+            self.insert(anyData(), for: url, into: sut)
+            self.expect(sut, toCompleteRetrievalWith: self.notFound(), for: nonMatchingURL)
+        }
+    }
+    
+    func test_retrieveImageData_deliversFoundDataWhenThereIsAStoredImageDataMatchingURL() throws {
+        try makeSUT { sut in
+            let matchingURL = URL(string: "http://a-url.com")!
+            let storedData = anyData()
+            
+            
+            self.insert(storedData, for: matchingURL, into: sut)
+            
+            self.expect(sut, toCompleteRetrievalWith: self.found(storedData), for: matchingURL)
+        }
         
     }
-    func test_retrieveImageData_deliversLastInsertedValue() {
-        let sut = makeSUT()
-        
-        let matchingURL = URL(string: "http://a-url.com")!
-        let firstStoredData = Data("first".utf8)
-        let secondStoredData = Data("second".utf8)
-
- 
-        insert(firstStoredData, for: matchingURL, into: sut)
-        insert(secondStoredData, for: matchingURL, into: sut)
-
-        expect(sut, toCompleteRetrievalWith: found(secondStoredData), for: matchingURL)
-        
+    func test_retrieveImageData_deliversLastInsertedValue() throws {
+        try makeSUT { sut in
+            
+            let matchingURL = URL(string: "http://a-url.com")!
+            let firstStoredData = Data("first".utf8)
+            let secondStoredData = Data("second".utf8)
+            
+            
+            self.insert(firstStoredData, for: matchingURL, into: sut)
+            self.insert(secondStoredData, for: matchingURL, into: sut)
+            
+            self.expect(sut, toCompleteRetrievalWith: self.found(secondStoredData), for: matchingURL)
+        }
         
     }
 //    func test_sideEffects_runSerially() {
@@ -72,12 +75,20 @@ class CoreDataFeedImageDataStoreTests:XCTestCase{
 //            wait(for: [op1, op2, op3], timeout: 5.0, enforceOrder: true)
 //        }
     
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> CoreDataFeedStore {
+    private func makeSUT( test: @escaping (CoreDataFeedStore) -> Void,file: StaticString = #file, line: UInt = #line) throws {
           
         let storeURL = URL(fileURLWithPath: "/dev/null")
         let sut = try! CoreDataFeedStore(storeURL: storeURL)
             trackForMemoryLeaks(sut, file: file, line: line)
-            return sut
+        
+        let exp = expectation(description: "wait for operation")
+        
+        sut.perform {
+            test(sut)
+            exp.fulfill()
+
+        }
+        wait(for: [exp], timeout: 0.1)
         }
 
         private func notFound() -> Result<Data?, Error> {

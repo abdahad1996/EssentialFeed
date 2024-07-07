@@ -93,7 +93,7 @@ extension LocalFeedLoader {
 }
 
 extension LocalFeedLoader {
-    public typealias ValidationResult = Result<Void, Error>
+//    public typealias ValidationResult = Result<Void, Error>
     private struct InvalidCache: Error {}
 
 //    public func validateCache(completion: @escaping (ValidationResult) -> Void) {
@@ -114,20 +114,29 @@ extension LocalFeedLoader {
 //            }
 //        }
 //    }
-    
-    public func validateCache(completion: @escaping (ValidationResult) -> Void) {
-        completion(ValidationResult{
-            do {
+    public func validateCache() throws {
+        do {
 
-            if let cache = try store.retrieve(), !CachePolicy.validateCache(cache.timestamp, against: currentDate()) {
-                throw InvalidCache()
-            }
-            } catch {
-                try store.deleteCachedFeed()
-            }
-        })
-        
+        if let cache = try store.retrieve(), !CachePolicy.validateCache(cache.timestamp, against: currentDate()) {
+            throw InvalidCache()
+        }
+        } catch {
+            try store.deleteCachedFeed()
+        }
     }
+//    public func validateCache(completion: @escaping (ValidationResult) -> Void) {
+//        completion(ValidationResult{
+//            do {
+//
+//            if let cache = try store.retrieve(), !CachePolicy.validateCache(cache.timestamp, against: currentDate()) {
+//                throw InvalidCache()
+//            }
+//            } catch {
+//                try store.deleteCachedFeed()
+//            }
+//        })
+//        
+//    }
 }
 
 private extension Array where Element == FeedImage {

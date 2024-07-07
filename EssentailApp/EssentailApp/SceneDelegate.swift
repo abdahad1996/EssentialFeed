@@ -145,7 +145,7 @@ import os
      }
 
     func sceneWillResignActive(_ scene: UIScene) {
-             localFeedLoader.validateCache { _ in }
+            try? localFeedLoader.validateCache()
         }
      
      private func makeFirstPage(items: [FeedImage]) -> Paginated<FeedImage> {

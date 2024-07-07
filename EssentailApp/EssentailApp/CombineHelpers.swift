@@ -55,17 +55,26 @@ public extension HTTPClient {
 public extension FeedImageDataLoader{
     typealias Publisher = AnyPublisher<Data,Error>
     
-     func loadImageDataPublisher(_ url:URL) -> Publisher {
-        var task:FeedImageDataLoaderTask?
+//     func loadImageDataPublisher(_ url:URL) -> Publisher {
+//        var task:FeedImageDataLoaderTask?
+//        return Deferred {
+//            Future{ promise in
+//                task = self.loadImageData(from: url, completion: promise)
+//            }
+//        }.handleEvents(receiveCancel: {
+//            task?.cancel()
+//        })
+//        .eraseToAnyPublisher()
+//    }
+    
+    func loadImageDataPublisher(_ url:URL) -> Publisher {
         return Deferred {
-            Future{ promise in
-                task = self.loadImageData(from: url, completion: promise)
-            }
-        }.handleEvents(receiveCancel: {
-            task?.cancel()
-        })
-        .eraseToAnyPublisher()
-    }
+           Future{ completion in
+               completion(Result{try self.loadImageData(from: url)})
+           }
+       }
+       .eraseToAnyPublisher()
+   }
 }
 
 extension Publisher where Output == Data {

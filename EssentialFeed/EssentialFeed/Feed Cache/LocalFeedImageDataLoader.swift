@@ -8,6 +8,8 @@
 import Foundation
 
 public class LocalFeedImageDataLoader:FeedImageDataLoader {
+   
+    
     let store:FeedImageDataStore
     public init(store:FeedImageDataStore){
         self.store = store
@@ -18,33 +20,43 @@ public class LocalFeedImageDataLoader:FeedImageDataLoader {
         case notFound
     }
     
-    private final class Task:FeedImageDataLoaderTask{
-    var completion:((FeedImageDataLoader.Result) -> Void)?
-        
-        init(completion:@escaping (FeedImageDataLoader.Result) -> Void ) {
-            self.completion = completion
-        }
-        func cancel() {
-            self.completion = nil
-        }
-        func complete(with completion:FeedImageDataLoader.Result){
-            self.completion?(completion)
-        }
-    }
+//    private final class Task:FeedImageDataLoaderTask{
+//    var completion:((FeedImageDataLoader.Result) -> Void)?
+//        
+//        init(completion:@escaping (FeedImageDataLoader.Result) -> Void ) {
+//            self.completion = completion
+//        }
+//        func cancel() {
+//            self.completion = nil
+//        }
+//        func complete(with completion:FeedImageDataLoader.Result){
+//            self.completion?(completion)
+//        }
+//    }
     
-    public func loadImageData(from url: URL,completion:@escaping(FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
-        let task = Task(completion: completion)
-        task.complete(
-            with: Swift.Result {
-                try store.retrieve(dataForURL: url)
-            }    .mapError { _ in LoadError.failed}
-                    .flatMap { data in
-                        data.map { .success($0) } ?? .failure(LoadError.notFound)
-                    })
-
-                return task
-
+    public func loadImageData(from url: URL) throws -> Data {
+        do {
+            if let imageData = try store.retrieve(dataForURL: url) {
+                return imageData
             }
+        }catch {
+            throw LoadError.failed
+        }
+        throw LoadError.notFound
+    }
+//    public func loadImageData(from url: URL,completion:@escaping(FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
+//        let task = Task(completion: completion)
+//        task.complete(
+//            with: Swift.Result {
+//                try store.retrieve(dataForURL: url)
+//            }    .mapError { _ in LoadError.failed}
+//                    .flatMap { data in
+//                        data.map { .success($0) } ?? .failure(LoadError.notFound)
+//                    })
+//
+//                return task
+//
+//            }
 
 
         
@@ -67,6 +79,7 @@ public class LocalFeedImageDataLoader:FeedImageDataLoader {
 //        return task
 //    }
     
+   
     
 }
 

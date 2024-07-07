@@ -27,7 +27,7 @@ class InMemoryFeedStore: FeedStore {
     }
     
     func retrieve() throws -> CachedFeed? {
-        return .none
+        return feedCache
     }
 
 //    func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping FeedStore.InsertionCompletion) {

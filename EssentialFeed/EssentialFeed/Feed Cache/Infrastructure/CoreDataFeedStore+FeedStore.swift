@@ -9,13 +9,13 @@ import Foundation
 
 extension CoreDataFeedStore{
     public func deleteCachedFeed() throws {
-        try performSync { context in
-                    
-            Result{
+//        try performSync { context in
+//                    
+//            Result{
                 try ManagedCache.deleteCache(in: context)
-            }
+//            }
             
-        }
+//        }
     }
 //    public func deleteCachedFeed(completion: @escaping DeletionCompletion) {
 //        performAsync { context in
@@ -28,16 +28,16 @@ extension CoreDataFeedStore{
 //    }
     
     public func insert(_ items: [LocalFeedImage], timestamp timeStamp: Date) throws {
-        try performSync { context in
-            Result{
+//        try performSync { context in
+//            Result{
                 let cache = try ManagedCache.findNewInstance(context: context)
                 cache.timestamp = timeStamp
                 cache.feed = ManagedFeedImage.images(items: items, context: context)
 
                 try context.save()
 
-            }
-        }
+//            }
+//        }
     }
 //    public func insert(_ items: [LocalFeedImage], timestamp timeStamp: Date, completion: @escaping InsertionCompletion)  {
 //        performAsync { context in
@@ -55,13 +55,13 @@ extension CoreDataFeedStore{
     
     
     public func retrieve() throws ->  CachedFeed?{
-        try performSync { context in
-          Result {
+//        try performSync { context in
+//          Result {
                 try ManagedCache.find(context: context).map{
                         return CachedFeed(feed: $0.localFeed, timestamp: $0.timestamp)
                     }
-                }
-            }
+//                }
+//            }
         }
     
 //    public func retrieve(completion: @escaping RetrievalCompletion) {

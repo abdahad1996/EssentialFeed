@@ -13,7 +13,7 @@ public final class CoreDataFeedStore:FeedStore{
     private static let modelName = "FeedStore"
     private static let model = NSManagedObjectModel.with(name: modelName, in: Bundle(for: CoreDataFeedStore.self))
     private let container:NSPersistentContainer
-    private let context: NSManagedObjectContext
+     let context: NSManagedObjectContext
     
     public enum ContextQueue {
             case main
@@ -37,15 +37,15 @@ public final class CoreDataFeedStore:FeedStore{
             }
     }
     
-    func performSync<R>(_ action: (NSManagedObjectContext) -> Result<R, Error>) throws -> R {
-            let context = self.context
-            var result: Result<R, Error>!
-            context.performAndWait {
-                result = action(context)
-            }
-            return try result.get()
-        }
-    
+//    func performSync<R>(_ action: (NSManagedObjectContext) -> Result<R, Error>) throws -> R {
+//            let context = self.context
+//            var result: Result<R, Error>!
+//            context.performAndWait {
+//                result = action(context)
+//            }
+//            return try result.get()
+//        }
+//    
     public func perform(_ action: @escaping () -> Void) {
             context.perform(action)
         }

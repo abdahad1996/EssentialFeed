@@ -19,6 +19,12 @@ import os
      
 //     let remoteURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!
      
+     private lazy var scheduler: AnyDispatchQueueScheduler = DispatchQueue(
+             label: "com.essentialdeveloper.infra.queue",
+             qos: .userInitiated,
+             attributes: .concurrent
+         ).eraseToAnyScheduler()
+     
     let localStoreURL = NSPersistentContainer
         .defaultDirectoryURL()
         .appendingPathComponent("feed-store.sqlite")
@@ -51,10 +57,11 @@ import os
 
 //     private lazy var remoteFeedLoader = RemoteLoader(url: remoteURL, client: httpClient,mapper: FeedItemsMapper.map)
 
-     convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
+     convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore, scheduler: AnyDispatchQueueScheduler){
              self.init()
              self.httpClient = httpClient
              self.store = store
+             self.scheduler = scheduler
          }
      
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -119,11 +126,13 @@ import os
          
          return localImageLoader
              .loadImageDataPublisher(url)
-             .fallback { [httpClient] in
+             .fallback { [httpClient,scheduler] in
                  httpClient
                      .getPublisher(url)
                      .tryMap(FeedImageDataMapper.map)
                      .caching(to: localImageLoader, using: url)
+                     .subscribe(on: scheduler)
+                     .eraseToAnyPublisher()
              }
 //         return localImageLoader
 //             .loadImageDataPublisher(url)

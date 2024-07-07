@@ -18,26 +18,30 @@ public final class LocalFeedLoader {
 }
 
 extension LocalFeedLoader:FeedCache {
-    public typealias SaveResult = FeedCache.Result
-
-    public func save(_ feed: [FeedImage], completion: @escaping (SaveResult) -> Void) {
-//        store.deleteCachedFeed { [weak self] deletionResult in
-//            guard let self = self else { return }
-//            
-//            switch deletionResult {
-//            case .success:
-//                self.cache(feed, with: completion)
-//            
-//            case let .failure(error):
-//                completion(.failure(error))
-//            }
-//        }
-        
-        completion(SaveResult {
-            try store.deleteCachedFeed()
-            try self.store.insert(feed.toLocal(), timestamp: currentDate())
-        })
+//    public typealias SaveResult = FeedCache.Result
+    public func save(_ feed: [FeedImage]) throws
+    {
+        try store.deleteCachedFeed()
+        try self.store.insert(feed.toLocal(), timestamp: currentDate())
     }
+//    public func save(_ feed: [FeedImage], completion: @escaping (SaveResult) -> Void) {
+////        store.deleteCachedFeed { [weak self] deletionResult in
+////            guard let self = self else { return }
+////            
+////            switch deletionResult {
+////            case .success:
+////                self.cache(feed, with: completion)
+////            
+////            case let .failure(error):
+////                completion(.failure(error))
+////            }
+////        }
+//        
+//        completion(SaveResult {
+//            try store.deleteCachedFeed()
+//            try self.store.insert(feed.toLocal(), timestamp: currentDate())
+//        })
+//    }
     
 //    private func cache(_ feed: [FeedImage], with completion: @escaping (SaveResult) -> Void) {
 //        store.insert(feed.toLocal(), timestamp: currentDate()) { [weak self] insertionResult in

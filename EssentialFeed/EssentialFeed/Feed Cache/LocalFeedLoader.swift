@@ -53,32 +53,41 @@ extension LocalFeedLoader:FeedCache {
 }
 
 extension LocalFeedLoader {
-    public typealias LoadResult = Swift.Result<[FeedImage], Error>
+//    public typealias LoadResult = Swift.Result<[FeedImage], Error>
 
-    public func load(completion: @escaping (LoadResult) -> Void) {
-//        store.retrieve { [weak self] result in
-//            guard let self = self else { return }
-//
-        
-//            switch result {
-//            case let .failure(error):
-//                completion(.failure(error))
-//
-//            case let .success(.some(cache)) where CachePolicy.validateCache(cache.timestamp, against: self.currentDate()):
-//                completion(.success(cache.feed.toModels()))
-//
-//            case .success:
-//                completion(.success([]))
-//            }
-//        }
-        completion(LoadResult{
-            if let cache = try store.retrieve(),
-                CachePolicy.validateCache(cache.timestamp, against: self.currentDate()){
-                return cache.feed.toModels()
-            }
-            return []
-        })
+    public func load() throws -> [FeedImage]  {
+        if let cache = try store.retrieve(),
+            CachePolicy.validateCache(cache.timestamp, against: self.currentDate()){
+            return cache.feed.toModels()
+        }
+        return []
     }
+//    public func load(completion: @escaping (LoadResult) -> Void) {
+//        
+//        
+////        store.retrieve { [weak self] result in
+////            guard let self = self else { return }
+////
+//        
+////            switch result {
+////            case let .failure(error):
+////                completion(.failure(error))
+////
+////            case let .success(.some(cache)) where CachePolicy.validateCache(cache.timestamp, against: self.currentDate()):
+////                completion(.success(cache.feed.toModels()))
+////
+////            case .success:
+////                completion(.success([]))
+////            }
+////        }
+//        completion(LoadResult{
+//            if let cache = try store.retrieve(),
+//                CachePolicy.validateCache(cache.timestamp, against: self.currentDate()){
+//                return cache.feed.toModels()
+//            }
+//            return []
+//        })
+//    }
     
     
 }

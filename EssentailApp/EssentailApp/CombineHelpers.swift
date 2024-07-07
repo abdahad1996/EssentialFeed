@@ -98,7 +98,9 @@ public extension LocalFeedLoader {
 
     func loadPublisher() -> Publisher {
         Deferred {
-            Future(self.load)
+            Future{ completion in
+                completion(Result{try self.load()})
+            }
         }
         .eraseToAnyPublisher()
     }

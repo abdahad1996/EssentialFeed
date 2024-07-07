@@ -25,17 +25,15 @@ public final class CoreDataFeedStore:FeedStore{
         guard let model = CoreDataFeedStore.model else {
             throw StoreError.modelNotFound
         }
-       
-        
         do {
-                container = try NSPersistentContainer.load(modelName: "FeedStore", url: storeURL, in: bundle)
+            container = try NSPersistentContainer.load(modelName: "FeedStore", url: storeURL, in: bundle)
                 context = container.newBackgroundContext()
-                } catch {
+            } catch {
                     throw StoreError.failedToLoadPersistentContainer(error)
-                }
+            }
     }
     
-     func perform(action:@escaping (NSManagedObjectContext) -> Void) {
+     func performAsync(action:@escaping (NSManagedObjectContext) -> Void) {
         let context = self.context
         context.perform{action(context)}
          

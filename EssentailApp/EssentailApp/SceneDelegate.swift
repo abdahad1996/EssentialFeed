@@ -19,11 +19,17 @@ import os
      
 //     let remoteURL = URL(string: "https://ile-api.essentialdeveloper.com/essential-feed/v1/feed")!
      
-     private lazy var scheduler: AnyDispatchQueueScheduler = DispatchQueue(
-             label: "com.essentialdeveloper.infra.queue",
-             qos: .userInitiated,
-             attributes: .concurrent
+     private lazy var scheduler: AnyDispatchQueueScheduler = {
+     if let store = store as? CoreDataFeedStore {
+         return .scheduler(for: store)
+     }
+         return DispatchQueue(
+            
+            label: "com.essentialdeveloper.infra.queue",
+            qos: .userInitiated,
+            attributes: .concurrent
          ).eraseToAnyScheduler()
+     }()
      
     let localStoreURL = NSPersistentContainer
         .defaultDirectoryURL()
@@ -57,11 +63,11 @@ import os
 
 //     private lazy var remoteFeedLoader = RemoteLoader(url: remoteURL, client: httpClient,mapper: FeedItemsMapper.map)
 
-     convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore, scheduler: AnyDispatchQueueScheduler){
+     convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore){
              self.init()
              self.httpClient = httpClient
              self.store = store
-             self.scheduler = scheduler
+            
          }
      
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {

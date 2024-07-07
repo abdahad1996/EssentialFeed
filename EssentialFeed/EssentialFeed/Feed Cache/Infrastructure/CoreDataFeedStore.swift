@@ -66,4 +66,8 @@ public final class CoreDataFeedStore:FeedStore{
         deinit {
             cleanUpReferencesToPersistentStores()
         }
+    
+    public var contextQueue: ContextQueue {
+            context == container.viewContext ? .main : .background
+        }
 }

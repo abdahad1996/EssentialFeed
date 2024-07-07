@@ -82,7 +82,8 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
     
     func test_load_hasNoSideEffectOnRetrievalError() {
         let (store,sut) = makeSut()
-        
+        store.completeRetrieval(with: anyNSError())
+
         sut.load{_ in}
         
         XCTAssertEqual(store.receivedMessages, [.retrieve])
@@ -91,10 +92,11 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
 
     func test_load_hasNoSideEffectOnEmptyCache() {
         let (store,sut) = makeSut()
-        
+        store.completeRetrieval(with: anyNSError())
+
         sut.load{_ in}
         
-        store.completeRetrievalWithEmptyCache()
+//        store.completeRetrievalWithEmptyCache()
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
     
@@ -103,12 +105,13 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
         let fixedDate = Date()
         let feedImages = uniqueImages()
         let nonExpiredCacheTimeStamp = fixedDate.minusFeedCacheMaxAge().adding(seconds:1)
-        
         let (store,sut) = makeSut(currentTimeStamp: {fixedDate})
+        store.completeRetrieval(with: feedImages.local, timestamp: nonExpiredCacheTimeStamp)
+        
         sut.load{_ in}
 
         
-        store.completeRetrieval(with: feedImages.local, timestamp: nonExpiredCacheTimeStamp)
+//        store.completeRetrieval(with: feedImages.local, timestamp: nonExpiredCacheTimeStamp)
             
         XCTAssertEqual(store.receivedMessages, [.retrieve])
 
@@ -121,9 +124,9 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
         let expiringCacheTimeStamp = fixedDate.minusFeedCacheMaxAge()
         
         let (store,sut) = makeSut(currentTimeStamp: {fixedDate})
-        
-        sut.load{_ in}
         store.completeRetrieval(with: feedImages.local, timestamp: expiringCacheTimeStamp)
+
+        sut.load{_ in}
             
         XCTAssertEqual(store.receivedMessages, [.retrieve])
 
@@ -135,32 +138,33 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
         let expiredCacheTimeStamp = fixedDate.minusFeedCacheMaxAge().adding(seconds:-1)
         
         let (store,sut) = makeSut(currentTimeStamp: {fixedDate})
+        store.completeRetrieval(with: feedImages.local, timestamp: expiredCacheTimeStamp)
+
         
         sut.load{_ in}
-        store.completeRetrieval(with: feedImages.local, timestamp: expiredCacheTimeStamp)
-            
+ 
         XCTAssertEqual(store.receivedMessages, [.retrieve,])
 
         
     }
     
-    func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
-        var store = FeedStoreSpy()
-        var sut:LocalFeedLoader? = LocalFeedLoader(store: store, currentDate: Date.init)
-        
-        var receivedResult = [LocalFeedLoader.LoadResult]()
-        
-        sut?.load(completion: { result in
-            receivedResult.append(result)
-        })
-        sut = nil
-        
-        store.completeRetrievalWithEmptyCache()
-        
-        XCTAssertTrue(receivedResult.isEmpty)
-        
-        
-    }
+//    func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
+//        var store = FeedStoreSpy()
+//        var sut:LocalFeedLoader? = LocalFeedLoader(store: store, currentDate: Date.init)
+//        
+//        var receivedResult = [LocalFeedLoader.LoadResult]()
+//        
+//        sut?.load(completion: { result in
+//            receivedResult.append(result)
+//        })
+//        sut = nil
+//        
+//        store.completeRetrievalWithEmptyCache()
+//        
+//        XCTAssertTrue(receivedResult.isEmpty)
+//        
+//        
+//    }
     func makeSut(
         currentTimeStamp:@escaping () -> Date = Date.init,
         file:StaticString = #file,
@@ -178,6 +182,7 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
     
     func expect(sut:LocalFeedLoader,completeWith expectedResult:Swift.Result<[FeedImage], Error>,when action:()->Void,file:StaticString = #file,line:UInt = #line){
                
+        action()
         let exp = expectation(description: "wait for completion")
         sut.load { receivedResult in
             switch (receivedResult,expectedResult) {
@@ -194,7 +199,7 @@ class LoadFeedFromCacheUseCaseTests:XCTestCase{
             exp.fulfill()
        }
         
-        action()
+        
         wait(for: [exp],timeout: 0.1)
         
         

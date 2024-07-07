@@ -40,11 +40,11 @@ public final class CoreDataFeedStore:FeedStore{
             return try result.get()
         }
     
-     func performAsync(action:@escaping (NSManagedObjectContext) -> Void) {
-        let context = self.context
-        context.perform{action(context)}
-         
-    }
+//     func performAsync(action:@escaping (NSManagedObjectContext) -> Void) {
+//        let context = self.context
+//        context.perform{action(context)}
+//         
+//    }
     
     private func cleanUpReferencesToPersistentStores() {
             context.performAndWait {

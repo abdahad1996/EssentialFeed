@@ -7,24 +7,19 @@
 
 import Foundation
 
- final class CachePolicy {
+final class FeedCachePolicy {
+    private init() {}
     
     private static let calendar = Calendar(identifier: .gregorian)
     
-    private init(){
-        
-    }
-
-    private static var maxCacheAgeInDays:Int {
+    private static var maxCacheAgeInDays: Int {
         return 7
     }
-
-   static func validateCache(_ timeStamp:Date,against date:Date) -> Bool{
-        guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timeStamp) else {
+    
+    static func validate(_ timestamp: Date, against date: Date) -> Bool {
+        guard let maxCacheAge = calendar.date(byAdding: .day, value: maxCacheAgeInDays, to: timestamp) else {
             return false
         }
-      
-
         return date < maxCacheAge
     }
 }

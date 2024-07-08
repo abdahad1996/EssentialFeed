@@ -5,12 +5,10 @@
 //  Created by macbook abdul on 20/06/2024.
 //
 
-import Foundation
 import XCTest
+import EssentialFeed
 import EssentialFeediOS
 @testable import EssentailApp
-import EssentialFeed
-
 
 class FeedAcceptanceTests: XCTestCase {
     
@@ -39,22 +37,22 @@ class FeedAcceptanceTests: XCTestCase {
         XCTAssertFalse(feed.canLoadMoreFeed)
     }
     
-//    func test_onLaunch_displaysCachedRemoteFeedWhenCustomerHasNoConnectivity() throws {
-//        let sharedStore = try CoreDataFeedStore.empty
-//        
-//        let onlineFeed = launch(httpClient: .online(response), store: sharedStore)
-//        onlineFeed.simulateFeedImageViewVisible(at: 0)
-//        onlineFeed.simulateFeedImageViewVisible(at: 1)
-//        onlineFeed.simulateLoadMoreFeedAction()
-//        onlineFeed.simulateFeedImageViewVisible(at: 2)
-//        
-//        let offlineFeed = launch(httpClient: .offline, store: sharedStore)
-//        
-//        XCTAssertEqual(offlineFeed.numberOfRenderedFeedImageViews(), 3)
-//        XCTAssertEqual(offlineFeed.renderedFeedImageData(at: 0), makeImageData0())
-//        XCTAssertEqual(offlineFeed.renderedFeedImageData(at: 1), makeImageData1())
-//        XCTAssertEqual(offlineFeed.renderedFeedImageData(at: 2), makeImageData2())
-//    }
+    func test_onLaunch_displaysCachedRemoteFeedWhenCustomerHasNoConnectivity() throws {
+        let sharedStore = try CoreDataFeedStore.empty
+        
+        let onlineFeed = launch(httpClient: .online(response), store: sharedStore)
+        onlineFeed.simulateFeedImageViewVisible(at: 0)
+        onlineFeed.simulateFeedImageViewVisible(at: 1)
+        onlineFeed.simulateLoadMoreFeedAction()
+        onlineFeed.simulateFeedImageViewVisible(at: 2)
+        
+        let offlineFeed = launch(httpClient: .offline, store: sharedStore)
+        
+        XCTAssertEqual(offlineFeed.numberOfRenderedFeedImageViews(), 3)
+        XCTAssertEqual(offlineFeed.renderedFeedImageData(at: 0), makeImageData0())
+        XCTAssertEqual(offlineFeed.renderedFeedImageData(at: 1), makeImageData1())
+        XCTAssertEqual(offlineFeed.renderedFeedImageData(at: 2), makeImageData2())
+    }
     
     func test_onLaunch_displaysEmptyFeedWhenCustomerHasNoConnectivityAndNoCache() throws {
         let feed = try launch(httpClient: .offline, store: .empty)

@@ -5,11 +5,11 @@
 //  Created by macbook abdul on 16/06/2024.
 //
 
+import os
 import UIKit
-import EssentialFeed
 import CoreData
 import Combine
-import os
+import EssentialFeed
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
@@ -22,7 +22,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         return DispatchQueue(
             label: "com.essentialdeveloper.infra.queue",
             qos: .userInitiated
-//            attributes: .concurrent
         ).eraseToAnyScheduler()
     }()
     
@@ -94,7 +93,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private func makeRemoteCommentsLoader(url: URL) -> () -> AnyPublisher<[ImageComment], Error> {
         return { [httpClient] in
             return httpClient
-                .getPublisher(url)
+                .getPublisher(url: url)
                 .tryMap(ImageCommentsMapper.map)
                 .eraseToAnyPublisher()
         }
@@ -126,7 +125,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let url = FeedEndpoint.get(after: after).url(baseURL: baseURL)
         
         return httpClient
-            .getPublisher(url)
+            .getPublisher(url: url)
             .tryMap(FeedItemsMapper.map)
             .eraseToAnyPublisher()
     }
@@ -145,10 +144,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let localImageLoader = LocalFeedImageDataLoader(store: store)
         
         return localImageLoader
-            .loadImageDataPublisher(url)
+            .loadImageDataPublisher(from: url)
             .fallback(to: { [httpClient, scheduler] in
                 httpClient
-                    .getPublisher(url)
+                    .getPublisher(url: url)
                     .tryMap(FeedImageDataMapper.map)
                     .receive(on: scheduler)
                     .caching(to: localImageLoader, using: url)

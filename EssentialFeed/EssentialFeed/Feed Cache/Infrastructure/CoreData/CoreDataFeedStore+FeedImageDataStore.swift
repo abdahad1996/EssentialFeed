@@ -7,7 +7,7 @@
 
 import Foundation
 import CoreData
- 
+
 extension CoreDataFeedStore: FeedImageDataStore {
     
     public func insert(_ data: Data, for url: URL) throws {

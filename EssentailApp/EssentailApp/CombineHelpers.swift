@@ -9,7 +9,6 @@ import Foundation
 import Combine
 import EssentialFeed
 
-
 public extension Paginated {
     init(items: [Item], loadMorePublisher: (() -> AnyPublisher<Self, Error>)?) {
         self.init(items: items, loadMore: loadMorePublisher.map { publisher in
@@ -37,48 +36,38 @@ public extension Paginated {
 }
 
 public extension HTTPClient {
-    typealias Publisher = AnyPublisher<(Data,HTTPURLResponse),Error>
+    typealias Publisher = AnyPublisher<(Data, HTTPURLResponse), Error>
     
-    func getPublisher(_ url:URL) -> Publisher{
-        var task:HTTPClientTask?
+    func getPublisher(url: URL) -> Publisher {
+        var task: HTTPClientTask?
+        
         return Deferred {
-            Future{ completion in
+            Future { completion in
                 task = self.get(from: url, completion: completion)
             }
         }
-        .handleEvents(receiveCancel: {
-            task?.cancel()
-        })
+        .handleEvents(receiveCancel: { task?.cancel() })
         .eraseToAnyPublisher()
     }
 }
-public extension FeedImageDataLoader{
-    typealias Publisher = AnyPublisher<Data,Error>
+
+public extension FeedImageDataLoader {
+    typealias Publisher = AnyPublisher<Data, Error>
     
-//     func loadImageDataPublisher(_ url:URL) -> Publisher {
-//        var task:FeedImageDataLoaderTask?
-//        return Deferred {
-//            Future{ promise in
-//                task = self.loadImageData(from: url, completion: promise)
-//            }
-//        }.handleEvents(receiveCancel: {
-//            task?.cancel()
-//        })
-//        .eraseToAnyPublisher()
-//    }
-    
-    func loadImageDataPublisher(_ url:URL) -> Publisher {
+    func loadImageDataPublisher(from url: URL) -> Publisher {
         return Deferred {
-           Future{ completion in
-               completion(Result{try self.loadImageData(from: url)})
-           }
-       }
-       .eraseToAnyPublisher()
-   }
+            Future { completion in
+                completion(Result {
+                    try self.loadImageData(from: url)
+                })
+            }
+        }
+        .eraseToAnyPublisher()
+    }
 }
 
 extension Publisher where Output == Data {
-    func caching(to cache: FeedImageDataCache,using url:URL) -> AnyPublisher<Output, Failure> {
+    func caching(to cache: FeedImageDataCache, using url: URL) -> AnyPublisher<Output, Failure> {
         handleEvents(receiveOutput: { data in
             cache.saveIgnoringResult(data, for: url)
         }).eraseToAnyPublisher()
@@ -91,15 +80,13 @@ private extension FeedImageDataCache {
     }
 }
 
-
-
 public extension LocalFeedLoader {
     typealias Publisher = AnyPublisher<[FeedImage], Error>
-
+    
     func loadPublisher() -> Publisher {
         Deferred {
-            Future{ completion in
-                completion(Result{try self.load()})
+            Future { completion in
+                completion(Result{ try self.load() })
             }
         }
         .eraseToAnyPublisher()
@@ -116,7 +103,7 @@ extension Publisher {
     func caching(to cache: FeedCache) -> AnyPublisher<Output, Failure> where Output == [FeedImage] {
         handleEvents(receiveOutput: cache.saveIgnoringResult).eraseToAnyPublisher()
     }
-
+    
     func caching(to cache: FeedCache) -> AnyPublisher<Output, Failure> where Output == Paginated<FeedImage> {
         handleEvents(receiveOutput: cache.saveIgnoringResult).eraseToAnyPublisher()
     }
@@ -126,9 +113,10 @@ private extension FeedCache {
     func saveIgnoringResult(_ feed: [FeedImage]) {
         try? save(feed)
     }
+    
     func saveIgnoringResult(_ page: Paginated<FeedImage>) {
-            saveIgnoringResult(page.items)
-        }
+        saveIgnoringResult(page.items)
+    }
 }
 
 extension Publisher {

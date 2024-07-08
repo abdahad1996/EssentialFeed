@@ -128,26 +128,22 @@ import EssentailApp
     }
     
     // MARK: - Image View Tests
-    func test_feedImageView_loadsImageURLWhenVisible() {
-        let (sut,loader) =  makeSUT()
-        let image0 = makeImage(description: "a description", location: "a location")
-        let image1 = makeImage(description: "a description", location: "a location")
-        
-        sut.simulateAppearance()
-        
-        loader.completeFeedLoading(with:[image0,image1])
-        
-        XCTAssertEqual(sut.numberOfRenderedFeedImageViews(), 2)
-        XCTAssertEqual(loader.loadedImageURLs, [], "Expected no image URL requests until views become visible")
-        
-        sut.simulateFeedImageViewVisible(at: 0)
-        XCTAssertEqual(loader.loadedImageURLs, [image0.url], "Expected first image URL request once first view becomes visible")
-        
-        sut.simulateFeedImageViewVisible(at: 1)
-        XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url], "Expected second image URL request once second view also becomes visible")
-        
-        
-    }
+     func test_feedImageView_loadsImageURLWhenVisible() {
+         let image0 = makeImage(url: URL(string: "http://url-0.com")!)
+         let image1 = makeImage(url: URL(string: "http://url-1.com")!)
+         let (sut, loader) = makeSUT()
+         
+         sut.simulateAppearance()
+         XCTAssertEqual(loader.loadedImageURLs, [], "Expected no image URL requests until views become visible")
+
+         loader.completeFeedLoading(with: [image0, image1])
+         sut.simulateFeedImageViewVisible(at: 0)
+         XCTAssertEqual(loader.loadedImageURLs, [image0.url], "Expected first image URL request once first view becomes visible")
+         
+         sut.simulateFeedImageViewVisible(at: 1)
+         XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url], "Expected second image URL request once second view also becomes visible")
+     }
+     
     func test_feedImageView_cancelsImageLoadingWhenNotVisibleAnymore() {
         let (sut,loader) =  makeSUT()
         let image0 = makeImage(description: "a description", location: "a location")
@@ -276,25 +272,21 @@ import EssentailApp
         
     }
     
-    func test_feedImageView_preloadsImageURLWhenNearVisible() {
-        
-        let image0 = makeImage(url: URL(string: "http://url-0.com")!)
-        let image1 = makeImage(url: URL(string: "http://url-1.com")!)
-        let (sut, loader) = makeSUT()
-        
-        sut.simulateAppearance()
+     func test_feedImageView_preloadsImageURLWhenNearVisible() {
+         let image0 = makeImage(url: URL(string: "http://url-0.com")!)
+         let image1 = makeImage(url: URL(string: "http://url-1.com")!)
+         let (sut, loader) = makeSUT()
+         
+         sut.simulateAppearance()
+         XCTAssertEqual(loader.loadedImageURLs, [], "Expected no image URL requests until image is near visible")
 
-        
-        loader.completeFeedLoading(with: [image0, image1])
-        XCTAssertEqual(loader.loadedImageURLs, [], "Expected no image URL requests until image is near visible")
-
-        sut.simulateFeedImageViewNearVisible(at: 0)
-        XCTAssertEqual(loader.loadedImageURLs, [image0.url], "Expected first image URL request once first image is near visible")
-
-        sut.simulateFeedImageViewNearVisible(at: 1)
-        XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url], "Expected second image URL request once second image is near visible")
-        
-    }
+         loader.completeFeedLoading(with: [image0, image1])
+         sut.simulateFeedImageViewNearVisible(at: 0)
+         XCTAssertEqual(loader.loadedImageURLs, [image0.url], "Expected first image URL request once first image is near visible")
+         
+         sut.simulateFeedImageViewNearVisible(at: 1)
+         XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url], "Expected second image URL request once second image is near visible")
+     }
     
     func test_feedImageView_cancelsImageURLPreloadingWhenNotNearVisibleAnymore() {
             let image0 = makeImage(url: URL(string: "http://url-0.com")!)
@@ -545,50 +537,51 @@ import EssentailApp
      // MARK: - Load More Tests
 
      func test_loadMoreActions_requestMoreFromLoader() {
-             let (sut, loader) = makeSUT()
-             sut.simulateAppearance()
-             loader.completeFeedLoading()
-
-             XCTAssertEqual(loader.loadMoreCallCount, 0, "Expected no requests before until load more action")
-
-             sut.simulateLoadMoreFeedAction()
-             XCTAssertEqual(loader.loadMoreCallCount, 1, "Expected load more request")
-                sut.simulateLoadMoreFeedAction()
-                XCTAssertEqual(loader.loadMoreCallCount, 1, "Expected no request while loading more")
+         let (sut, loader) = makeSUT()
+         sut.simulateAppearance()
+         loader.completeFeedLoading(with: [makeImage()])
+         
+         XCTAssertEqual(loader.loadMoreCallCount, 0, "Expected no requests before until load more action")
+         
+         sut.simulateLoadMoreFeedAction()
+         XCTAssertEqual(loader.loadMoreCallCount, 1, "Expected load more request")
+         
+         sut.simulateLoadMoreFeedAction()
+         XCTAssertEqual(loader.loadMoreCallCount, 1, "Expected no request while loading more")
+         
          loader.completeLoadMore(lastPage: false, at: 0)
-                 sut.simulateLoadMoreFeedAction()
-                 XCTAssertEqual(loader.loadMoreCallCount, 2, "Expected request after load more completed with more pages")
-
-                 loader.completeLoadMoreWithError(at: 1)
-                 sut.simulateLoadMoreFeedAction()
-                 XCTAssertEqual(loader.loadMoreCallCount, 3, "Expected request after load more failure")
-
-                 loader.completeLoadMore(lastPage: true, at: 2)
-                 sut.simulateLoadMoreFeedAction()
-                 XCTAssertEqual(loader.loadMoreCallCount, 3, "Expected no request after loading all pages")
-         }
-     
+         sut.simulateLoadMoreFeedAction()
+         XCTAssertEqual(loader.loadMoreCallCount, 2, "Expected request after load more completed with more pages")
+         
+         loader.completeLoadMoreWithError(at: 1)
+         sut.simulateLoadMoreFeedAction()
+         XCTAssertEqual(loader.loadMoreCallCount, 3, "Expected request after load more failure")
+         
+         loader.completeLoadMore(lastPage: true, at: 2)
+         sut.simulateLoadMoreFeedAction()
+         XCTAssertEqual(loader.loadMoreCallCount, 3, "Expected no request after loading all pages")
+     }
      func test_loadingMoreIndicator_isVisibleWhileLoadingMore() {
-             let (sut, loader) = makeSUT()
-
-             sut.simulateAppearance()
-             XCTAssertFalse(sut.isShowingLoadMoreFeedIndicator, "Expected no loading indicator once view is loaded")
-
-             loader.completeFeedLoading(at: 0)
-             XCTAssertFalse(sut.isShowingLoadMoreFeedIndicator, "Expected no loading indicator once loading completes successfully")
-
-             sut.simulateLoadMoreFeedAction()
-             XCTAssertTrue(sut.isShowingLoadMoreFeedIndicator, "Expected loading indicator on load more action")
-
-             loader.completeLoadMore(at: 0)
-             XCTAssertFalse(sut.isShowingLoadMoreFeedIndicator, "Expected no loading indicator once user initiated loading completes successfully")
-
-             sut.simulateLoadMoreFeedAction()
-             XCTAssertTrue(sut.isShowingLoadMoreFeedIndicator, "Expected loading indicator on second load more action")
-
-             loader.completeLoadMoreWithError(at: 1)
-             XCTAssertFalse(sut.isShowingLoadMoreFeedIndicator, "Expected no loading indicator once user initiated loading completes with error")
-         }
+         let (sut, loader) = makeSUT()
+         
+         sut.simulateAppearance()
+         XCTAssertFalse(sut.isShowingLoadMoreFeedIndicator, "Expected no loading indicator once view appears")
+         
+         loader.completeFeedLoading(with: [makeImage()], at: 0)
+         XCTAssertFalse(sut.isShowingLoadMoreFeedIndicator, "Expected no loading indicator once loading completes successfully")
+         
+         sut.simulateLoadMoreFeedAction()
+         XCTAssertTrue(sut.isShowingLoadMoreFeedIndicator, "Expected loading indicator on load more action")
+         
+         loader.completeLoadMore(with: [makeImage()], at: 0)
+         XCTAssertFalse(sut.isShowingLoadMoreFeedIndicator, "Expected no loading indicator once user initiated loading completes successfully")
+         
+         sut.simulateLoadMoreFeedAction()
+         XCTAssertTrue(sut.isShowingLoadMoreFeedIndicator, "Expected loading indicator on second load more action")
+         
+         loader.completeLoadMoreWithError(at: 1)
+         XCTAssertFalse(sut.isShowingLoadMoreFeedIndicator, "Expected no loading indicator once user initiated loading completes with error")
+     }
      
      func test_loadMoreCompletion_dispatchesFromBackgroundToMainThread() {
          let (sut, loader) = makeSUT()

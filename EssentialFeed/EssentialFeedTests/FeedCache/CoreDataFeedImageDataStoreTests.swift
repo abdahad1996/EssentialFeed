@@ -57,7 +57,7 @@ class CoreDataFeedImageDataStoreTests: XCTestCase, FeedImageDataStoreSpecs {
 
 private func insertFeedImage(with url: URL, into sut: CoreDataFeedStore, file: StaticString = #filePath, line: UInt = #line) {
     do {
-        let image = LocalFeedImage(id: UUID(), description: "any", location: "any", imageURL: url)
+        let image = LocalFeedImage(id: UUID(), description: "any", location: "any", url: url)
         try sut.insert([image], timestamp: Date())
     } catch {
         XCTFail("Failed to insert feed image with URL \(url) - error: \(error)", file: file, line: line)

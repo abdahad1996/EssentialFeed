@@ -201,7 +201,7 @@ Given the customer doesn't have connectivity
 | `id`          | `UUID`              |
 | `description` | `String` (optional) |
 | `location`    | `String` (optional) |
-| `url`	        | `URL`               |
+| `url`            | `URL`               |
 
 ### Payload contract
 
@@ -211,29 +211,29 @@ GET /feed
 200 RESPONSE
 
 {
-	"items": [
-		{
-			"id": "a UUID",
-			"description": "a description",
-			"location": "a location",
-			"image": "https://a-image.url",
-		},
-		{
-			"id": "another UUID",
-			"description": "another description",
-			"image": "https://another-image.url"
-		},
-		{
-			"id": "even another UUID",
-			"location": "even another location",
-			"image": "https://even-another-image.url"
-		},
-		{
-			"id": "yet another UUID",
-			"image": "https://yet-another-image.url"
-		}
-		...
-	]
+    "items": [
+        {
+            "id": "a UUID",
+            "description": "a description",
+            "location": "a location",
+            "image": "https://a-image.url",
+        },
+        {
+            "id": "another UUID",
+            "description": "another description",
+            "image": "https://another-image.url"
+        },
+        {
+            "id": "even another UUID",
+            "location": "even another location",
+            "image": "https://even-another-image.url"
+        },
+        {
+            "id": "yet another UUID",
+            "image": "https://yet-another-image.url"
+        }
+        ...
+    ]
 }
 ```
 
@@ -294,15 +294,15 @@ Given the customer doesn't have connectivity
 | Property          | Type                    |
 |-------------------|-------------------------|
 | `id`              | `UUID`                  |
-| `message` 	    | `String`			      |
+| `message`         | `String`                  |
 | `created_at`      | `Date` (ISO8601 String) |
-| `author` 			| `CommentAuthorObject`   |
+| `author`             | `CommentAuthorObject`   |
 
 ### Image Comment Author
 
 | Property          | Type                |
 |-------------------|---------------------|
-| `username` 	    | `String`			  |
+| `username`         | `String`              |
 
 ### Payload contract
 
@@ -312,25 +312,25 @@ GET /image/{image-id}/comments
 2xx RESPONSE
 
 {
-	"items": [
-		{
-			"id": "a UUID",
-			"message": "a message",
-			"created_at": "2020-05-20T11:24:59+0000",
-			"author": {
-				"username": "a username"
-			}
-		},
-		{
-			"id": "another UUID",
-			"message": "another message",
-			"created_at": "2020-05-19T14:23:53+0000",
-			"author": {
-				"username": "another username"
-			}
-		},
-		...
-	]
+    "items": [
+        {
+            "id": "a UUID",
+            "message": "a message",
+            "created_at": "2020-05-20T11:24:59+0000",
+            "author": {
+                "username": "a username"
+            }
+        },
+        {
+            "id": "another UUID",
+            "message": "another message",
+            "created_at": "2020-05-19T14:23:53+0000",
+            "author": {
+                "username": "another username"
+            }
+        },
+        ...
+    ]
 }
 ```
 

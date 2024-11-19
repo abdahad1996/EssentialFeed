@@ -255,7 +255,6 @@
 		657604DA2C2BBB7600E8A930 /* SharedLocalizationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedLocalizationTests.swift; sourceTree = "<group>"; };
 		657604DD2C2BBC7100E8A930 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Shared.strings; sourceTree = "<group>"; };
 		657604DF2C2BBC7B00E8A930 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Shared.strings; sourceTree = "<group>"; };
-		657604E12C2BBC8100E8A930 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Shared.strings"; sourceTree = "<group>"; };
 		657604E22C2C2C7200E8A930 /* SharedLocalizationTestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedLocalizationTestHelper.swift; sourceTree = "<group>"; };
 		657604E42C2C32E100E8A930 /* ResourceLoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourceLoadingView.swift; sourceTree = "<group>"; };
 		657604E62C2C347000E8A930 /* ResourceErrorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourceErrorView.swift; sourceTree = "<group>"; };
@@ -1346,7 +1345,6 @@
 			children = (
 				657604DD2C2BBC7100E8A930 /* en */,
 				657604DF2C2BBC7B00E8A930 /* el */,
-				657604E12C2BBC8100E8A930 /* pt-BR */,
 			);
 			name = Shared.strings;
 			path = "/Users/abdulahadjamal/EssentialFeed/EssentialFeed/EssentialFeed/Shared Presentation";

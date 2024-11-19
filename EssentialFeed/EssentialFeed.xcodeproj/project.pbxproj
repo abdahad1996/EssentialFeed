@@ -48,7 +48,6 @@
 		657604D62C2B94E100E8A930 /* LoadResourcePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657604D52C2B94E100E8A930 /* LoadResourcePresenter.swift */; };
 		657604D92C2B952D00E8A930 /* LoadResourcePresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657604D82C2B952D00E8A930 /* LoadResourcePresenterTests.swift */; };
 		657604DB2C2BBB7600E8A930 /* SharedLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657604DA2C2BBB7600E8A930 /* SharedLocalizationTests.swift */; };
-		657604E02C2BBC7C00E8A930 /* Shared.strings in Resources */ = {isa = PBXBuildFile; fileRef = 657604DE2C2BBC7100E8A930 /* Shared.strings */; };
 		657604E32C2C2C7200E8A930 /* SharedLocalizationTestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657604E22C2C2C7200E8A930 /* SharedLocalizationTestHelper.swift */; };
 		657604E52C2C32E100E8A930 /* ResourceLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657604E42C2C32E100E8A930 /* ResourceLoadingView.swift */; };
 		657604E72C2C347000E8A930 /* ResourceErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657604E62C2C347000E8A930 /* ResourceErrorView.swift */; };
@@ -253,8 +252,6 @@
 		657604D52C2B94E100E8A930 /* LoadResourcePresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadResourcePresenter.swift; sourceTree = "<group>"; };
 		657604D82C2B952D00E8A930 /* LoadResourcePresenterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadResourcePresenterTests.swift; sourceTree = "<group>"; };
 		657604DA2C2BBB7600E8A930 /* SharedLocalizationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedLocalizationTests.swift; sourceTree = "<group>"; };
-		657604DD2C2BBC7100E8A930 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Shared.strings; sourceTree = "<group>"; };
-		657604DF2C2BBC7B00E8A930 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Shared.strings; sourceTree = "<group>"; };
 		657604E22C2C2C7200E8A930 /* SharedLocalizationTestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedLocalizationTestHelper.swift; sourceTree = "<group>"; };
 		657604E42C2C32E100E8A930 /* ResourceLoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourceLoadingView.swift; sourceTree = "<group>"; };
 		657604E62C2C347000E8A930 /* ResourceErrorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResourceErrorView.swift; sourceTree = "<group>"; };
@@ -613,7 +610,6 @@
 		657604D42C2B94BB00E8A930 /* Shared Presentation */ = {
 			isa = PBXGroup;
 			children = (
-				657604DE2C2BBC7100E8A930 /* Shared.strings */,
 				657604D52C2B94E100E8A930 /* LoadResourcePresenter.swift */,
 				657604E42C2C32E100E8A930 /* ResourceLoadingView.swift */,
 				657604E62C2C347000E8A930 /* ResourceErrorView.swift */,
@@ -1103,7 +1099,6 @@
 				657604EE2C2C84EF00E8A930 /* ImageComments.strings in Resources */,
 				65ADA6FC2C246F5B000E8B7C /* EssentialFeed.xctestplan in Resources */,
 				6577065E2C1738910045FA7A /* Feed.strings in Resources */,
-				657604E02C2BBC7C00E8A930 /* Shared.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1340,16 +1335,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		657604DE2C2BBC7100E8A930 /* Shared.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				657604DD2C2BBC7100E8A930 /* en */,
-				657604DF2C2BBC7B00E8A930 /* el */,
-			);
-			name = Shared.strings;
-			path = "/Users/abdulahadjamal/EssentialFeed/EssentialFeed/EssentialFeed/Shared Presentation";
-			sourceTree = "<absolute>";
-		};
 		657604EC2C2C84EF00E8A930 /* ImageComments.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

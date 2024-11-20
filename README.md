@@ -393,8 +393,8 @@ Nevertheless, I didn't test any logic with snapshot tests.
 
 
 ### deep dive into feed scene
-<img width="1448" alt="Screen Shot 2022-08-14 at 7 02 39 PM" src="https://github.com/user-attachments/assets/72e2891f-9862-45d6-890b-a3a47c628f3d">
 
+<img width="1471" alt="Screen Shot 2022-08-14 at 7 02 07 PM" src="https://github.com/user-attachments/assets/2385dfdf-12dd-4eab-9afa-159955d5c39a">
 
 ### zoomed out version
 <img width="1491" alt="Screen Shot 2022-08-14 at 7 06 01 PM" src="https://github.com/user-attachments/assets/9ab45153-5af4-455b-b27b-706d4765a22c">

@@ -376,12 +376,44 @@ Snapshot tests are used as regression tests for the UI. It seemed like a better 
 
 Nevertheless, I didn't test any logic with snapshot tests.
 
+## what and why Architecture
+
+<img width="1000" alt="Why Is architecture so important" src="https://github.com/user-attachments/assets/05ff4936-b9b3-483c-b77c-7337a6acaa1f">
+<img width="1000" alt="What supports good architecture" src="https://github.com/user-attachments/assets/a97d7fab-aae6-4d60-9bd6-6ffa27a83f81">
+
+<img width="1000" alt="Design Patterns" src="https://github.com/user-attachments/assets/c122c0af-707e-4137-bdf6-b9538c3f3749">
+<img width="1000" alt="Practices" src="https://github.com/user-attachments/assets/a1fd463a-4f2c-4e6f-989d-3ed2c5217781">
 
 ## App Architecture
 
+
+
+
 ![](architecture.png)
 
-<img width="600" alt="Screenshot 2024-11-20 at 2 42 12 PM" src="https://github.com/user-attachments/assets/7accd070-3318-40d6-990c-c69e1b13da91">
 
-<img width="600" alt="Screenshot 2024-11-20 at 2 42 46 PM" src="https://github.com/user-attachments/assets/24107994-c260-4f53-b8aa-28592069e9bd">
+### deep dive into feed scene
+<img width="1448" alt="Screen Shot 2022-08-14 at 7 02 39 PM" src="https://github.com/user-attachments/assets/72e2891f-9862-45d6-890b-a3a47c628f3d">
+
+
+### zoomed out version
+<img width="1491" alt="Screen Shot 2022-08-14 at 7 06 01 PM" src="https://github.com/user-attachments/assets/9ab45153-5af4-455b-b27b-706d4765a22c">
+
+### onion/clean architecture form 
+<img width="1400" alt="Screen Shot 2022-08-14 at 7 07 40 PM" src="https://github.com/user-attachments/assets/047443d0-8629-4842-954b-c48d3b2bc25f">
+
+### plug and play architecture
+
+<img width="1000" alt="Composition Root" src="https://github.com/user-attachments/assets/2f97f036-41e9-4f47-ac12-2a768e3718a2">
+
+
+<img width="929" alt="watchOS Application" src="https://github.com/user-attachments/assets/d5c69bb9-fbdd-4459-9001-35577d052559">
+
+
+
+
+
+
+
+
 

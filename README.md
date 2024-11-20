@@ -1,6 +1,18 @@
-# Essential App Case Study
+# EssentialFeed App Case Study
+an app to showcase a list of paginated feed with comment feature
 
 ![](https://github.com/essentialdevelopercom/essential-feed-case-study/workflows/CI-iOS/badge.svg) ![](https://github.com/essentialdevelopercom/essential-feed-case-study/workflows/CI-macOS/badge.svg) ![](https://github.com/essentialdevelopercom/essential-feed-case-study/workflows/Deploy/badge.svg)
+
+## Code Coverage:
+
+<img width="1228" alt="Screenshot 2024-11-20 at 2 26 51 PM" src="https://github.com/user-attachments/assets/6e878509-ca10-4b06-8cdc-c69b8d988f4a">
+
+## Screenshot and Video
+<img src="https://github.com/user-attachments/assets/5b3e323e-e96a-4f86-95be-3d991a90ed00" alt="Simulator Screenshot" width="300"/>
+<img src="https://github.com/user-attachments/assets/117efacb-9074-453b-8bd4-2bde60212c1d" alt="Simulator Screenshot" width="300"/>
+
+https://github.com/user-attachments/assets/e8aa5866-79c8-4df3-bf8b-7f1ca1c20b13
+
 
 ## Image Feed Feature Specs
 
@@ -336,6 +348,40 @@ GET /image/{image-id}/comments
 
 ---
 
+## Testing Strategy
+<img width="1080" alt="Screenshot 2024-01-16 at 08 52 19" src="https://github.com/abdahad1996/WorldOfPAYBACK/assets/28492677/ea9d13d2-dbb1-4eb2-a8f6-b9faaa0ad739">
+<img width="1067" alt="Screenshot 2024-01-16 at 08 52 05" src="https://github.com/abdahad1996/WorldOfPAYBACK/assets/28492677/58c1112b-288c-4319-acec-e55e4b8d26a1">
+
+I tried following the testing pyramid strategy. The foundation for my testing strategy was unit tests for the system internals (without hitting external systems like the network). In addition, I used snapshot tests to validate the screen layout. Lastly, to test out the whole flow I used UI Tests with page object architecture. 
+
+### Summary Table
+
+### Methodology
+
+I adopted the following naming convention for all tests: test_methodName_expectedOutputWhenGivenInput.
+
+To ensure there was no temporal coupling between tests and prevent artifacts from being left on the disk or in memory, I enabled test randomization for all targets 
+
+### Unit Tests
+
+I based my testing pyramid's foundation on unit tests because they are the most reliable and cost-effective to write. Also, I can easily test each component in isolation by mocking collaborators without making any assumptions about the rest of the system.
+
+### Integration Tests
+
+integeration tests are used to test if the units are collaborating correctly or not. 
+
+### Snapshot Tests
+
+Snapshot tests are used as regression tests for the UI. It seemed like a better alternative to UItests because they are relatively fast to run, and I could check the UI for both light and dark modes and different design strategies simultaneously.
+
+Nevertheless, I didn't test any logic with snapshot tests.
+
+
 ## App Architecture
 
 ![](architecture.png)
+
+<img width="600" alt="Screenshot 2024-11-20 at 2 42 12 PM" src="https://github.com/user-attachments/assets/7accd070-3318-40d6-990c-c69e1b13da91">
+
+<img width="600" alt="Screenshot 2024-11-20 at 2 42 46 PM" src="https://github.com/user-attachments/assets/24107994-c260-4f53-b8aa-28592069e9bd">
+

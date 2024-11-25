@@ -14,7 +14,7 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:..\/EssentialFeed\/EssentialFeed.xcodeproj",
+        "containerPath" : "container:EssentialFeed.xcodeproj",
         "identifier" : "65EC5D012BE4FAAF00B71FCA",
         "name" : "EssentialFeedCacheIntegrationTests"
       }

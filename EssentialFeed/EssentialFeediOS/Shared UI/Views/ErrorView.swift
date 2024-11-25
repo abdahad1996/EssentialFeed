@@ -57,7 +57,7 @@ public final class ErrorView: UIButton {
 
     private func showAnimated(_ message: String) {
         setTitle(message, for: .normal)
-        contentEdgeInsets = .init(top: 8, left: 8, bottom: 8, right: 8)
+//        contentEdgeInsets = .init(top: 8, left: 8, bottom: 8, right: 8)
 
         UIView.animate(withDuration: 0.25) {
             self.alpha = 1
@@ -76,8 +76,15 @@ public final class ErrorView: UIButton {
     private func hideMessage() {
         setTitle(nil, for: .normal)
         alpha = 0
-        contentEdgeInsets = .init(top: -2.5, left: 0, bottom: -2.5, right: 0)
-        onHide?()
+ 
+         onHide?()
+        
+//        if #available(iOS 14, *) {
+//            contentEdgeInsets = .init(top: -2.5, left: 0, bottom: -2.5, right: 0)
+//
+//        } else {
+//            self.contentEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+//        }
     }
 }
 

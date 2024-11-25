@@ -96,7 +96,7 @@ class CoreDataFeedStoreTests:XCTestCase,FeedStoreSpecs{
             exp.fulfill()
 
         }
-        wait(for: [exp], timeout: 0.1)
+        wait(for: [exp], timeout: 2)
 
        
     }

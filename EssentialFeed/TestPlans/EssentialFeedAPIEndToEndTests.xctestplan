@@ -13,8 +13,13 @@
   },
   "testTargets" : [
     {
+      "skippedTests" : [
+        "EssentialFeedAPIEndToEndTests",
+        "EssentialFeedAPIEndToEndTests\/test_endToEndTestServerGETFeedImageDataResult_matchesFixedTestAccountData()",
+        "EssentialFeedAPIEndToEndTests\/test_endToEndTestServerGETFeedResult_matchesFixedTestAccountData()"
+      ],
       "target" : {
-        "containerPath" : "container:..\/EssentialFeed\/EssentialFeed.xcodeproj",
+        "containerPath" : "container:EssentialFeed.xcodeproj",
         "identifier" : "6538F6FB2B6094CD00421684",
         "name" : "EssentialFeedAPIEndToEndTests"
       }

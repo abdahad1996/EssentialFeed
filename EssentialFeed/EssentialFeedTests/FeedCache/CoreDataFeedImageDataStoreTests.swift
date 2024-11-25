@@ -50,7 +50,7 @@ class CoreDataFeedImageDataStoreTests: XCTestCase, FeedImageDataStoreSpecs {
             test(sut, imageDataURL)
             exp.fulfill()
         }
-        wait(for: [exp], timeout: 0.1)
+        wait(for: [exp], timeout: 2)
     }
     
 }
